@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% load i18n %}
+{% block main-content %}
+<div class="container-fluid pt-3">
+  <div class="card">
+    <div class="card-header">
+      <h2>{% trans "New Fablog" %}</h2>
+    </div>
+    <form method="post" class="form">
+      <div class="card-body">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-lg-6">
+            {% bootstrap_form form %}
+          </div>
+        </div>
+      </div>
+      <div class="card-footer text-muted">
+        {% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock main-content%}
+{% block extra-javascript %}
+<script type="text/javascript" src={% static "js/selectize.min.js"%}></script>
+<script type="text/javascript">
+  $('#id_member').selectize({
+    create: false,
+    sortField: 'text'
+  }); 
+</script>
+{% endblock extra-javascript %}
+{% block extra_head %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.bootstrap3.css' %}"/>
+{% endblock %}

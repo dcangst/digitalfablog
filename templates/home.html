@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load i18n %}
+{% block title %} DigitalFablog {% endblock title %}
+{% block extra_head %}
+  <link href={% static "css/ionicons.min.css" %} rel="stylesheet">
+{% endblock %}
+{% block main-content %}
+<div class="d-flex flex-wrap">
+  {% if not fablogs %}
+    <div class="col-12 date-header">
+      <h5>{% trans "today" %}</h3>
+    </div>
+    <div class="card fablog-card">
+      <div class="card-body d-flex justify-content-center">
+        <a href="{% url 'fablog:create' %}" class="icon ion-ios-plus-outline align-self-center" style="font-size:5rem"></a>
+      </div>
+    </div>
+  {% endif %}
+  {% for fablog in fablogs %}
+    {% ifchanged %}
+      <div class="col-12 date-header">
+        <h5>{{ fablog.created_at|naturalday:"l, j.m.Y" }}</h3>
+      </div>
+    {% endifchanged %}
+    {% if forloop.first %}
+    <div class="card fablog-card">
+      <div class="card-body d-flex justify-content-center">
+        <a href="{% url 'fablog:create' %}" class="icon ion-ios-plus-outline align-self-center" style="font-size:5rem"></a>
+      </div>
+    </div>
+    {% endif %}
+    <a style="display:block; color:black;" href="{% url 'fablog:update' fablog.pk %}">
+      <div class="card fablog-card {% if fablog.closed_at %}fablog-closed{% endif %}" >
+        <div class="card-header text-center p-1">
+          {{ fablog.member.full_name }}
+        </div>
+        <div class="card-body p-1 small text-center">
+          <table class="w-100">
+            {% for machinesused in fablog.machinesused_set.all %}
+            <tr align="right">
+              <td style="width:20%">
+                <span 
+                  class="badge badge-secondary"
+                  style="background:{{ machinesused.machine.color }}">
+                  {{ machinesused.machine.abbreviation }}
+                </span>
+              </td>
+              <td style="width:40%">
+                {% if machinesused.end_time %}
+                  {{ machinesused.duration_str }}
+                {% else %}
+                  <span name="countup" data-countup= "{{ machinesused.start_time|date:'c' }}"></span>
+                {% endif %}
+              </td>
+              <td style="width:40%">
+                {% if machinesused.end_time %}
+                  <i>{{ machinesused.price }}</i>
+                {% else %}
+                  ...
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% if fablog.machinesused_set.all %}
+            <hr class="m-1">
+          {% endif %}
+          <table class="w-100">
+            {% for materialsused in fablog.materialsused_set.all %}
+            <tr>
+              <td style="width:80%" align="left">
+                {{materialsused.units}} x {{ materialsused.material.name|truncatechars:16}}
+              </td>
+              <td style="width:20%" align="right">
+                <i>{{materialsused.price}}</i>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% if fablog.materialsused_set.all %}
+            <hr class="m-1">
+          {% endif %}
+          <table class="w-100">
+            {% for servicesused in fablog.servicesused_set.all %}
+            <tr>
+              <td style="width:80%" align="left">
+                {{servicesused.units}} x {{ servicesused.service.name|truncatechars:14}}
+              </td>
+              <td style="width:20%" align="right">
+                <i>{{servicesused.price}}</i>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+        <div class="card-footer text-center p-1">
+          <table class="w-100">
+            <td style="width:80%" align="left">
+              Total    
+            </td>
+            <td style="width:20%" align="right">
+              <b>{{ fablog.total }}</b>
+            </td>
+          </table>
+        </div>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+{% endblock main-content %}
+{% block extra-javascript %}
+  <script type="text/javascript" src={% static "js/jquery.plugin.min.js"%}></script> 
+  <script type="text/javascript" src={% static "js/jquery.countdown.min.js"%}></script>
+  <script type="text/javascript">
+    $("span[name*='countup']").each(function() {
+      time_str = $(this).attr("data-countup")
+      time = new Date(time_str);
+      $(this).countdown({since: time, format: 'HM', layout: "{hn}{sep}{mnn}"});
+    });
+  </script>
+{% endblock extra-javascript %}

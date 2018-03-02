@@ -1,0 +1,13 @@
+$cols: ( sm: 2, md: 3, lg: 4, xl: 6 ) !default;
+$spacer: 1rem;
+ #custom-card-deck .card {
+     margin: 0 0 $spacer 0;
+
+     @each $breakpoint in map-keys($cols) {
+         @include media-breakpoint-up($breakpoint) {
+             $col: map-get($cols, $breakpoint);
+
+             flex: 0 0 calc(#{percentage(1/$col)} - #{$spacer * ($col - 1)/ $col});
+         }
+     }
+ }

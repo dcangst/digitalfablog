@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load i18n %}
+{% block main-content %}
+<div class="container-fluid pt-3">
+<div class="card mx-1">
+  <div class="card-header">
+    <h4>{% trans "Fablog" %} | {{ fablog.member }} </h4>
+    <small>{{ fablog.created_at|naturalday:"l, j.m.Y" }}</small>
+  </div>
+  <div class="card-body">
+    <div class="row justify-content-md-center">
+      <div class="col-md-6">
+          {% include "includes/fablog_table.html" %}
+      </div>
+      <div class="col-md-6">
+        <form method="post" class="form">
+          {% csrf_token %}
+          {% bootstrap_field form.payment_method %}
+          {% bootstrap_field form.amount %}
+          {% bootstrap_field form.remainder_as_donation field_class='helper invisible'%}
+      </div>
+    </div>
+  </div>
+  <div class="card-footer text-muted">
+    <button class="btn btn-warning" type="submit" name = "close">{% trans "Close Fablog" %}</button>
+  </div>
+  </form>
+</div>
+</div>
+{% endblock main-content%}
+{% block extra-javascript %}
+  <script type="text/javascript" src={% static "js/selectize.min.js"%}></script>
+  <script type="text/javascript">
+    $('#id_payment_method').selectize({
+      create: false,
+      sortField: 'text'
+    }); 
+  </script>
+  <script type="text/javascript">
+    $( document ).ready(function() {
+      value = $('#id_amount').val()
+      if ( value > {{ fablog.dues }}){
+        $('#id_remainder_as_donation').parents(".helper").removeClass("invisible");
+      } else {
+        $('#id_remainder_as_donation').parents(".helper").addClass("invisible");
+      }
+    });
+    $( '#id_amount' ).on('change ready', function() {
+      value = $(this).val()
+      if ( value > {{ fablog.dues }}){
+        $('#id_remainder_as_donation').parents(".helper").removeClass("invisible");
+      } else {
+        $('#id_remainder_as_donation').parents(".helper").addClass("invisible");
+      }
+    }); 
+  </script>
+{% endblock extra-javascript %}
+{% block extra_head %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.bootstrap3.css' %}"/>
+{% endblock %}
+
+

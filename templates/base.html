@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load bootstrap4 %}
+{% load static %}
+{% if 'use_i18n'|bootstrap_setting %}
+    {% load i18n %}
+    {% get_current_language as LANGUAGE_CODE %}
+{% endif %}
+<html lang="{{ LANGUAGE_CODE|default:'en_us' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!--  <link rel="icon" href="../../../../favicon.ico"> -->
+  <title>{% block header_title %} {% endblock header_title %}</title>
+  <!-- Bootstrap CSS -->
+  {% bootstrap_css %}
+  
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="{% url 'fablog:home' %}">
+      <img  alt="Home" src="{% static 'img/logo_navbar.svg' %}" height="30px" title="Home" data-placement="bottom">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'fablog:home' %}">{% trans "Fablog" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="">{% trans "Cashier" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">{% trans "Members" %}</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Services" %}</a>
+          <div class="dropdown-menu" aria-labelledby="dropdown01">
+            <a class="dropdown-item" href="#">{% trans "Machines" %}</a>
+            <a class="dropdown-item" href="#">{% trans "Material" %}</a>
+            <a class="dropdown-item" href="#">{% trans "Services" %}</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown ">
+          <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
+            <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
+            <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
+          </div>
+      </li>
+    </ul>
+    </div>
+  </nav>
+  <main role="main">
+
+    {% block main-content %}
+    {% endblock main-content %}
+
+    <div class="alert alert-danger m-3" role="alert">
+      <h4 class="alert-heading">Dev Infos</h4>
+      {{ view }}
+    </div>
+    
+  </main>
+
+  <!-- Bootstrap JavaScript -->
+  <script type="text/javascript" src={% static "js/jquery.min.js"%}></script> 
+  <script type="text/javascript" src={% static "js/popper.min.js"%}></script>
+  <script type="text/javascript" src={% static "js/bootstrap.min.js"%}></script>
+  <script type="text/javascript">
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+  {% block extra-javascript %}
+  {% endblock extra-javascript %}
+</body>
+</html>
+
+

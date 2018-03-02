@@ -1,0 +1,231 @@
+[
+{
+  "model": "machines.machine",
+  "pk": 1,
+  "fields": {
+    "name": "Mankati 1",
+    "abbreviation": "MK1",
+    "color": "#cc33ff",
+    "unit": "00:30:00",
+    "price_per_unit": "6.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 2,
+  "fields": {
+    "name": "Mankati 2",
+    "abbreviation": "MK2",
+    "color": "#8600b3",
+    "unit": "00:30:00",
+    "price_per_unit": "6.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 3,
+  "fields": {
+    "name": "Millstep CNC",
+    "abbreviation": "CNC",
+    "color": "#ffcc66",
+    "unit": "00:30:00",
+    "price_per_unit": "10.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 4,
+  "fields": {
+    "name": "Epilog EXT36",
+    "abbreviation": "EPI",
+    "color": "#00cc00",
+    "unit": "00:30:00",
+    "price_per_unit": "10.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 5,
+  "fields": {
+    "name": "AKJ-6090",
+    "abbreviation": "AKJ",
+    "color": "#1aff1a",
+    "unit": "00:30:00",
+    "price_per_unit": "10.00"
+  }
+},
+{
+  "model": "materials.material",
+  "pk": 1,
+  "fields": {
+    "name": "Pappelsperrholz 3mm"
+  }
+},
+{
+  "model": "materials.material",
+  "pk": 2,
+  "fields": {
+    "name": "Plexiglas 2mm"
+  }
+},
+{
+  "model": "materials.material",
+  "pk": 3,
+  "fields": {
+    "name": "Stempelgummi"
+  }
+},
+{
+  "model": "services.service",
+  "pk": 1,
+  "fields": {
+    "name": "Membership",
+    "price": "156.00"
+  }
+},
+{
+  "model": "cashier.financialaccount",
+  "pk": 1,
+  "fields": {
+    "name": "Default Account",
+    "default_account": true
+  }
+},
+{
+  "model": "cashier.paymentmethod",
+  "pk": 1,
+  "fields": {
+    "short_name": "EFT",
+    "long_name": "Elektronische Finanztransaktion"
+  }
+},
+{
+  "model": "cashier.paymentmethod",
+  "pk": 2,
+  "fields": {
+    "short_name": "Bar",
+    "long_name": "Bargeld"
+  }
+},
+{
+  "model": "cashier.paymentmethod",
+  "pk": 3,
+  "fields": {
+    "short_name": "Ueb",
+    "long_name": "\u00dcberweisung"
+  }
+},
+{
+  "model": "cashier.currency",
+  "pk": 1,
+  "fields": {
+    "name": "Franken",
+    "fractional_name": "Rappen",
+    "abbreviation": "CHF"
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 1,
+  "fields": {
+    "value": "0.10",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 2,
+  "fields": {
+    "value": "0.05",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 3,
+  "fields": {
+    "value": "0.20",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 4,
+  "fields": {
+    "value": "0.50",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 5,
+  "fields": {
+    "value": "1.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 6,
+  "fields": {
+    "value": "2.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 7,
+  "fields": {
+    "value": "5.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 8,
+  "fields": {
+    "value": "10.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 9,
+  "fields": {
+    "value": "20.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 10,
+  "fields": {
+    "value": "50.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 11,
+  "fields": {
+    "value": "100.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 12,
+  "fields": {
+    "value": "200.00",
+    "currency": 1
+  }
+},
+{
+  "model": "cashier.cashnominal",
+  "pk": 13,
+  "fields": {
+    "value": "1000.00",
+    "currency": 1
+  }
+}
+]
