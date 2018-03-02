@@ -8,6 +8,7 @@
 __pycache__/
 local_settings.py
 media
+assets
 
 ### sass
 .sass-cache/
