@@ -76,7 +76,8 @@ class Booking(models.Model):
         decimal_places=2,
         verbose_name=_("amount"),
         help_text=_("Amount of the booking"))
-    notes = models.TextField(
+    notes = models.CharField(
+        max_length=255,
         null=True,
         blank=True,
         verbose_name=_("notes"),
