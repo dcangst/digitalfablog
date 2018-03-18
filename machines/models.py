@@ -91,7 +91,6 @@ class MachineStatus(models.Model):
     details = models.CharField(
         max_length=300,
         blank=True,
-        null=True,
         verbose_name=_("details"),
         help_text=_("Details concerning the machine status"))
     objects = MachineStatusManager()

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
-from accounts import views as accounts_views
+from members.views import Login, Logout, Registration
 
 urlpatterns = [
     # admin
@@ -28,6 +28,8 @@ urlpatterns = [
     # members
     path("members/", include("members.urls", namespace="members")),
     # accounts
-    path("login/", accounts_views.login.as_view(), name="login"),
-    path("logout/", accounts_views.logout.as_view(), name="logout")
+    path("cashier/", include("cashier.urls", namespace="cashier")),
+    path("login/", Login.as_view(), name="login"),
+    path("logout/", Logout.as_view(), name="logout"),
+    path("registration/", Registration.as_view(), name="registration")
 ]

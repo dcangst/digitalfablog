@@ -1,12 +1,12 @@
 # standard library
-from datetime import timedelta
+from datetime import timedelta, date
 from math import ceil
 
 # Django
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy as _c
@@ -15,7 +15,8 @@ from django.utils.translation import pgettext_lazy as _c
 class Fablog(models.Model):
     """Fablog object"""
     created_by = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
+        related_name="created_fablogs",
         on_delete=models.PROTECT,
         verbose_name=_("Created by"),
         help_text=_c(
@@ -29,8 +30,8 @@ class Fablog(models.Model):
             "Creation date and time"))
 
     closed_by = models.ForeignKey(
-        User,
-        related_name="fablog_closed_by",
+        settings.AUTH_USER_MODEL,
+        related_name="closed_fablogs",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -47,7 +48,8 @@ class Fablog(models.Model):
             "Closure date and time"))
 
     member = models.ForeignKey(
-        "members.Member",
+        settings.AUTH_USER_MODEL,
+        related_name="fablogs",
         on_delete=models.SET_NULL,
         null=True,
         verbose_name=_("member"),
@@ -57,7 +59,6 @@ class Fablog(models.Model):
         )
 
     notes = models.TextField(
-        null=True,
         blank=True,
         verbose_name=_("notes"),
         help_text=_c(
@@ -73,14 +74,22 @@ class Fablog(models.Model):
         "materials.Material",
         through="MaterialsUsed",
         verbose_name=_("materials used"))
-    services = models.ManyToManyField(
-        "services.Service",
-        through="ServicesUsed",
-        verbose_name=_("services used"))
+    memberships = models.ManyToManyField(
+        "memberships.Membership",
+        through="FablogMemberships",
+        verbose_name=_("Memberships"))
     bookings = models.ManyToManyField(
         "cashier.Booking",
         through="fablogBookings",
         verbose_name=_("Bookings"))
+
+    class Meta:
+        verbose_name = _('fablog')
+        verbose_name_plural = _('fablogs')
+        ordering = ['-created_at', '-closed_at']
+
+    def __str__(self):
+        return self._meta.verbose_name + " " + str(self.id)
 
     @property
     def fablog_date(self):
@@ -89,14 +98,6 @@ class Fablog(models.Model):
             "month": self.created_at.month,
             "year": self.created_at.year}
         return fablog_date
-
-    class Meta:
-        verbose_name = _('fablog')
-        verbose_name_plural = _('fablogs')
-        ordering = ['-closed_at', '-created_at']
-
-    def __str__(self):
-        return self._meta.verbose_name + " " + str(self.id)
 
     def total_machines(self):
         machines = self.machinesused_set.all()
@@ -114,13 +115,13 @@ class Fablog(models.Model):
         return total_material_costs
     total_materials.short_description = _("subtotal materials")
 
-    def total_services(self):
-        services = self.servicesused_set.all()
-        total_service_costs = 0
-        for service in services:
-            total_service_costs += service.price()
-        return total_service_costs
-    total_services.short_description = _("subtotal services")
+    def total_memberships(self):
+        memberships = self.fablogmemberships_set.all()
+        total_membership_costs = 0
+        for membership in memberships:
+            total_membership_costs += membership.price()
+        return total_membership_costs
+    total_memberships.short_description = _("subtotal memberships")
 
     def total_bookings(self):
         payments = self.fablogbookings_set.all()
@@ -128,10 +129,10 @@ class Fablog(models.Model):
         for payment in payments:
             total_payments += payment.booking.amount
         return total_payments
-    total_services.short_description = _("total bookings")
+    total_bookings.short_description = _("total bookings")
 
     def total(self):
-        return self.total_machines() + self.total_materials() + self.total_services()
+        return self.total_machines() + self.total_materials() + self.total_memberships()
     total.short_description = _("total overall")
 
     def dues(self):
@@ -238,30 +239,35 @@ class MaterialsUsed(models.Model):
     price.short_description = _("price")
 
 
-class ServicesUsed(models.Model):
+class FablogMemberships(models.Model):
     fablog = models.ForeignKey(
         Fablog,
         on_delete=models.SET_NULL,
         null=True)
-    service = models.ForeignKey(
-        "services.Service",
+    membership = models.ForeignKey(
+        "memberships.Membership",
         on_delete=models.SET_NULL,
         null=True)
-    units = models.PositiveSmallIntegerField(
-        default=1,
-        verbose_name=_("units"),
-        help_text=_("Units of Service used"))
+    start_date = models.DateField(
+        default=date(date.today().year, 1, 1),
+        verbose_name=_("membership start date"),
+        help_text=_("First day of membership"))
+    end_date = models.DateField(
+        default=date(date.today().year, 12, 31),
+        verbose_name=_("membership end date"),
+        help_text=_("Last day of membership"))
 
     def price(self):
-        return self.units * self.service.price
+        return self.membership.price
+
     price.short_description = _("price")
 
     class Meta:
-        verbose_name = _('service used')
-        verbose_name_plural = _('services used')
+        verbose_name = _('Membership')
+        verbose_name_plural = _('Memberships')
 
     def __str__(self):
-        return str(self.service.name)
+        return str(self.membership.name)
 
 
 class FablogBookings(models.Model):

@@ -1,21 +1,56 @@
+# django
 from django.contrib import admin
-from .models import Member, MembershipBookings
+from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext_lazy as _
+
+# local
+from .models import User, Membership
 from cashier.models import Booking
 
 
-class MembershipBookingInline(admin.TabularInline):
-    model = MembershipBookings
+class MembershipInline(admin.TabularInline):
+    model = Membership
     extra = 1
 
 
 class BookingInline(admin.TabularInline):
     model = Booking
+    fk_name = "payed_byto"
     extra = 1
 
 
-class MemberAdmin(admin.ModelAdmin):
-    inlines = (MembershipBookingInline, BookingInline)
+class CustomUserAdmin(UserAdmin):
+    inlines = (MembershipInline, BookingInline)
+
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        (_('Personal info'), {'fields': ('first_name', 'middle_name', 'last_name',
+                                         'street_and_number', 'zip_code', 'city',
+                                         'phone', 'birthday')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groups', 'user_permissions')}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2',
+                       'first_name', 'middle_name', 'last_name',
+                       'street_and_number', 'zip_code', 'city',
+                       'phone', 'birthday'),
+        }),
+    )
+
+    # form = UserChangeForm
+    # add_form = UserCreationForm
+    # change_password_form = AdminPasswordChangeForm
+    list_display = ('email', 'first_name', 'last_name', 'is_staff')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
+    search_fields = ('first_name', 'last_name', 'email')
+    filter_horizontal = ('groups', 'user_permissions',)
+    ordering = ['last_name', 'first_name']
 
 
-admin.site.register(Member, MemberAdmin)
-admin.site.register(MembershipBookings)
+admin.site.register(User, CustomUserAdmin)
+admin.site.register(Membership)

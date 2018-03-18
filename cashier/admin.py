@@ -2,12 +2,12 @@
 from django.contrib import admin
 
 # local
-from .models import CashCount, CashCountNominals, CashNominal, Currency, \
-    FinancialAccount, BookingType, PaymentMethod, Booking
+from .models import CashCount, CashCountNominal, CashNominal, Currency, \
+    FinancialAccount, BookingType, PaymentMethod, Booking, FinancialAccountBalance
 
 
-class CashCountNominalsInline(admin.TabularInline):
-    model = CashCountNominals
+class CashCountNominalInline(admin.TabularInline):
+    model = CashCountNominal
     extra = 1
 
 
@@ -22,7 +22,7 @@ class CashCountInline(admin.TabularInline):
 
 
 class CashCountAdmin(admin.ModelAdmin):
-    inlines = (CashCountNominalsInline, )
+    inlines = (CashCountNominalInline, )
     readonly_fields = ("total", )
 
 
@@ -33,8 +33,9 @@ class FinancialAccountAdmin(admin.ModelAdmin):
 admin.site.register(Currency)
 admin.site.register(CashNominal)
 admin.site.register(CashCount, CashCountAdmin)
-admin.site.register(CashCountNominals)
+admin.site.register(CashCountNominal)
 admin.site.register(FinancialAccount, FinancialAccountAdmin)
 admin.site.register(PaymentMethod)
 admin.site.register(Booking)
 admin.site.register(BookingType)
+admin.site.register(FinancialAccountBalance)

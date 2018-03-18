@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load i18n %}
+{% block main-content %}
+<div class="container-fluid pt-3">
+  <h4>{{ financial_account }}</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>{% trans "Date" %}</th>
+        <th>{% trans "Type" %}</th>
+        <th>{% trans "Comment" %}</th>
+        <th>{% trans "Income" %}</th>
+        <th>{% trans "Expenses" %}</th>
+        <th>{% trans "Balance" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+        <tr>
+          <td>{{booking.id}}</td>
+          <td>{{booking.timestamp}}</td>
+          <td>{{booking.booking_type}}</td>
+          <td>{% if booking.comment %}{{booking.comment}}{%endif%}</td>
+          <td>{% if booking.amount >= 0 %}{{booking.amount}}{%endif%}</td>
+          <td>{% if booking.amount < 0 %}{{booking.amount}}{%endif%}</td>
+          <td>{{booking.balance.balance}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock main-content%}
+{% block extra-javascript %}
+{% endblock extra-javascript %}
+{% block extra_head %}
+{% endblock %}
+

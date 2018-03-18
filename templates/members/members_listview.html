@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load i18n %}
+{% block main-content %}
+<div class="container-fluid pt-3">
+  <h4>{% trans "Fablab Members" %}</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>n</th>
+        <th>#</th>
+        <th>{% trans "Email" %}</th>
+        <th>{% trans "First Name" %}</th>
+        <th>{% trans "Middle Name" %}</th>
+        <th>{% trans "Last Name" %}</th>
+        <th>{% trans "Adress" %}</th>
+        <th>{% trans "ZIP" %}</th>
+        <th>{% trans "City" %}</th>
+        <th>{% trans "enddate" %}</th>
+        <th>{% trans "has payed" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in members %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{member.id}}</td>
+          <td>{{member.email}}</td>
+          <td>{{member.first_name}}</td>
+          <td>{{member.middle_name}}</td>
+          <td>{{member.last_name}}</td>
+          <td>{{member.street_and_number}}</td>
+          <td>{{member.zip_code}}</td>
+          <td>{{member.city}}</td>
+          <td>{{member.end_date}}</td>
+          <td>{{member.has_payed}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock main-content%}
+{% block extra-javascript %}
+{% endblock extra-javascript %}
+{% block extra_head %}
+{% endblock %}
+

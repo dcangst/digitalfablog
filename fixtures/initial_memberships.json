@@ -1,0 +1,20 @@
+[
+{
+  "model": "memberships.membership",
+  "pk": 1,
+  "fields": {
+    "name": "Mitgliedschaft",
+    "service_type": 0,
+    "price": "156.00"
+  }
+},
+{
+  "model": "memberships.membership",
+  "pk": 2,
+  "fields": {
+    "name": "Mitgliedschaft KulturLegi",
+    "service_type": 1,
+    "price": "78.00"
+  }
+}
+]

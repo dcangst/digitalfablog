@@ -13,7 +13,14 @@
         {% csrf_token %}
         <div class="row">
           <div class="col-lg-6">
-            {% bootstrap_form form %}
+             {% bootstrap_field form.created_at show_label=True show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='btn btn-outline icon ion-ios-clock-outline' type='button'></button>" addon_after_class='input-group-append'%}
+            <div class="form-group">
+              <label for="id_member">Member</label>
+              <select name="member"
+                class="form-control custom-select"
+                title="" required="" id="id_member"
+                placeholder="{% trans 'Select member...' %}"></select>
+            </div>
           </div>
         </div>
       </div>
@@ -28,11 +35,43 @@
 <script type="text/javascript" src={% static "js/selectize.min.js"%}></script>
 <script type="text/javascript">
   $('#id_member').selectize({
+    valueField: 'pk',
+    labelField: 'label',
+    searchField: 'label',
     create: false,
-    sortField: 'text'
+    sortField: 'text',
+    options: {{ members_list | safe}},
+    render: {
+        item: function(item, escape) {
+              return '<div>' +
+                '<div>' +
+                  '<span class="name">' + escape(item.label) + '</span>' + " " +
+                  '<span class="small text-muted">Membership: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
+                '</div>' +
+            '</div>';
+                },
+        option: function(item, escape) {
+            return '<div>' +
+                '<div>' +
+                    '<span class="name">' + escape(item.label) + '</span>' +
+                '</div>' +
+                '<div>' +
+                  '<span class="small text-muted">Membership: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
+                '</div>' +
+            '</div>';
+        }
+    }
   }); 
 </script>
+<script type="text/javascript" src={% static "js/dateJs/date.min.js"%}></script>
+<script type="text/javascript">
+    $( "button[name*='now']" ).click(function() {
+      t = new Date()
+      $( this ).parent().siblings('input').val(t.toString( "yyyy-MM-dd HH:mm:ss" ))
+    })
+  </script>
 {% endblock extra-javascript %}
 {% block extra_head %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.bootstrap3.css' %}"/>
+  <link href={% static "css/ionicons.min.css" %} rel="stylesheet">
 {% endblock %}

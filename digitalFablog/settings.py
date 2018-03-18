@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django.contrib.humanize",
     "django.contrib.postgres",
+    "django.forms",
     # additional
     "django_extensions",
     "bootstrap4",
@@ -48,8 +49,7 @@ INSTALLED_APPS = [
     "fablog",
     "machines",
     "materials",
-    "services",
-    "accounts",
+    "memberships",
     "members",
     "cashier"
 ]
@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'digitalFablog.middleware.TimezoneMiddleware'
 ]
 
 ROOT_URLCONF = 'digitalFablog.urls'
@@ -77,7 +78,8 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
+                'utils.context_processors.global_variables'
             ],
         },
     },
@@ -154,6 +156,7 @@ FIXTURE_DIRS = (
 )
 
 # AUTH
+AUTH_USER_MODEL = 'members.User'
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"

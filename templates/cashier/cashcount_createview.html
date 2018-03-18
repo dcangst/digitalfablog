@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load i18n %}
+{% block main-content %}
+<div class="container-fluid pt-3">
+<div class="card mx-1">
+  <div class="card-header">
+    <h4>{% trans "Cash Count" %}</h4>
+  </div>
+  <form method="post" class="form">
+  <div class="card-body">
+    <div class="row justify-content-md-center">
+      <div class="col-md-4">
+        {% bootstrap_field form.cashier_date %}
+      </div>
+      <div class="col-md-4">
+        {% bootstrap_field form.financial_account %}
+      </div>
+      <div class="col-md-4">
+        {% bootstrap_field form.currency %}
+      </div>
+    </div>
+    <hr>
+      {% csrf_token %}
+      {{ nominalsFS.management_form }}
+      {% for form in nominalsFS %}
+      <div class="row justify-content-md-left">
+        <div class="col-md-2">
+          {% bootstrap_field form.cash_nominal %}
+        </div>
+        <div class="col-md-3">
+          {% bootstrap_field form.count show_help=False %}
+        </div>
+      </div>
+      {% endfor %}
+  </div>
+  <div class="card-footer text-muted">
+    <a class="btn btn-primary" href="{% url 'fablog:home' %}">{% trans "Home" %}</a>
+  </div>
+  </form>
+</div>
+</div>
+{% endblock main-content%}
+
+

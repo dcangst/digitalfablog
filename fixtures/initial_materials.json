@@ -1,0 +1,23 @@
+[
+{
+  "model": "materials.material",
+  "pk": 1,
+  "fields": {
+    "name": "Pappelsperrholz 3mm"
+  }
+},
+{
+  "model": "materials.material",
+  "pk": 2,
+  "fields": {
+    "name": "Plexiglas 2mm"
+  }
+},
+{
+  "model": "materials.material",
+  "pk": 3,
+  "fields": {
+    "name": "Stempelgummi"
+  }
+}
+]

@@ -1,12 +1,17 @@
+# base
+from datetime import date
+
 # django
-from django.forms import ModelForm, SplitDateTimeField, Select, BaseInlineFormSet
+from django.forms import ModelForm, ModelChoiceField, Select, BaseInlineFormSet
 from django.utils.translation import gettext_lazy as _
 
 # additional
 from extra_views import InlineFormSet
 
 # local
-from .models import Fablog, MachinesUsed, MaterialsUsed, ServicesUsed
+from .models import Fablog, MachinesUsed, MaterialsUsed, FablogMemberships
+from members.models import User
+from memberships.models import Membership
 
 
 class FablogForm(ModelForm):
@@ -17,30 +22,45 @@ class FablogForm(ModelForm):
 
 
 class NewFablogForm(ModelForm):
+    member = ModelChoiceField(
+        widget=Select(attrs={'class': "custom-select"}),
+        queryset=User.members.all())
 
     class Meta:
         model = Fablog
         fields = ("created_at", "member", )
-        field_classes = {
-            'created_at': SplitDateTimeField,
-        }
 
 
 class FablogMachinesUsedInlineFormset(BaseInlineFormSet):
 
-    def close_check(self):
-        valid = True
+    def close_check(self, valid):
+        form_valid = True
         for i in range(0, self.total_form_count()):
             data = self.forms[i].cleaned_data
             if data.get("start_time") and not data.get("end_time"):
                 self.forms[i].add_error("end_time", _("Need an end time to close Fablog!"))
-                valid = False
-        return valid
+                form_valid = False
+        return form_valid
+
+
+class FablogMembershipInlineFormset(BaseInlineFormSet):
+
+    def close_check(self, valid):
+        if not valid:
+            form_valid = True
+            for i in range(0, self.total_form_count()):
+                data = self.forms[i].cleaned_data
+                if not data.get("membership"):
+                    form_valid = False
+                    self.forms[0].add_error(None, _('You must add a membership!'))
+            return form_valid
+        else:
+            return True
 
 
 class FablogInlineFormset(BaseInlineFormSet):
 
-    def close_check(self):
+    def close_check(self, valid):
         return True
 
 
@@ -60,9 +80,11 @@ class MaterialsUsedInline(InlineFormSet):
     widgets = {'material': Select(attrs={'class': "custom-select"})}
 
 
-class ServicesUsedInline(InlineFormSet):
-    model = ServicesUsed
-    formset_class = FablogInlineFormset
+class FablogMembershipsInline(InlineFormSet):
+    model = FablogMemberships
+    formset_class = FablogMembershipInlineFormset
     extra = 1
+    max_num = 1
     fields = '__all__'
-    widgets = {'service': Select(attrs={'class': "custom-select"})}
+    widgets = {'membership': Select(attrs={'class': "custom-select"})}
+    initial = [{'start_date': date(date.today().year, 1, 1), 'end_date': date(date.today().year, 12, 31)}]

@@ -1,0 +1,57 @@
+[
+{
+  "model": "machines.machine",
+  "pk": 1,
+  "fields": {
+    "name": "Mankati 1",
+    "abbreviation": "MK1",
+    "color": "#cc33ff",
+    "unit": "00:30:00",
+    "price_per_unit": "6.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 2,
+  "fields": {
+    "name": "Mankati 2",
+    "abbreviation": "MK2",
+    "color": "#8600b3",
+    "unit": "00:30:00",
+    "price_per_unit": "6.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 3,
+  "fields": {
+    "name": "Millstep CNC",
+    "abbreviation": "CNC",
+    "color": "#ffcc66",
+    "unit": "00:30:00",
+    "price_per_unit": "10.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 4,
+  "fields": {
+    "name": "Epilog EXT36",
+    "abbreviation": "EPI",
+    "color": "#00cc00",
+    "unit": "00:30:00",
+    "price_per_unit": "10.00"
+  }
+},
+{
+  "model": "machines.machine",
+  "pk": 5,
+  "fields": {
+    "name": "AKJ-6090",
+    "abbreviation": "AKJ",
+    "color": "#1aff1a",
+    "unit": "00:30:00",
+    "price_per_unit": "10.00"
+  }
+}
+]

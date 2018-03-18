@@ -61,23 +61,23 @@
         </td>
       </tr>
     {% endif %}
-    {% for servicesused in fablog.servicesused_set.all %}
+    {% for fablogmembership in fablog.fablogmemberships_set.all %}
         <tr>
           <td colspan="2" align="left">
-            {{servicesused.units}} x {{ servicesused.service.name }}
+            {{fablogmembership.membership.name}} {% trans "until" %} {{ fablogmembership.end_date }}
           </td>
           <td align="right">
-            {{servicesused.price}}
+            {{fablogmembership.price}}
           </td>
         </tr>
     {% endfor %}
-    {% if fablog.servicesused_set.all %}
+    {% if fablog.fablogmemberships_set.all %}
       <tr>
         <td colspan="2" align="right">
-          <em>{% trans "Subtotal Services" %}</em>
+          <em>{% trans "Subtotal Memberships" %}</em>
         </td>
         <td class="border-top border-dark" align="right">
-          <em>{{fablog.total_services}}</em>
+          <em>{{fablog.total_memberships}}</em>
         </td>
       </tr>
     {% endif %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+{% load i18n %}
+{% load bootstrap4 %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<html lang="{{ LANGUAGE_CODE|default:'en_us' }}">
+<head>
+  <!--  meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+
+  <title>{% trans "Become a Fablab Member!" %}</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/df-bootstrap.min.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
+</head>
+<body>
+
+<div class="row justify-content-md-center">
+  <div class="col-md-6">
+    <div class="card">
+      <form method="post" class="form">
+      <div class="card-body">
+        {% csrf_token %}
+
+        {% bootstrap_form form %}
+
+      </div>
+      <div class="card-footer text-muted">
+        <div class="form-group">
+          <button type="submit" class="btn btn-lg btn-primary btn-block">{% trans "Register" %}</button>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+

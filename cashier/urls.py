@@ -1,11 +1,11 @@
+# django
 from django.urls import path
-from . import views
-from cashier
 
-app_name = 'fablog'
+# local
+from . import views
+
+app_name = 'cashier'
 urlpatterns = [
-    path("", views.Home.as_view(), name="home"),
-    path("<int:pk>/", views.FablogUpdateView.as_view(), name="update"),
-    path("<int:pk>/booking", views.FablogBookingUpdateView.as_view(), name="booking"),
-    path("new/", views.FablogCreateView.as_view(), name="create")
+    path("<int:pk>/", views.AccountBookingListView.as_view(), name="account"),
+    path("cashcount/", views.CashCountCreateView.as_view(), name="new_cash_count")
 ]
