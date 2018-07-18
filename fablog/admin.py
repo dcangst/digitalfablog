@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Fablog, MachinesUsed, MaterialsUsed, FablogMemberships, FablogBookings
+from .models import Fablog, MachinesUsed, MaterialsUsed, FablogMemberships, FablogBookings, FabDay
 
 
 class MachinesUsedInline(admin.TabularInline):
@@ -35,3 +35,4 @@ admin.site.register(MachinesUsed)
 admin.site.register(FablogMemberships)
 admin.site.register(MaterialsUsed)
 admin.site.register(FablogBookings)
+admin.site.register(FabDay)

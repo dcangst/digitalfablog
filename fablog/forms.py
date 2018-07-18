@@ -11,7 +11,6 @@ from extra_views import InlineFormSet
 # local
 from .models import Fablog, MachinesUsed, MaterialsUsed, FablogMemberships
 from members.models import User
-from memberships.models import Membership
 
 
 class FablogForm(ModelForm):

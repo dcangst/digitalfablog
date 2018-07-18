@@ -5,24 +5,52 @@
 {% load i18n %}
 {% block main-content %}
 <div class="container-fluid pt-3">
-<div class="card mx-1">
-  <div class="card-header">
-    <h4>{% trans "Fablog" %} | {{ fablog.member }} </h4>
-    <small>{{ fablog.created_at|naturalday:"l, j.m.Y" }}</small>
-  </div>
-  <div class="card-body">
-    <div class="row justify-content-md-center">
-      <div class="col-md-6">
-          {% include "includes/fablog_table.html" %}
+  <div class="row justify-content-lg-center">
+    <div class="col-lg-8">
+      <div class="card mx-1">
+        <div class="card-header">
+          <div class="media">
+            <div class="media-body">
+              <h4 class="d-print-none">{% trans "Fablog" %} | {{ fablog.member }} </h4>
+              <h4 class="d-none d-print-block">{% trans "Receipt" %} | {{ fablog.member }} </h4>
+              <small class="d-print-none">{{ fablog.created_at|naturalday:"l, j.m.Y" }}</small>
+              <small class="d-none d-print-block">{{ fablog.created_at }}</small>
+            </div>
+            <img class="align-self-start d-none d-print-block" src="{% static 'img/logo_header.png' %}" alt="fablab zürich">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row justify-content-md-center">
+            <div class="col-md-10">
+                {% include "includes/fablog_table.html" %}
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-muted d-print-none">
+          <a class="btn btn-primary" href="{% url 'fablog:home' %}">{% trans "Home" %}</a>
+          {% if is_labmanager %}
+          <button class="btn btn-info" onclick="print_page()">{% trans "print receipt" %}</button>
+          {% endif %}
+        </div>
+        </form>
+        <div class="card-footer d-none d-print-block">
+          <p>{% trans "Thanks for your support! Your labmanager was:" %} {{ fablog.closed_by }}</p>
+          <p style="margin:0px">FABLAB ZÜRICH | Zimmerlistrasse 6 | 8004 Zürich | +41 44 520 88 38</p>
+          <small>PC-Konto: 60-405120-8 | IBAN: CH51 0900 0000 6040 5120 8</small>
+        </div>
       </div>
     </div>
   </div>
-  <div class="card-footer text-muted">
-    <a class="btn btn-primary" href="{% url 'fablog:home' %}">{% trans "Home" %}</a>
-  </div>
-  </form>
 </div>
-</div>
-{% endblock main-content%}
+
+{% endblock main-content %}
+{% block extra-javascript %}
+<script>
+function print_page() {
+    window.print();
+}
+</script>
+{% endblock extra-javascript %}
+
 
 

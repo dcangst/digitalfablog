@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "name": "Mitgliedschaft",
-    "service_type": 0,
+    "membership_type": 0,
     "price": "156.00"
   }
 },
@@ -13,7 +13,7 @@
   "pk": 2,
   "fields": {
     "name": "Mitgliedschaft KulturLegi",
-    "service_type": 1,
+    "membership_type": 1,
     "price": "78.00"
   }
 }

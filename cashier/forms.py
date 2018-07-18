@@ -39,12 +39,12 @@ class CashCountForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CashCountForm, self).__init__(*args, **kwargs)
-        self.fields['financial_account'].disabled = True
-        self.fields['currency'].disabled = True
+        self.fields['financial_account'].disabled = False
+        self.fields['currency'].disabled = False
 
 
 class CashCountNominalInline(InlineFormSet):
-    """ use with additional kwarg "currency" a instance of Currency """
+    """ use with additional kwarg "currency", a instance of Currency """
     model = CashCountNominal
     can_delete = False
     fields = ("cash_nominal", "count",)
@@ -52,10 +52,13 @@ class CashCountNominalInline(InlineFormSet):
 
     def get_factory_kwargs(self):
         kwargs = super(InlineFormSet, self).get_factory_kwargs()
-        # set inital here, because get_initial is only called after.
-        cash_nominals = CashNominal.objects.filter(currency=self.kwargs["currency"])
-        self.initial = [{'cash_nominal': x.id, 'count': 0} for x in cash_nominals.all()]
+        n_cash_nominals = CashNominal.objects.filter(currency=self.kwargs["currency"]).count()
         kwargs.update({
-            'extra': len(self.initial),
+            'extra': n_cash_nominals,
         })
         return kwargs
+
+    def get_initial(self):
+        cash_nominals = CashNominal.objects.filter(currency=self.kwargs["currency"])
+        self.initial = [{'cash_nominal': x.id, 'count': 0} for x in cash_nominals.all()]
+        return self.initial

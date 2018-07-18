@@ -8,31 +8,27 @@
 {% endblock %}
 {% block main-content %}
 <div class="d-flex flex-wrap">
-  {% if not fablogs and is_labmanager %}
-    <div class="col-12 date-header">
-      <h5>{% trans "today" %}</h3>
-    </div>
+{% for fabday in fabdays %}
+  <div class="col-12 d-flex date-header">
+    <h5>{{ fabday.date|naturalday:"l, j.m.Y" }}</h5>
+    {% if fabday.cashcount.exists %}
+      <h5 class="ml-auto icon ion-cash align-self-center text-success"></h5>
+      <span class="ml-2">Kassenstand (Schichtbeginn): {{fabday.cashcount.all.0.total}} {{fabday.cashcount.all.0.currency.abbreviation}}</span>
+    {% else %}
+     <a class="ml-auto" href="{% url 'cashier:new_cash_count' %}"><h5 class="icon ion-cash align-self-center text-warning"></h5></a>
+    {% endif %}
+  </div>
+  {% if forloop.first and is_labmanager %}
     <div class="card fablog-card">
       <div class="card-body d-flex justify-content-center">
         <a href="{% url 'fablog:create' %}" class="icon ion-ios-plus-outline align-self-center" style="font-size:5rem"></a>
       </div>
     </div>
   {% endif %}
-  {% for fablog in fablogs %}
-    {% ifchanged %}
-      <div class="col-12 date-header">
-        <h5>{{ fablog.created_at|naturalday:"l, j.m.Y" }}</h3>
-      </div>
-    {% endifchanged %}
-    {% if forloop.first and is_labmanager %}
-    <div class="card fablog-card">
-      <div class="card-body d-flex justify-content-center">
-        <a href="{% url 'fablog:create' %}" class="icon ion-ios-plus-outline align-self-center" style="font-size:5rem"></a>
-      </div>
-    </div>
-    {% endif %}
-    <a style="display:block; color:black;"
-      href="{% if is_labmanager %}{% url 'fablog:update' fablog.pk %}{% else %}{% url 'fablog:detail' fablog.pk %}{% endif %}">
+  {% for fablog in fabday.fablogs.all %}
+    {% if fablog.member == request.user or is_labmanager %}
+      <a style="display:block; color:black;"
+      href="{{ fablog.get_absolute_url }}">
       <div class="card fablog-card {% if fablog.closed_at %}fablog-closed{% endif %}" >
         <div class="card-header text-center p-1">
           {{ fablog.member.get_full_name }}
@@ -107,9 +103,43 @@
           </table>
         </div>
       </div>
-    </a>
+      </a>
+    {% endif %}
   {% endfor %}
+{% endfor %}
 </div>
+{% if is_paginated %}
+<nav aria-label="pagination">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="page-item active">
+          <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+        </li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
 {% endblock main-content %}
 {% block extra-javascript %}
   <script type="text/javascript" src={% static "js/jquery.plugin.min.js"%}></script> 

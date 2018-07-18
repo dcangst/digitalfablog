@@ -3,10 +3,13 @@
 {% load bootstrap4 %}
 {% load humanize %}
 {% load i18n %}
+{% block extra_head %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}">
+{% endblock extra_head %}
 {% block main-content %}
 <div class="container-fluid pt-3">
   <h4>{% trans "Fablab Members" %}</h4>
-  <table class="table">
+  <table class="table" id="memberTable">
     <thead>
       <tr>
         <th>n</th>
@@ -43,7 +46,19 @@
 </div>
 {% endblock main-content%}
 {% block extra-javascript %}
+<script type="text/javascript" charset="utf8" src="{% static '/js/datatables.min.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready( function () {
+    $('#memberTable').DataTable({
+      fixedHeader: true,
+      scrollY:        '80vh',
+      scrollCollapse: true,
+      paging:         false,
+      dom: 'Bfrtip',
+      buttons: [ 'copy', 'csv', 'excel' ]
+    });
+} );
+</script>
 {% endblock extra-javascript %}
-{% block extra_head %}
-{% endblock %}
+
 

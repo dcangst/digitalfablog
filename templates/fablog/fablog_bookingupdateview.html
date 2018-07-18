@@ -5,30 +5,36 @@
 {% load i18n %}
 {% block main-content %}
 <div class="container-fluid pt-3">
-<div class="card mx-1">
-  <div class="card-header">
-    <h4>{% trans "Fablog" %} | {{ fablog.member }} </h4>
-    <small>{{ fablog.created_at|naturalday:"l, j.m.Y" }}</small>
-  </div>
-  <div class="card-body">
-    <div class="row justify-content-md-center">
-      <div class="col-md-6">
-          {% include "includes/fablog_table.html" %}
-      </div>
-      <div class="col-md-6">
+  <div class="row justify-content-lg-center">
+    <div class="col-lg-8">
+      <div class="card mx-1">
+        <div class="card-header">
+          <h4>{% trans "Fablog" %} | {{ fablog.member }} </h4>
+          <small>{{ fablog.created_at|naturalday:"l, j.m.Y" }}</small>
+        </div>
         <form method="post" class="form">
           {% csrf_token %}
-          {% bootstrap_field form.payment_method %}
-          {% bootstrap_field form.amount %}
-          {% bootstrap_field form.remainder_as_donation field_class='helper invisible'%}
+          <div class="card-body">
+            <div class="row justify-content-lg-center">
+              <div class="col-lg-8">
+                  {% include "includes/fablog_table.html" %}
+              </div>
+            </div>
+            <div class="row justify-content-lg-center">
+              <div class="col-lg-8">
+                  {% bootstrap_field form.payment_method %}
+                  {% bootstrap_field form.amount %}
+                  {% bootstrap_field form.remainder_as_donation field_class='helper invisible'%}
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            <button class="btn btn-warning" type="submit" name = "close">{% trans "Close Fablog" %}</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  <div class="card-footer text-muted">
-    <button class="btn btn-warning" type="submit" name = "close">{% trans "Close Fablog" %}</button>
-  </div>
-  </form>
-</div>
 </div>
 {% endblock main-content%}
 {% block extra-javascript %}

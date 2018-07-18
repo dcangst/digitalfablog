@@ -10,6 +10,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy as _c
+from django.urls import reverse
 
 
 class Fablog(models.Model):
@@ -66,6 +67,16 @@ class Fablog(models.Model):
             "Notes on the Fablog")
         )
 
+    fabday = models.ForeignKey(
+        "FabDay",
+        related_name="fablogs",
+        verbose_name=_("fabday"),
+        on_delete=models.PROTECT,
+        help_text=_c(
+            "Fablog",
+            "FabDay of this Fablog")
+        )
+
     machines = models.ManyToManyField(
         "machines.Machine",
         through="MachinesUsed",
@@ -91,13 +102,8 @@ class Fablog(models.Model):
     def __str__(self):
         return self._meta.verbose_name + " " + str(self.id)
 
-    @property
-    def fablog_date(self):
-        fablog_date = _("%(day)s.%(month)s.%(year)s") % {
-            "day": self.created_at.day,
-            "month": self.created_at.month,
-            "year": self.created_at.year}
-        return fablog_date
+    def get_absolute_url(self):
+        return reverse('fablog:detail', args=[str(self.id)])
 
     def total_machines(self):
         machines = self.machinesused_set.all()
@@ -282,3 +288,20 @@ class FablogBookings(models.Model):
     class Meta:
         verbose_name = _('associated Booking')
         verbose_name_plural = _('associated Bookings')
+
+
+class FabDay(models.Model):
+    """ helper model to facilitate views by date"""
+    date = models.DateField(
+        verbose_name=_("FabDay"),
+        help_text=_("A fabulous day of fabbing at the Fablab"))
+
+    class Meta:
+        verbose_name = _('Fabday')
+        verbose_name_plural = _('Fabdays')
+        ordering = ['-date']
+
+    def __str__(self):
+        return _("%(name)s, %(datetime)s") % {
+            "name": self._meta.verbose_name,
+            "datetime": self.date.strftime('%d.%m.%Y')}

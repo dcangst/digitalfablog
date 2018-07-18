@@ -1,3 +1,5 @@
+# base
+from datetime import date
 # django
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, DetailView
@@ -12,27 +14,44 @@ from django.utils.translation import gettext_lazy as _
 from extra_views import UpdateWithInlinesView, NamedFormsetsMixin
 
 # local
-from .models import Fablog, FablogMemberships
-from memberships.models import Membership
+from .models import Fablog, FablogMemberships, FabDay
 from .forms import NewFablogForm, FablogForm, MachinesUsedInline, MaterialsUsedInline, FablogMembershipsInline
 from members.models import User
+from memberships.models import Membership
 
 
 class Home(LoginRequiredMixin, ListView):
-    model = Fablog
-    context_object_name = 'fablogs'
+    model = FabDay
+    context_object_name = 'fabdays'
     template_name = "home.html"
+    paginate_by = 3
 
     def get_queryset(self):
+        # if no fabday for today has been generated, make one
+        FabDay.objects.get_or_create(date=date.today())
         queryset = super(Home, self).get_queryset()
         if not self.request.user.has_perm('fablog.add_fablog'):
-            queryset = queryset.filter(member=self.request.user)
+            queryset = queryset.filter(fablogs__member=self.request.user)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # included_fablogs_dates = [i['created_at'].date() for i in context['fablogs'].values("created_at")]
+        # context["cashcounts"] = CashCount.objects.filter(
+        #     cashier_date__in=included_fablogs_dates).distinct('cashier_date')
+        return context
 
 
 class FablogDetailView(LoginRequiredMixin, DetailView):
     model = Fablog
     template_name = "fablog/fablog_detailview.html"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not self.object.closed_at and request.user.has_perm('fablog.add_fablog'):
+            return redirect('fablog:update', **kwargs)
+        return super(FablogDetailView, self).get(request, *args, **kwargs)
 
 
 class FablogCreateView(PermissionRequiredMixin, CreateView):
@@ -48,6 +67,7 @@ class FablogCreateView(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.created_by = self.request.user
+        self.object.fabday, new = FabDay.objects.get_or_create(date=self.object.created_at)
         self.object.save()
         if not self.object.member.membership_valid():
             # add membership to fablog

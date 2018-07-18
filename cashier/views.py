@@ -18,12 +18,13 @@ from extra_views import CreateWithInlinesView, NamedFormsetsMixin
 # local
 from .models import Booking, FinancialAccount, CashCount, Currency
 from .forms import FablogBookingForm, CashCountForm, CashCountNominalInline
+from fablog.models import FabDay
 
 
 class AccountBookingListView(PermissionRequiredMixin, ListView):
     permission_required = 'cashier.can_view_bookings'
 
-    template_name = "cashier/accountbooking_listview.html"
+    template_name = 'cashier/accountbooking_listview.html'
     context_object_name = 'bookings'
 
     def get_queryset(self):
@@ -39,14 +40,14 @@ class AccountBookingListView(PermissionRequiredMixin, ListView):
 class FablogBookingCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'cashier.add_booking'
 
-    template_name = "fablog/fablog_bookingupdateview.html"
+    template_name = 'fablog/fablog_bookingupdateview.html'
     model = Booking
     form_class = FablogBookingForm
 
     def get_context_data(self, **kwargs):
-        Fablog = apps.get_model("fablog", "Fablog")
+        Fablog = apps.get_model('fablog', 'Fablog')
         fablog = Fablog.objects.get(pk=self.kwargs['pk'])
-        self.initial = {"amount": fablog.dues}
+        self.initial = {'amount': fablog.dues}
         context = super().get_context_data(**kwargs)
         context['fablog'] = fablog
         return context
@@ -54,25 +55,25 @@ class FablogBookingCreateView(PermissionRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         self.object = None
         form = self.get_form()
-        Fablog = apps.get_model("fablog", "Fablog")
+        Fablog = apps.get_model('fablog', 'Fablog')
         fablog = Fablog.objects.get(pk=self.kwargs['pk'])
         form_is_valid = form.is_valid()
         dues = fablog.dues()
-        entered_amount = Decimal(request.POST.get("amount"))
+        entered_amount = Decimal(request.POST.get('amount'))
         self.membership_amount = fablog.total_memberships()
         if entered_amount > dues:
-            if request.POST.get("remainder_as_donation"):
+            if request.POST.get('remainder_as_donation'):
                 self.donation_amount = entered_amount - dues
                 self.payment_amount = dues
             else:
                 form.add_error(
-                    "remainder_as_donation",
+                    'remainder_as_donation',
                     ValidationError(_('Change Amount or check box to convert remainder to a donation!')))
                 form_is_valid = False
         else:
             if self.membership_amount > entered_amount:
                 form.add_error(
-                    "amount",
+                    'amount',
                     ValidationError(_('Membership must be payed in full.')))
                 form_is_valid = False
             else:
@@ -84,13 +85,12 @@ class FablogBookingCreateView(PermissionRequiredMixin, CreateView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        Fablog = apps.get_model("fablog", "Fablog")
+        Fablog = apps.get_model('fablog', 'Fablog')
         fablog = Fablog.objects.get(pk=self.kwargs['pk'])
         if not self.payment_amount == 0:
             # get common models
-            BookingType = apps.get_model("cashier", "BookingType")
-            FablogBookings = apps.get_model("fablog", "FablogBookings")
-
+            BookingType = apps.get_model('cashier', 'BookingType')
+            FablogBookings = apps.get_model('fablog', 'FablogBookings')
             self.object = form.save(commit=False)
             # add financial account
             if self.object.payment_method.to_account:
@@ -110,12 +110,13 @@ class FablogBookingCreateView(PermissionRequiredMixin, CreateView):
             self.object.amount = payment_amount
             # add booking type
             self.object.booking_type, new = BookingType.objects.get_or_create(purpose=0)
-            # save booking
-            self.object.save()
-            # add booking to Fablog
-            FablogBookings.objects.create(
-                fablog=fablog,
-                booking=self.object)
+            # save booking if still > 0 after possible subtraction of membership
+            if self.object.amount > 0:
+                self.object.save()
+                # add booking to Fablog
+                FablogBookings.objects.create(
+                    fablog=fablog,
+                    booking=self.object)
             # add donation if necessary
             if self.donation_amount:
                 donation = self.object
@@ -131,13 +132,18 @@ class FablogBookingCreateView(PermissionRequiredMixin, CreateView):
                 membership_booking.pk = None
                 membership_booking.amount = self.membership_amount
                 membership_booking.booking_type, new = BookingType.objects.get_or_create(purpose=5)
+                print(membership_booking.payment_method.short_name)
+                membership_booking.comment = _('%(name)s payed in %(paymement_method)s') % {
+                    'name': fablog.member.get_full_name(),
+                    'paymement_method': membership_booking.payment_method.short_name
+                }
                 membership_booking.save()
                 # add to fablog
                 FablogBookings.objects.create(
                     fablog=fablog,
                     booking=membership_booking)
                 # add to Member
-                Membership = apps.get_model("members", "Membership")
+                Membership = apps.get_model('members', 'Membership')
                 Membership.objects.create(
                     member=fablog.member,
                     booking=membership_booking,
@@ -162,7 +168,7 @@ class FablogBookingCreateView(PermissionRequiredMixin, CreateView):
 class CashCountCreateView(PermissionRequiredMixin, NamedFormsetsMixin, CreateWithInlinesView):
     permission_required = 'cashier.add_cashcount'
 
-    template_name = "cashier/cashcount_createview.html"
+    template_name = 'cashier/cashcount_createview.html'
     model = CashCount
     form_class = CashCountForm
     inlines = [CashCountNominalInline, ]
@@ -173,7 +179,24 @@ class CashCountCreateView(PermissionRequiredMixin, NamedFormsetsMixin, CreateWit
 
     def get_initial(self):
         self.currency = Currency.objects.get(default_currency=True)
-        self.kwargs.update({"currency": self.currency})
+        self.kwargs.update({'currency': self.currency})
         account = FinancialAccount.objects.get(default_account=True)
-        self.initial = {"currency": self.currency, "financial_account": account}
+        self.initial = {'currency': self.currency, 'financial_account': account}
         return super(CashCountCreateView, self).get_initial()
+
+    def forms_valid(self, form, inlines):
+        '''
+        If the form and formsets are valid, save the associated models.
+        '''
+        self.object = form.save(commit=False)
+        self.object.created_by = self.request.user
+        self.object.fabday, new = FabDay.objects.get_or_create(date=self.object.cashier_date)
+        for formset in inlines:
+            cashnominals = formset.save(commit=False)
+            total = sum([c.total() for c in cashnominals])
+        self.object.total = total
+        self.object.save()
+        for formset in inlines:
+            formset.save()
+
+        return HttpResponseRedirect(self.get_success_url())

@@ -7,6 +7,7 @@ from .models import CashCount, CashCountNominal, CashNominal, Currency, \
 
 
 class CashCountNominalInline(admin.TabularInline):
+    readonly_fields = ("total", )
     model = CashCountNominal
     extra = 1
 
@@ -18,12 +19,13 @@ class BookingInline(admin.TabularInline):
 
 class CashCountInline(admin.TabularInline):
     model = CashCount
+    readonly_fields = ("total", )
     extra = 1
 
 
 class CashCountAdmin(admin.ModelAdmin):
     inlines = (CashCountNominalInline, )
-    readonly_fields = ("total", )
+    readonly_fields = ("total", "created_at")
 
 
 class FinancialAccountAdmin(admin.ModelAdmin):

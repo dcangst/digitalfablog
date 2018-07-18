@@ -25,6 +25,7 @@ class Registration(CreateView):
     def get_success_url(self):
         return reverse('fablog:home')
 
+
 class MemberListView(PermissionRequiredMixin, ListView):
     permission_required = 'members.view_members'
 

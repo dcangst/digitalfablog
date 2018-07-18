@@ -8,22 +8,22 @@ from django.utils.translation import pgettext as _c
 
 
 class FinancialAccount(models.Model):
-    """An object representing an account"""
+    '''An object representing an account'''
     name = models.CharField(
         max_length=20,
         unique=True,
-        verbose_name=_("account name"),
-        help_text=_("Name of the account"))
+        verbose_name=_('account name'),
+        help_text=_('Name of the account'))
     default_account = models.BooleanField(
         default=False,
-        verbose_name=_("default account"),
-        help_text=_("Is this the default account for which bookings should be made?"))
+        verbose_name=_('default account'),
+        help_text=_('Is this the default account for which bookings should be made?'))
 
     class Meta:
         verbose_name = _('Financial Account')
         verbose_name_plural = _('Financial Accounts')
         permissions = (
-            ("view_account", _("Can view account")),)
+            ('view_account', _('Can view account')),)
 
     def __str__(self):
         return self.name
@@ -32,168 +32,196 @@ class FinancialAccount(models.Model):
         # check for default account
         if self.default_account:
             if self._meta.model.objects.filter(default_account=True).exclude(id=self.id).exists():
-                raise ValidationError(_("Only one account can be the default!"))
+                raise ValidationError(_('Only one account can be the default!'))
+
         super(FinancialAccount, self).save(*args, **kwargs)
+
         # create initial booking if necessary
         if not Booking.objects.filter(financial_account=self).exists():
-            booking_type, created = BookingType.objects.get_or_create(purpose=2)
+            booking_type, created = BookingType.objects.get_or_create(purpose=BookingType.STORE)
             payment_method, created = PaymentMethod.objects.get_or_create(
-                short_name="DEF",
-                long_name="default payment method",
+                short_name='DEF',
+                long_name='default payment method',
                 selectable=False)
             Booking.objects.create(
                 booking_type=booking_type,
                 financial_account=self,
                 payment_method=payment_method,
                 amount=0,
-                comment=_("account opening"))
+                comment=_('account opening'))
 
 
 class FinancialAccountBalance(models.Model):
     financial_account = models.ForeignKey(
-        "FinancialAccount",
-        related_name="balances",
+        'FinancialAccount',
+        related_name='balances',
         on_delete=models.PROTECT,
-        verbose_name=_("account"),
+        verbose_name=_('account'),
         help_text=_c(
-            "Cashier",
-            "Associated account"))
-    balance = models.DecimalField(
+            'Cashier',
+            'Associated account'))
+
+    balance_expected = models.DecimalField(
         max_digits=20,
         decimal_places=2,
-        verbose_name=_("balance"),
-        help_text=_("Balance"))
+        verbose_name=_('Balance expected'),
+        help_text=_('Balance expected'))
+
+    balance_true = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name=_('Balance true'),
+        help_text=_('Balance true'))
 
     class Meta:
         verbose_name = _('Account Balance')
         verbose_name_plural = _('Account Balances')
         permissions = (
-            ("view_account_balance", _("Can view account balances")),)
+            ('view_account_balance', _('Can view account balances')),)
 
     def __str__(self):
-        name = _("%(acc_name)s %(name)s %(id)s") % {
-            "acc_name": self.financial_account.name,
-            "name": self._meta.verbose_name,
-            "id": self.id}
+        name = _('%(acc_name)s %(id)s: %(true)s (%(expected)s)') % {
+            'acc_name': self.financial_account.name,
+            'id': self.id,
+            'true': self.balance_true,
+            'expected': self.balance_expected}
         return name
 
 
 class Booking(models.Model):
-    """ A booking to an account """
+    ''' A booking to an account '''
     booking_type = models.ForeignKey(
-        "BookingType",
-        related_name="bookings",
+        'BookingType',
+        related_name='bookings',
         on_delete=models.PROTECT,
-        verbose_name=_("booking type"),
+        verbose_name=_('booking type'),
         help_text=_c(
-            "Cashier",
-            "Type of booking"))
+            'Cashier',
+            'Type of booking'))
     financial_account = models.ForeignKey(
-        "FinancialAccount",
-        related_name="bookings",
+        'FinancialAccount',
+        related_name='bookings',
         on_delete=models.PROTECT,
-        verbose_name=_("account"),
+        verbose_name=_('account'),
         help_text=_c(
-            "Cashier",
-            "Associated account"))
+            'Cashier',
+            'Associated account'))
     payment_method = models.ForeignKey(
-        "PaymentMethod",
-        related_name="bookings",
+        'PaymentMethod',
+        related_name='bookings',
         on_delete=models.PROTECT,
-        verbose_name=_("payment method"),
+        verbose_name=_('payment method'),
         help_text=_c(
-            "Cashier",
-            "payment method"))
+            'Cashier',
+            'payment method'))
     timestamp = models.DateTimeField(
         auto_now_add=True,
-        verbose_name=_("Date & Time"),
+        verbose_name=_('Date & Time'),
         help_text=_c(
-            "Cashier",
-            "Booking date and time"))
+            'Cashier',
+            'Booking date and time'))
     payed_byto = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="bookings_payed_byto",
+        related_name='bookings_payed_byto',
         blank=True,
         null=True,
         on_delete=models.PROTECT,
-        verbose_name=_("Payed by/to"),
+        verbose_name=_('Payed by/to'),
         help_text=_c(
-            "Cashier",
-            "User who payed/got payed"))
+            'Cashier',
+            'User who payed/got payed'))
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="bookings_created_by",
+        related_name='bookings_created_by',
         blank=True,
         null=True,
         on_delete=models.PROTECT,
-        verbose_name=_("Created by"),
+        verbose_name=_('Created by'),
         help_text=_c(
-            "Cashier",
-            "User who created the booking"))
+            'Cashier',
+            'User who created the booking'))
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        verbose_name=_("amount"),
-        help_text=_("Amount of the booking"))
+        verbose_name=_('amount'),
+        help_text=_('Amount of the booking'))
     comment = models.CharField(
         max_length=255,
         blank=True,
-        verbose_name=_("comment"),
+        verbose_name=_('comment'),
         help_text=_c(
-            "Cashier",
-            "Comment on Booking")
+            'Cashier',
+            'Comment on Booking')
         )
 
     balance = models.ForeignKey(
         FinancialAccountBalance,
-        related_name="booking_balance",
+        related_name='booking_balance',
         on_delete=models.PROTECT,
-        verbose_name=_("Balance"),
+        verbose_name=_('Balance'),
         help_text=_c(
-            "Cashier",
-            "Balance after booking"))
+            'Cashier',
+            'Balance after booking'))
 
     class Meta:
         verbose_name = _('Booking')
         verbose_name_plural = _('Bookings')
-        ordering = ["-timestamp", ]
+        ordering = ['-timestamp', ]
         permissions = (
-            ("view_bookings", _("Can view bookings")),)
+            ('view_bookings', _('Can view bookings')),)
 
     def __str__(self):
-        name = _("%(name)s | %(datetime)s") % {
-            "name": self.booking_type.__str__(),
-            "datetime": self.timestamp.strftime('%d.%m.%Y %H:%M')}
+        name = _('%(name)s | %(datetime)s') % {
+            'name': self.booking_type.__str__(),
+            'datetime': self.timestamp.strftime('%d.%m.%Y %H:%M')}
         return name
 
     def save(self, *args, **kwargs):
+        # get previous balance
         if FinancialAccountBalance.objects.filter(financial_account=self.financial_account).exists():
-            last_bal = FinancialAccountBalance.objects.filter(
-                financial_account=self.financial_account).order_by('id').last().balance
+            last_balance = FinancialAccountBalance.objects.filter(
+                financial_account=self.financial_account).order_by('id').last()
+            last_balance_expected = last_balance.balance_expected
+            last_balance_true = last_balance.balance_true
         else:
-            last_bal = 0
-        new_balance = FinancialAccountBalance.objects.create(
-            financial_account=self.financial_account,
-            balance=last_bal + self.amount)
+            last_balance_expected = 0
+            last_balance_true = 0
+
+        # add count if cash_count, else add normal booking
+        if self.booking_type.purpose == BookingType.COUNT:
+            new_balance = FinancialAccountBalance.objects.create(
+                financial_account=self.financial_account,
+                balance_expected=last_balance_expected + 0,
+                balance_true=self.amount)
+        else:
+            new_balance = FinancialAccountBalance.objects.create(
+                financial_account=self.financial_account,
+                balance_expected=last_balance_expected + self.amount,
+                balance_true=last_balance_true)
         self.balance = new_balance
+        self.amount = 0
         super(Booking, self).save(*args, **kwargs)
 
 
 class BookingType(models.Model):
-    """Types of bookings"""
+    '''Types of bookings'''
     FABLOG = 0
     DONATION = 1
     STORE = 2
     EXPENSES = 3
     CORRECTION = 4
     MEMBERSHIP = 5
+    COUNT = 6
     PURPOSE_CHOICES = (
         (FABLOG, _('Fablog')),
         (DONATION, _('Donation')),
         (STORE, _('Store')),
         (EXPENSES, _('Expenses')),
         (CORRECTION, _('Correction')),
-        (MEMBERSHIP, _('Membership'))
+        (MEMBERSHIP, _('Membership')),
+        (COUNT, _('CashCount'))
     )
     purpose = models.PositiveSmallIntegerField(
         choices=PURPOSE_CHOICES,
@@ -202,61 +230,61 @@ class BookingType(models.Model):
     )
     description = models.CharField(
         max_length=250,
-        verbose_name=_("description"),
+        verbose_name=_('description'),
         blank=True,
         help_text=_c(
-            "booking type",
-            "Description of Booking Type")
+            'booking type',
+            'Description of Booking Type')
         )
 
     class Meta:
         verbose_name = _('booking type')
         verbose_name_plural = _('booking types')
         permissions = (
-            ("view_account", _("Can view booking types")),)
+            ('view_account', _('Can view booking types')),)
 
     def __str__(self):
         return self.PURPOSE_CHOICES[self.purpose][1]
 
 
 class PaymentMethod(models.Model):
-    """table for storing different available payment types"""
+    '''table for storing different available payment types'''
     short_name = models.CharField(
         max_length=3,
-        verbose_name=_("short name"),
+        verbose_name=_('short name'),
         help_text=_c(
-            "payment method",
-            "Three letter short name for display.")
+            'payment method',
+            'Three letter short name for display.')
         )
     long_name = models.CharField(
         max_length=50,
-        verbose_name=_("long name"),
+        verbose_name=_('long name'),
         help_text=_c(
-            "payment method",
-            "Long name of payment method")
+            'payment method',
+            'Long name of payment method')
         )
     selectable = models.BooleanField(
         default=True,
-        verbose_name=_("Selectable"),
+        verbose_name=_('Selectable'),
         help_text=_c(
-            "payment method",
-            "Used to restrict Select Widgets in Forms"))
+            'payment method',
+            'Used to restrict Select Widgets in Forms'))
     to_account = models.ForeignKey(
         FinancialAccount,
-        related_name="payment_methods",
+        related_name='payment_methods',
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        verbose_name=_("Booking to account"),
+        verbose_name=_('Booking to account'),
         help_text=_c(
-            "Cashier",
-            "Account for this payment method"))
+            'Cashier',
+            'Account for this payment method'))
 
     class Meta:
         verbose_name = _('payment method')
         verbose_name_plural = _('payment methods')
         permissions = (
-            ("view_payment_methods", _("Can view payment methods")),)
+            ('view_payment_methods', _('Can view payment methods')),)
 
     def __str__(self):
         return self.short_name
@@ -265,129 +293,173 @@ class PaymentMethod(models.Model):
 class CashCount(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="cash_counts",
+        related_name='cash_counts',
         on_delete=models.PROTECT,
-        verbose_name=_("created by"),
+        verbose_name=_('created by'),
         help_text=_c(
-            "Cash",
-            "Labmanager who created the cash account"))
+            'Cash',
+            'Labmanager who created the cash account'))
     created_at = models.DateTimeField(
         auto_now_add=True,
-        verbose_name=_("created at"),
+        verbose_name=_('created at'),
         help_text=_c(
-            "Cash",
-            "Creation date and time"))
-    cashier_date = models.DateTimeField(
+            'Cash',
+            'Creation date and time'))
+    cashier_date = models.DateField(
         default=timezone.now,
-        verbose_name=_("cash account date"),
+        verbose_name=_('cash count date'),
         help_text=_c(
-            "Cash",
-            "Cash account creation date and time"))
+            'Cash',
+            'Cash count date'))
 
     financial_account = models.ForeignKey(
-        "FinancialAccount",
-        related_name="cash_counts",
+        'FinancialAccount',
+        related_name='cash_counts',
         on_delete=models.PROTECT,
-        verbose_name=_("account"),
+        verbose_name=_('account'),
         help_text=_c(
-            "Accounts",
-            "Associated account"))
+            'Accounts',
+            'Associated account'))
 
     cash = models.ManyToManyField(
-        "CashNominal",
-        through="CashCountNominal",
-        verbose_name=_("Cash"))
+        'CashNominal',
+        through='CashCountNominal',
+        verbose_name=_('Cash'))
     currency = models.ForeignKey(
-        "Currency",
-        related_name="cash_counts",
+        'Currency',
+        related_name='cash_counts',
         on_delete=models.PROTECT,
-        verbose_name=_("currency"),
+        verbose_name=_('currency'),
         help_text=_c(
-            "Accounts",
-            "Currency of cash count"))
+            'Accounts',
+            'Currency of cash count'))
+
+    fabday = models.ForeignKey(
+        'fablog.FabDay',
+        related_name='cashcount',
+        verbose_name=_('fabday'),
+        on_delete=models.PROTECT,
+        help_text=_c(
+            'Cashier',
+            'FabDay of this CashCount')
+        )
+    total = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
+        verbose_name=_('total cash'),
+        help_text=_('total cash'))
+
+    booking = models.OneToOneField(
+        "cashier.Booking",
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = _('cash count')
         verbose_name_plural = _('cash counts')
         ordering = ['-cashier_date', '-created_at']
         permissions = (
-            ("view_cash_counts", _("Can view cash counts")),)
+            ('view_cash_counts', _('Can view cash counts')),)
 
     def __str__(self):
-        name = _("%(name)s %(date)s") % {
-            "name": self._meta.verbose_name,
-            "date": self.cashier_date.strftime("%d.%m.%Y")}
+        name = _('%(name)s %(date)s: %(total)s') % {
+            'name': self._meta.verbose_name,
+            'date': self.cashier_date.strftime('%d.%m.%Y'),
+            'total': self.total}
         return name
 
-    def total(self):
-        pass
+    def save(self, *args, **kwargs):
+        # create a booking
+        booking_type, created = BookingType.objects.get_or_create(purpose=BookingType.COUNT)
+        payment_method, created = PaymentMethod.objects.get_or_create(
+            short_name='DEF',
+            long_name='default payment method',
+            selectable=False)
+        self.booking = Booking.objects.create(
+            booking_type=booking_type,
+            financial_account=self.financial_account,
+            payment_method=payment_method,
+            amount=self.total,
+            comment=_('cash count'))
+        super(CashCount, self).save(*args, **kwargs)
 
 
 class Currency(models.Model):
     name = models.CharField(
         max_length=20,
         unique=True,
-        verbose_name=_("currency name"),
-        help_text=_("Name of currency"))
+        verbose_name=_('currency name'),
+        help_text=_('Name of currency'))
     fractional_name = models.CharField(
         max_length=20,
         unique=True,
-        verbose_name=_("fractional currency name"),
-        help_text=_("Name of fractional currency"))
+        verbose_name=_('fractional currency name'),
+        help_text=_('Name of fractional currency'))
     abbreviation = models.CharField(
         max_length=3,
         unique=True,
-        verbose_name=_("currency abbreviation"),
-        help_text=_("Abbreviation of currency"))
+        verbose_name=_('currency abbreviation'),
+        help_text=_('Abbreviation of currency'))
     default_currency = models.BooleanField(
         default=False,
-        verbose_name=_("default currency"),
-        help_text=_("Is this the default currency?"))
+        verbose_name=_('default currency'),
+        help_text=_('Is this the default currency?'))
 
     class Meta:
         verbose_name = _('currency')
         verbose_name_plural = _('currencies')
-        permissions = (("view_currencies", _("Can view currencies")),)
+        permissions = (('view_currencies', _('Can view currencies')),)
 
     def __str__(self):
-        return "{0}: {1}/{2}".format(self.abbreviation, self.name, self.fractional_name)
+        return '{0}: {1}/{2}'.format(self.abbreviation, self.name, self.fractional_name)
 
     def save(self, *args, **kwargs):
         # check for default account
         if self.default_currency:
             if self._meta.model.objects.filter(default_currency=True).exclude(id=self.id).exists():
-                raise ValidationError(_("Only one curreny can be the default!"))
+                raise ValidationError(_('Only one curreny can be the default!'))
         super(Currency, self).save(*args, **kwargs)
 
 
 class CashNominal(models.Model):
-    """Cash Nominals"""
+    '''Cash Nominals'''
+    COIN = 0
+    PAPER = 1
+    CASHNOMINALKIND = (
+        (COIN, _('Coin')),
+        (PAPER, _('Banknote')))
+
     value = models.DecimalField(
         max_digits=7,
         decimal_places=2,
-        verbose_name=_("value"),
-        help_text=_("Value of denomination"))
+        verbose_name=_('value'),
+        help_text=_('Value of denomination'))
+    kind = models.PositiveSmallIntegerField(
+        choices=CASHNOMINALKIND,
+        default=0
+        )
     currency = models.ForeignKey(
         Currency,
-        related_name="nominals",
+        related_name='nominals',
         on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = _('Cash nominal')
         verbose_name_plural = _('Cash nominals')
-        unique_together = (("value", "currency"),)
-        ordering = ["value"]
-        permissions = (("view_cash_nominals", _("Can view cash nominals")),)
+        unique_together = (('value', 'currency'),)
+        ordering = ['value']
+        permissions = (('view_cash_nominals', _('Can view cash nominals')),)
 
     def __str__(self):
         if self.value < 1:
-            return "{0} {1}".format(int(self.value*100), self.currency.fractional_name)
+            return '{0} {1}'.format(int(self.value*100), self.currency.fractional_name)
         else:
-            return "{0} {1}".format(int(self.value), self.currency.name)
+            return '{0} {1}'.format(int(self.value), self.currency.name)
 
 
 class CashCountNominal(models.Model):
-    """Intermediate Table for CashCount -> CashNominal relation"""
+    '''Intermediate Table for CashCount -> CashNominal relation'''
     cash_count = models.ForeignKey(
         CashCount,
         on_delete=models.PROTECT,
@@ -396,12 +468,16 @@ class CashCountNominal(models.Model):
         CashNominal,
         on_delete=models.PROTECT)
     count = models.PositiveSmallIntegerField(
-        verbose_name=_("count"),
-        help_text=_("Count of %(nominal)s") % {
-            "nominal": cash_nominal.name
+        verbose_name=_('count'),
+        help_text=_('Count of %(nominal)s') % {
+            'nominal': cash_nominal.name
         })
 
     class Meta:
         verbose_name = _('Cash count nominal')
         verbose_name_plural = _('Cash count nominals')
-        permissions = (("view_cash_count_nominals", _("Can view cash count nominals")),)
+        permissions = (('view_cash_count_nominals', _('Can view cash count nominals')),)
+
+    def total(self):
+        total = self.count * self.cash_nominal.value
+        return(total)

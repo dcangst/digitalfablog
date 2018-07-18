@@ -15,7 +15,8 @@
         <th>{% trans "Comment" %}</th>
         <th>{% trans "Income" %}</th>
         <th>{% trans "Expenses" %}</th>
-        <th>{% trans "Balance" %}</th>
+        <th>{% trans "Balance expected" %}</th>
+        <th>{% trans "Balance true" %}</th>
       </tr>
     </thead>
     <tbody>
@@ -27,7 +28,8 @@
           <td>{% if booking.comment %}{{booking.comment}}{%endif%}</td>
           <td>{% if booking.amount >= 0 %}{{booking.amount}}{%endif%}</td>
           <td>{% if booking.amount < 0 %}{{booking.amount}}{%endif%}</td>
-          <td>{{booking.balance.balance}}</td>
+          <td>{{booking.balance.balance_expected}}</td>
+          <td>{{booking.balance.balance_true}}</td>
         </tr>
       {% endfor %}
     </tbody>
