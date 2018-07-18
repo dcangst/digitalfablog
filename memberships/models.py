@@ -26,7 +26,7 @@ class Membership(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0)],
         verbose_name=_("price"),
-        help_text=_("price of service"))
+        help_text=_("price of membership"))
 
     def __str__(self):
         return "{0} ({1})".format(self.name, self.price)
