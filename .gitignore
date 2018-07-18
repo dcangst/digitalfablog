@@ -13,7 +13,5 @@ local_settings.py
 media
 assets
 
-
-### sass
-.sass-cache/
-node_modules/
+### env ###
+.env
