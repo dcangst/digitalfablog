@@ -63,24 +63,28 @@ class FablogInlineFormset(BaseInlineFormSet):
 class MachinesUsedInline(InlineFormSet):
     model = MachinesUsed
     formset_class = FablogMachinesUsedInlineFormset
-    extra = 1
-    fields = ("machine", "start_time", "end_time")
-    widgets = {'machine': Select(attrs={'class': "custom-select"})}
+    factory_kwargs = {
+        'extra': 1,
+        'fields': ("machine", "start_time", "end_time"),
+        'widgets': {'machine': Select(attrs={'class': "custom-select"})}}
 
 
 class MaterialsUsedInline(InlineFormSet):
     model = MaterialsUsed
     formset_class = FablogInlineFormset
-    extra = 1
-    fields = '__all__'
-    widgets = {'material': Select(attrs={'class': "custom-select"})}
+    factory_kwargs = {
+        'extra': 1,
+        'fields': '__all__',
+        'widgets': {'material': Select(attrs={'class': "custom-select"})}
+    }
 
 
 class FablogMembershipsInline(InlineFormSet):
     model = FablogMemberships
     formset_class = FablogMembershipInlineFormset
-    extra = 1
-    max_num = 1
-    fields = '__all__'
-    widgets = {'membership': Select(attrs={'class': "custom-select"})}
-    initial = [{'start_date': date(date.today().year, 1, 1), 'end_date': date(date.today().year, 12, 31)}]
+    factory_kwargs = {
+        'extra': 1,
+        'max_num': 1,
+        'fields': '__all__',
+        'widgets': {'membership': Select(attrs={'class': "custom-select"})}
+    }
