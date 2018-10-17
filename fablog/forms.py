@@ -1,6 +1,3 @@
-# base
-from datetime import date
-
 # django
 from django.forms import ModelForm, ModelChoiceField, Select, BaseInlineFormSet
 from django.utils.translation import gettext_lazy as _

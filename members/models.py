@@ -219,4 +219,3 @@ class Membership(models.Model):
     def __str__(self):
         return _("Membership %(year)s") % {
             "year": self.start_date.year}
-

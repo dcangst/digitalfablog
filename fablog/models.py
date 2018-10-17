@@ -1,4 +1,4 @@
-# standard library
+# base
 from datetime import timedelta, date
 from math import ceil
 

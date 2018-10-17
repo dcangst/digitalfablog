@@ -1,4 +1,4 @@
-# standard library
+# base
 from datetime import timedelta
 
 # django
