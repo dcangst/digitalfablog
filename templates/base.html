@@ -30,6 +30,9 @@
         <li class="nav-item{% if 'fablog' in request.path %} active{% endif %}">
           <a class="nav-link" href="{% url 'fablog:home' %}">{% trans "Fablog" %}</a>
         </li>
+        <li class="nav-item{% if 'workshop' in request.path %} active{% endif %}">
+          <a class="nav-link" href="#">{% trans "Workshops" %}</a>
+        </li>
         {% if is_labmanager %}
         <li class="nav-item dropdown{% if 'cashier' in request.path %} active{% endif %}">
           <a class="nav-link dropdown-toggle" id="cashierDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Cashier" %}</a>
