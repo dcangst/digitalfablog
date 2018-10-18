@@ -23,6 +23,7 @@ class Fablog(models.Model):
         help_text=_c(
             "Fablog",
             "Labmanager who created the Fablog"))
+
     created_at = models.DateTimeField(
         default=timezone.now,
         verbose_name=_("created at"),
@@ -40,6 +41,7 @@ class Fablog(models.Model):
         help_text=_c(
             "Fablog",
             "Labmanager who closed the Fablog"))
+
     closed_at = models.DateTimeField(
         null=True,
         blank=True,
@@ -56,16 +58,14 @@ class Fablog(models.Model):
         verbose_name=_("member"),
         help_text=_c(
             "Fablog",
-            "Member")
-        )
+            "Member"))
 
     notes = models.TextField(
         blank=True,
         verbose_name=_("notes"),
         help_text=_c(
             "Fablog",
-            "Notes on the Fablog")
-        )
+            "Notes on the Fablog"))
 
     fabday = models.ForeignKey(
         "FabDay",
@@ -74,21 +74,23 @@ class Fablog(models.Model):
         on_delete=models.PROTECT,
         help_text=_c(
             "Fablog",
-            "FabDay of this Fablog")
-        )
+            "FabDay of this Fablog"))
 
     machines = models.ManyToManyField(
         "machines.Machine",
         through="MachinesUsed",
         verbose_name=_("machines used"))
+
     materials = models.ManyToManyField(
         "materials.Material",
         through="MaterialsUsed",
         verbose_name=_("materials used"))
+
     memberships = models.ManyToManyField(
         "memberships.Membership",
         through="FablogMemberships",
         verbose_name=_("Memberships"))
+
     bookings = models.ManyToManyField(
         "cashier.Booking",
         through="fablogBookings",
@@ -148,19 +150,23 @@ class Fablog(models.Model):
 
 class MachinesUsed(models.Model):
     """machines used in Fablog"""
+
     fablog = models.ForeignKey(
         Fablog,
         on_delete=models.SET_NULL,
         null=True)
+
     machine = models.ForeignKey(
         "machines.Machine",
         on_delete=models.SET_NULL,
         null=True)
+
     start_time = models.DateTimeField(
         verbose_name=_("start time"),
         help_text=_c(
             "Machines used",
             "Machine use start time"))
+
     end_time = models.DateTimeField(
         null=True,
         blank=True,
@@ -211,18 +217,22 @@ class MachinesUsed(models.Model):
 
 class MaterialsUsed(models.Model):
     """materials used in Fablog"""
+
     fablog = models.ForeignKey(
         Fablog,
         on_delete=models.SET_NULL,
         null=True)
+
     material = models.ForeignKey(
         "materials.Material",
         on_delete=models.SET_NULL,
         null=True)
+
     units = models.PositiveSmallIntegerField(
         default=1,
         verbose_name=_("units"),
         help_text=_("Units of Material used"))
+
     price_per_unit = models.DecimalField(
         max_digits=5,
         decimal_places=2,
@@ -246,18 +256,22 @@ class MaterialsUsed(models.Model):
 
 
 class FablogMemberships(models.Model):
+
     fablog = models.ForeignKey(
         Fablog,
         on_delete=models.SET_NULL,
         null=True)
+
     membership = models.ForeignKey(
         "memberships.Membership",
         on_delete=models.SET_NULL,
         null=True)
+
     start_date = models.DateField(
         default=date(date.today().year, 1, 1),
         verbose_name=_("membership start date"),
         help_text=_("First day of membership"))
+
     end_date = models.DateField(
         default=date(date.today().year, 12, 31),
         verbose_name=_("membership end date"),
@@ -277,10 +291,12 @@ class FablogMemberships(models.Model):
 
 
 class FablogBookings(models.Model):
+
     fablog = models.ForeignKey(
         Fablog,
         on_delete=models.SET_NULL,
         null=True)
+
     booking = models.OneToOneField(
         "cashier.Booking",
         on_delete=models.PROTECT)
@@ -292,6 +308,7 @@ class FablogBookings(models.Model):
 
 class FabDay(models.Model):
     """ helper model to facilitate views by date"""
+
     date = models.DateField(
         verbose_name=_("FabDay"),
         help_text=_("A fabulous day of fabbing at the Fablab"))
