@@ -77,18 +77,6 @@ class Fablog(models.Model):
             "FabDay of this Fablog")
         )
 
-    course = models.ForeignKey(
-        "course.Course",
-        related_name="course",
-        verbose_name=_("course"),
-        blank=True,
-        null=True,
-        on_delete=models.PROTECT,
-        help_text=_c(
-            "Course",
-            "Course this fablog belongs too")
-        )
-
     machines = models.ManyToManyField(
         "machines.Machine",
         through="MachinesUsed",
