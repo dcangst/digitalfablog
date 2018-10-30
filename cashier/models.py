@@ -9,7 +9,7 @@ from django.utils.translation import pgettext as _c
 
 class FinancialAccount(models.Model):
     '''An object representing an account'''
-    name = models.CharField(
+    name = models.TextField(
         max_length=20,
         unique=True,
         verbose_name=_('account name'),
@@ -147,7 +147,7 @@ class Booking(models.Model):
         decimal_places=2,
         verbose_name=_('amount'),
         help_text=_('Amount of the booking'))
-    comment = models.CharField(
+    comment = models.TextField(
         max_length=255,
         blank=True,
         verbose_name=_('comment'),
@@ -228,7 +228,7 @@ class BookingType(models.Model):
         unique=True,
         default=0,
     )
-    description = models.CharField(
+    description = models.TextField(
         max_length=250,
         verbose_name=_('description'),
         blank=True,
@@ -249,14 +249,14 @@ class BookingType(models.Model):
 
 class PaymentMethod(models.Model):
     '''table for storing different available payment types'''
-    short_name = models.CharField(
+    short_name = models.TextField(
         max_length=3,
         verbose_name=_('short name'),
         help_text=_c(
             'payment method',
             'Three letter short name for display.')
         )
-    long_name = models.CharField(
+    long_name = models.TextField(
         max_length=50,
         verbose_name=_('long name'),
         help_text=_c(
@@ -386,17 +386,17 @@ class CashCount(models.Model):
 
 
 class Currency(models.Model):
-    name = models.CharField(
+    name = models.TextField(
         max_length=20,
         unique=True,
         verbose_name=_('currency name'),
         help_text=_('Name of currency'))
-    fractional_name = models.CharField(
+    fractional_name = models.TextField(
         max_length=20,
         unique=True,
         verbose_name=_('fractional currency name'),
         help_text=_('Name of fractional currency'))
-    abbreviation = models.CharField(
+    abbreviation = models.TextField(
         max_length=3,
         unique=True,
         verbose_name=_('currency abbreviation'),
