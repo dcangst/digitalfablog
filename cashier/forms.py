@@ -46,9 +46,10 @@ class CashCountForm(ModelForm):
 class CashCountNominalInline(InlineFormSet):
     """ use with additional kwarg "currency", a instance of Currency """
     model = CashCountNominal
-    can_delete = False
-    fields = ("cash_nominal", "count",)
-    widgets = {'cash_nominal': Select(attrs={'class': "custom-select"})}
+    factory_kwargs = {
+        'can_delete': False,
+        'fields': ("cash_nominal", "count",),
+        'widgets': {'cash_nominal': Select(attrs={'class': "custom-select"})}}
 
     def get_factory_kwargs(self):
         kwargs = super(InlineFormSet, self).get_factory_kwargs()
