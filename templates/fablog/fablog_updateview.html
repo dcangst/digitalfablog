@@ -40,8 +40,10 @@
               </div>
             </div>
 
-            <h4 class="mt-3"><a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-machines" role="button" aria-expanded="false" aria-controls="collapseExample">
-            </a>{% trans "Machines" %}</h4>
+            <h4 class="mt-3">
+              <a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-machines" role="button" aria-expanded="false" aria-controls="collapseMachines"></a>
+              {% trans "Machines" %}
+            </h4>
             <div class="collapse show" id="collapse-machines">
             <div class="row">
               <div class="col-md-3 d-none d-md-block"><label class="font-weight-bold">{{machinesFS.0.machine.label}}</label></div>
@@ -61,11 +63,11 @@
                 </div>
                 <div class="col-md-3">
                   <label class="font-weight-bold d-md-none">{{machinesFS.0.start_time.label}}</label>
-                  {% bootstrap_field form.start_time show_label=False show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='btn btn-outline icon ion-ios-clock-outline' type='button'></button>" addon_after_class='input-group-append'%}
+                  {% bootstrap_field form.start_time show_label=False show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='btn btn-outline icon ion-ios-clock-outline' type='button'></button>" addon_after_class=None %}
                 </div>
                 <div class="col-md-3">
                   <label class="font-weight-bold d-md-none">{{machinesFS.0.end_time.label}}</label>
-                  {% bootstrap_field form.end_time show_label=False show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='btn btn-outline icon ion-ios-clock-outline' type='button'></button>" addon_after_class='input-group-append'%}
+                  {% bootstrap_field form.end_time show_label=False show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='btn btn-outline icon ion-ios-clock-outline' type='button'></button>" addon_after_class=None %}
                 </div>
                 <div class="col-md-1">
                   <label class="font-weight-bold d-md-none mr-5">{{ duration }}</label>
@@ -100,8 +102,10 @@
               </div>
             </div>
 
-            <h4 class="mt-3"><a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-materials" role="button" aria-expanded="false" aria-controls="collapseExample">
-            </a>{% trans "Materials" %}</h4>
+            <h4 class="mt-3">
+              <a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-materials" role="button" aria-expanded="false" aria-controls="collapseMaterials"></a>
+            {% trans "Materials" %}
+            </h4>
             <div class="collapse show" id="collapse-materials">
             <div class="row">
               <div class="col-md-3 d-none d-md-block"><label class="font-weight-bold">{{materialsFS.0.material.label}}</label></div>
@@ -151,7 +155,7 @@
               </div>
             </div>
 
-            <h4 class="mt-3"><a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-services" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <h4 class="mt-3"><a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-services" role="button" aria-expanded="false" aria-controls="collapseMembership">
             </a>{% trans "Membership" %}</h4>
             <div class="collapse show" id="collapse-services">
             <div class="row">
@@ -276,7 +280,7 @@
   </script>
   <script type="text/javascript" src={% static "js/dateJs/date.min.js"%}></script>
   <script type="text/javascript">
-    $( "button[name*='now']" ).click(function() {
+    $( 'button[name="now"]' ).click(function() {
       t = new Date()
       $( this ).parent().siblings('input').val(t.toString( "yyyy-MM-dd HH:mm:ss" ))
     })
