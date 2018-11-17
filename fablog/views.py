@@ -170,7 +170,7 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
         return reverse('fablog:home')
 
     def get_close_url(self):
-        return reverse('fablog:booking', args=(self.get_object().id,))
+        return reverse('fablog:payment', args=(self.get_object().id,))
 
     def forms_valid(self, form, inlines):
         """

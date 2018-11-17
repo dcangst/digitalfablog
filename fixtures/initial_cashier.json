@@ -1,78 +1,40 @@
 [
 {
-  "model": "cashier.financialaccount",
+  "model": "cashier.journal",
   "pk": 1,
   "fields": {
-    "name": "Hauptkasse",
+    "number": 1000,
+    "name": "Kasse",
     "default_account": true
   }
 },
 {
-  "model": "cashier.bookingtype",
-  "pk": 1,
-  "fields": {
-    "purpose": 0,
-    "description": ""
-  }
-},
-{
-  "model": "cashier.bookingtype",
+  "model": "cashier.journal",
   "pk": 2,
   "fields": {
-    "purpose": 1,
-    "description": ""
-  }
-},
-{
-  "model": "cashier.bookingtype",
-  "pk": 3,
-  "fields": {
-    "purpose": 2,
-    "description": ""
-  }
-},
-{
-  "model": "cashier.bookingtype",
-  "pk": 4,
-  "fields": {
-    "purpose": 3,
-    "description": ""
-  }
-},
-{
-  "model": "cashier.bookingtype",
-  "pk": 5,
-  "fields": {
-    "purpose": 4,
-    "description": ""
-  }
-},
-{
-  "model": "cashier.bookingtype",
-  "pk": 6,
-  "fields": {
-    "purpose": 5,
-    "description": ""
+    "number": 1020,
+    "name": "PostFinance",
+    "default_account": false
   }
 },
 {
   "model": "cashier.paymentmethod",
   "pk": 1,
   "fields": {
-    "short_name": "EFT",
-    "long_name": "Elektronische Finanztransaktion",
+    "short_name": "EC+",
+    "long_name": "EFT (EC & andere)",
     "selectable": true,
-    "to_account": 2
+    "journal": 2
   }
 },
 {
   "model": "cashier.paymentmethod",
   "pk": 2,
   "fields": {
-    "short_name": "Bar",
-    "long_name": "Bargeld",
+    "short_name": "PC",
+    "long_name": "EFT (PostCard)",
     "selectable": true,
-    "to_account": 1
+    "journal": 2
   }
 },
 {
@@ -82,7 +44,17 @@
     "short_name": "Ueb",
     "long_name": "\u00dcberweisung",
     "selectable": false,
-    "to_account": 2
+    "journal": 2
+  }
+},
+{
+  "model": "cashier.paymentmethod",
+  "pk": 4,
+  "fields": {
+    "short_name": "BAR",
+    "long_name": "Barbezahlung",
+    "selectable": true,
+    "journal": 1
   }
 },
 {
@@ -100,6 +72,7 @@
   "pk": 1,
   "fields": {
     "value": "0.10",
+    "kind": 0,
     "currency": 1
   }
 },
@@ -108,6 +81,7 @@
   "pk": 2,
   "fields": {
     "value": "0.05",
+    "kind": 0,
     "currency": 1
   }
 },
@@ -116,6 +90,7 @@
   "pk": 3,
   "fields": {
     "value": "0.20",
+    "kind": 0,
     "currency": 1
   }
 },
@@ -124,6 +99,7 @@
   "pk": 4,
   "fields": {
     "value": "0.50",
+    "kind": 0,
     "currency": 1
   }
 },
@@ -132,6 +108,7 @@
   "pk": 5,
   "fields": {
     "value": "1.00",
+    "kind": 0,
     "currency": 1
   }
 },
@@ -140,6 +117,7 @@
   "pk": 6,
   "fields": {
     "value": "2.00",
+    "kind": 0,
     "currency": 1
   }
 },
@@ -148,6 +126,7 @@
   "pk": 7,
   "fields": {
     "value": "5.00",
+    "kind": 0,
     "currency": 1
   }
 },
@@ -156,6 +135,7 @@
   "pk": 8,
   "fields": {
     "value": "10.00",
+    "kind": 1,
     "currency": 1
   }
 },
@@ -164,6 +144,7 @@
   "pk": 9,
   "fields": {
     "value": "20.00",
+    "kind": 1,
     "currency": 1
   }
 },
@@ -172,6 +153,7 @@
   "pk": 10,
   "fields": {
     "value": "50.00",
+    "kind": 1,
     "currency": 1
   }
 },
@@ -180,6 +162,7 @@
   "pk": 11,
   "fields": {
     "value": "100.00",
+    "kind": 1,
     "currency": 1
   }
 },
@@ -188,6 +171,7 @@
   "pk": 12,
   "fields": {
     "value": "200.00",
+    "kind": 1,
     "currency": 1
   }
 },
@@ -196,6 +180,7 @@
   "pk": 13,
   "fields": {
     "value": "1000.00",
+    "kind": 1,
     "currency": 1
   }
 }

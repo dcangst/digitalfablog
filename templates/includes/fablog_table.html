@@ -89,13 +89,13 @@
         <b>{{fablog.total}}</b>
       </td>
     </tr>
-    {% for fablogbookings in fablog.fablogbookings_set.all %}
+    {% for fablogpayments in fablog.fablogpayments_set.all %}
         <tr>
           <td colspan="2" align="left">
-            {{ fablogbookings.booking.payment_method.short_name }} {% trans "Payment" %} {{ fablogbookings.booking.timestamp|date:"j.m.Y, H:i" }}
+            {{ fablogpayments.payment }}
           </td>
           <td align="right">
-            {{fablogbookings.booking.amount|mul:-1}}
+            {{fablogpayments.payment.amount|mul:-1}}
           </td>
         </tr>
     {% endfor %}

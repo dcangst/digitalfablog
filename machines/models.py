@@ -35,6 +35,11 @@ class Machine(models.Model):
         validators=[MinValueValidator(0)],
         verbose_name=_("price/unit"),
         help_text=_("price per unit"))
+    account_to = models.TextField(
+        max_length=4,
+        default="3000",
+        verbose_name=_("account to"),
+        help_text=_("account to bill to"))
     status = models.ManyToManyField(
         "Status",
         through="MachineStatus",
