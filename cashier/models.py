@@ -213,7 +213,7 @@ class Payment(models.Model):
     class Meta:
         verbose_name = _('Payment')
         verbose_name_plural = _('Payments')
-        ordering = ['-timestamp', ]
+        ordering = ['-amount', ]
         permissions = (
             ('view_bookings', _('Can view bookings')),)
 
