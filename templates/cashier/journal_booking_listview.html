@@ -5,7 +5,7 @@
 {% load i18n %}
 {% block main-content %}
 <div class="container-fluid pt-3">
-  <h4>{{ financial_account }}</h4>
+  <h4>{{ journal }}</h4>
   <table class="table">
     <thead>
       <tr>
@@ -29,7 +29,7 @@
           <td>{% if booking.amount >= 0 %}{{booking.amount}}{%endif%}</td>
           <td>{% if booking.amount < 0 %}{{booking.amount}}{%endif%}</td>
           <td>{{booking.balance.balance_expected}}</td>
-          <td>{{booking.balance.balance_true}}</td>
+          <td>{{booking.balance.balance_counted}}</td>
         </tr>
       {% endfor %}
     </tbody>

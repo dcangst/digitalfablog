@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 # local
 from .models import User, Membership
-from cashier.models import Booking
+from fablog.models import Fablog
 
 
 class MembershipInline(admin.TabularInline):
@@ -13,14 +13,14 @@ class MembershipInline(admin.TabularInline):
     extra = 1
 
 
-class BookingInline(admin.TabularInline):
-    model = Booking
-    fk_name = "payed_byto"
+class FablogInline(admin.TabularInline):
+    model = Fablog
+    fk_name = "member"
     extra = 1
 
 
 class CustomUserAdmin(UserAdmin):
-    inlines = (MembershipInline, BookingInline)
+    inlines = (MembershipInline, FablogInline)
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

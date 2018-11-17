@@ -31,6 +31,8 @@ class Fablog(models.Model):
             "Fablog",
             "Creation date and time"))
 
+    # this is set to the last labmanager who took a payment. Fablogs are closed in post-save signal
+    # when fablog.dues() is = 0.
     closed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="closed_fablogs",
@@ -91,6 +93,18 @@ class Fablog(models.Model):
         through="FablogMemberships",
         verbose_name=_("Memberships"))
 
+    donation = models.DecimalField(
+        default=0,
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_('donation'),
+        help_text=_('Donation to add to FabLog'))
+
+    payments = models.ManyToManyField(
+        "cashier.Payment",
+        through="fablogPayments",
+        verbose_name=_("Payments"))
+
     bookings = models.ManyToManyField(
         "cashier.Booking",
         through="fablogBookings",
@@ -131,20 +145,28 @@ class Fablog(models.Model):
         return total_membership_costs
     total_memberships.short_description = _("subtotal memberships")
 
-    def total_bookings(self):
-        payments = self.fablogbookings_set.all()
+    def total_payments(self):
+        payments = self.fablogpayments_set.all()
         total_payments = 0
         for payment in payments:
-            total_payments += payment.booking.amount
+            total_payments += payment.payment.amount
         return total_payments
+    total_payments.short_description = _("total payments")
+
+    def total_bookings(self):
+        bookings = self.fablogbookings_set.all()
+        total_bookings = 0
+        for payment in bookings:
+            total_bookings += payment.booking.amount
+        return total_bookings
     total_bookings.short_description = _("total bookings")
 
     def total(self):
-        return self.total_machines() + self.total_materials() + self.total_memberships()
+        return self.total_machines() + self.total_materials() + self.total_memberships() + self.donation
     total.short_description = _("total overall")
 
     def dues(self):
-        return self.total()-self.total_bookings()
+        return self.total()-self.total_payments()
     dues.short_description = _("dues")
 
 
@@ -256,6 +278,7 @@ class MaterialsUsed(models.Model):
 
 
 class FablogMemberships(models.Model):
+    """ intermediate table linking Fablogs and Memberships"""
 
     fablog = models.ForeignKey(
         Fablog,
@@ -290,7 +313,25 @@ class FablogMemberships(models.Model):
         return str(self.membership.name)
 
 
+class FablogPayments(models.Model):
+    """ intermediate table linking Fablogs and Payments"""
+
+    fablog = models.ForeignKey(
+        Fablog,
+        on_delete=models.SET_NULL,
+        null=True)
+
+    payment = models.OneToOneField(
+        "cashier.Payment",
+        on_delete=models.PROTECT)
+
+    class Meta:
+        verbose_name = _('associated Payment')
+        verbose_name_plural = _('associated Payments')
+
+
 class FablogBookings(models.Model):
+    """ intermediate table linking Fablogs and Bookings"""
 
     fablog = models.ForeignKey(
         Fablog,
