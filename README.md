@@ -39,6 +39,12 @@ python manage.py migrate
 echo "from members.models import User; User.objects.create_superuser(email='bruce@wayneindustries.com', first_name='Bruce', last_name='Wayne', street_and_number='Wayne manor', zip_code='1234', city='Gotham', phone = '098934973982', birthday='1939-2-19', password='iamthebatman')" | python manage.py shell
 ```
 
+7. (somewhat optional) load initial data from fixtures
+
+```
+python manage.py loaddata initial_cashier initial_machines initial_materials initial_authgroups initial_memberships
+```
+
 ### Code Style
 
 I use flake8 with linelenght set to 120 (since no one is going to print this)
