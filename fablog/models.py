@@ -10,7 +10,7 @@ from django.core.validators import MinValueValidator
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import pgettext_lazy as _c
+from django.utils.translation import pgettext_lazy
 from django.urls import reverse
 
 
@@ -21,14 +21,14 @@ class Fablog(models.Model):
         related_name="created_fablogs",
         on_delete=models.PROTECT,
         verbose_name=_("Created by"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Fablog",
             "Labmanager who created the Fablog"))
 
     created_at = models.DateTimeField(
         default=timezone.now,
         verbose_name=_("created at"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Fablog",
             "Creation date and time"))
 
@@ -41,7 +41,7 @@ class Fablog(models.Model):
         null=True,
         blank=True,
         verbose_name=_("Closed by"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Fablog",
             "Labmanager who closed the Fablog"))
 
@@ -49,7 +49,7 @@ class Fablog(models.Model):
         null=True,
         blank=True,
         verbose_name=_("closed at"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Fablog",
             "Closure date and time"))
 
@@ -59,14 +59,14 @@ class Fablog(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         verbose_name=_("member"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Fablog",
             "Member"))
 
     notes = models.TextField(
         blank=True,
         verbose_name=_("notes"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Fablog",
             "Notes on the Fablog"))
 
@@ -75,7 +75,7 @@ class Fablog(models.Model):
         related_name="fablogs",
         verbose_name=_("fabday"),
         on_delete=models.PROTECT,
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Fablog",
             "FabDay of this Fablog"))
 
@@ -266,7 +266,7 @@ class MachinesUsed(models.Model):
 
     start_time = models.DateTimeField(
         verbose_name=_("start time"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Machines used",
             "Machine use start time"))
 
@@ -274,7 +274,7 @@ class MachinesUsed(models.Model):
         null=True,
         blank=True,
         verbose_name=_("end time"),
-        help_text=_c(
+        help_text=pgettext_lazy(
             "Machines used",
             "Machine use end time"))
 

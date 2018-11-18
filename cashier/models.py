@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-from django.utils.translation import pgettext as _c
+from django.utils.translation import pgettext
 
 
 class Journal(models.Model):
@@ -47,7 +47,7 @@ class JournalBalance(models.Model):
         related_name='journals',
         on_delete=models.PROTECT,
         verbose_name=_('journal'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'Associated journal'))
 
@@ -93,7 +93,7 @@ class Booking(models.Model):
         choices=BOOKING_TYPE_CHOICES,
         default=0,
         verbose_name=_('booking type'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'type of booking'))
 
@@ -102,7 +102,7 @@ class Booking(models.Model):
         related_name='bookings',
         on_delete=models.PROTECT,
         verbose_name=_('journal'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'Associated journal'))
 
@@ -114,7 +114,7 @@ class Booking(models.Model):
     timestamp = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Date & Time'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'Booking date and time'))
 
@@ -128,7 +128,7 @@ class Booking(models.Model):
         max_length=1000,
         blank=True,
         verbose_name=_('comment'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'Comment on Booking')
         )
@@ -138,7 +138,7 @@ class Booking(models.Model):
         related_name='booking_balance',
         on_delete=models.PROTECT,
         verbose_name=_('Balance'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'Balance after booking'))
 
@@ -196,7 +196,7 @@ class Payment(models.Model):
         related_name='payments',
         on_delete=models.PROTECT,
         verbose_name=_('payment method'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'payment method'))
     amount = models.DecimalField(
@@ -207,7 +207,7 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Date & Time'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'Payment date and time'))
 
@@ -235,21 +235,21 @@ class PaymentMethod(models.Model):
     short_name = models.CharField(
         max_length=3,
         verbose_name=_('short name'),
-        help_text=_c(
+        help_text=pgettext(
             'payment method',
             'Three letter short name for display.')
         )
     long_name = models.CharField(
         max_length=50,
         verbose_name=_('long name'),
-        help_text=_c(
+        help_text=pgettext(
             'payment method',
             'Long name of payment method')
         )
     selectable = models.BooleanField(
         default=True,
         verbose_name=_('Selectable'),
-        help_text=_c(
+        help_text=pgettext(
             'payment method',
             'Used to restrict Select Widgets in Forms'))
     journal = models.ForeignKey(
@@ -259,7 +259,7 @@ class PaymentMethod(models.Model):
         blank=True,
         null=True,
         verbose_name=_('Bookings to journal'),
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'Journal for this payment method'))
 
@@ -287,19 +287,19 @@ class CashCount(models.Model):
         related_name='cash_counts',
         on_delete=models.PROTECT,
         verbose_name=_('created by'),
-        help_text=_c(
+        help_text=pgettext(
             'Cash',
             'Labmanager who created the cash account'))
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('created at'),
-        help_text=_c(
+        help_text=pgettext(
             'Cash',
             'Creation date and time'))
     cashier_date = models.DateField(
         default=timezone.now,
         verbose_name=_('cash count date'),
-        help_text=_c(
+        help_text=pgettext(
             'Cash',
             'Cash count date'))
 
@@ -308,7 +308,7 @@ class CashCount(models.Model):
         related_name='cash_counts',
         on_delete=models.PROTECT,
         verbose_name=_('journal'),
-        help_text=_c(
+        help_text=pgettext(
             'Accounts',
             'Associated journal'))
 
@@ -317,7 +317,7 @@ class CashCount(models.Model):
         related_name='cashcount',
         verbose_name=_('fabday'),
         on_delete=models.PROTECT,
-        help_text=_c(
+        help_text=pgettext(
             'Cashier',
             'FabDay of this CashCount')
         )
