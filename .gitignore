@@ -12,6 +12,10 @@ __pycache__/
 local_settings.py
 media
 assets
+/src/*
+
+### IDE ###
+.vscode
 
 ### env ###
 .env
