@@ -187,14 +187,14 @@ def legitimation_image_path(instance, filename):
 
 
 class Membership(models.Model):
-    """Intermediate table for User Memberships -> Bookings"""
+    """Intermediate table for User Memberships -> Fablog"""
     member = models.ForeignKey(
         User,
         related_name="membership",
         on_delete=models.PROTECT,
         null=True)
-    booking = models.OneToOneField(
-        "cashier.Booking",
+    fablog = models.OneToOneField(
+        "fablog.Fablog",
         on_delete=models.PROTECT,
         null=True)
     start_date = models.DateField(

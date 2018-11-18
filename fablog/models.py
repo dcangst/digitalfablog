@@ -169,6 +169,48 @@ class Fablog(models.Model):
         return self.total()-self.total_payments()
     dues.short_description = _("dues")
 
+    def get_positions(self):
+        positions = list()
+
+        # machines used
+        machines_list = [{
+            'account_to': x.machine.account_to,
+            'amount': x.price(),
+            'comment': _('Usage fee {machine_name}').format(machine_name=x.machine.name)
+            } for x in self.machinesused_set.all()]
+        positions.extend(machines_list)
+
+        # materials used
+        materials_list = [{
+            'account_to': x.material.account_to,
+            'amount': x.price(),
+            'comment': _('Sale of {material_name}').format(material_name=x.material.name)
+            } for x in self.materialsused_set.all()]
+        positions.extend(materials_list)
+
+        # memberships (only one)
+        membership_list = [{
+            'account_to': x.membership.account_to,
+            'amount': x.price(),
+            'comment': _('{full_name} ({membership_type})').format(
+                full_name=self.member.get_full_name(),
+                membership_type=x.membership.get_membership_type_display())
+            } for x in self.fablogmemberships_set.all()]
+        positions.extend(membership_list)
+
+        # donation
+        if self.donation != 0:
+            donation_list = [{
+                'account_to': "3601",
+                'ammount': self.donation,
+                'comment': _('Donation from {first_name} {last_name}').format(
+                    first_name=self.member.first_name,
+                    last_name=self.member.last_name)
+            }]
+            positions.extend(donation_list)
+
+        return positions
+
 
 class MachinesUsed(models.Model):
     """machines used in Fablog"""
@@ -302,7 +344,6 @@ class FablogMemberships(models.Model):
 
     def price(self):
         return self.membership.price
-
     price.short_description = _("price")
 
     class Meta:
