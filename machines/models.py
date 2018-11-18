@@ -11,16 +11,16 @@ from django.utils import timezone
 
 class Machine(models.Model):
     """Machines at the fablab"""
-    name = models.TextField(
+    name = models.CharField(
         max_length=255,
         verbose_name=_("Name"),
         help_text=_("machine name"))
-    abbreviation = models.TextField(
+    abbreviation = models.CharField(
         default="?",
         max_length=5,
         verbose_name=_("Abbreviation"),
         help_text=_("Abbreviation shown in overviews"))
-    color = models.TextField(
+    color = models.CharField(
         max_length=30,
         default="#212529",  # gray 900
         verbose_name=_("Overview color"),
@@ -35,7 +35,7 @@ class Machine(models.Model):
         validators=[MinValueValidator(0)],
         verbose_name=_("price/unit"),
         help_text=_("price per unit"))
-    account_to = models.TextField(
+    account_to = models.CharField(
         max_length=4,
         default="3000",
         verbose_name=_("account to"),
@@ -122,7 +122,8 @@ class Status(models.Model):
         default=0,
         verbose_name=_("severity"),
         help_text=_("severity of status"))
-    name = models.TextField(
+    name = models.CharField(
+        max_length=255,
         verbose_name=_("name"))
 
     class Meta:

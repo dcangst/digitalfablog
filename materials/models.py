@@ -5,11 +5,11 @@ from django.utils.translation import gettext_lazy as _
 
 class Material(models.Model):
     """ Materials """
-    name = models.TextField(
+    name = models.CharField(
         max_length=50,
         verbose_name=_("name"),
         help_text=_("name of material"))
-    account_to = models.TextField(
+    account_to = models.CharField(
         max_length=4,
         default="3000",
         verbose_name=_("account to"),
