@@ -1,0 +1,47 @@
+version: '3.6'
+
+services: 
+  fablog:
+    build: fablog
+    ports:
+      - '3000:80'
+    environment: 
+      - SECRET_KEY=yourownpersonalsupersecretkey
+      - DEBUG=True
+      - ALLOWED_HOSTS=.localhost,127.0.0.1
+      - DATABASE_URL=postgres://postgres:fablog@db:5432/postgres
+    networks: 
+      - web
+    volumes: 
+      - ../:/usr/src/app
+    depends_on: 
+      - 'db'
+    working_dir: '/usr/src/app/'
+    entrypoint: 
+      - python
+      - manage.py
+      - runserver
+      - 0.0.0.0:80
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD:fablog
+    networks: 
+      - web
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+
+    ports:
+      - 3001:8080
+    networks: 
+      - web
+
+networks:
+  web:
+
+volumes: 
+  db-data:
