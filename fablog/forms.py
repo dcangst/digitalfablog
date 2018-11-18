@@ -93,13 +93,17 @@ class FablogMembershipsInline(InlineFormSetFactory):
     }
 
     def get_initial(self):
-        end_date_previous = self.object.member.membership.first().end_date
-        # set start date to the next day after expiry
-        start_date = end_date_previous + timedelta(days=1)
-        # set end_date to the same date the next year (sorry for the leap year folks ;))
-        end_date = end_date_previous.replace(year=end_date_previous.year + 1)
-        self.initial = [{
-            'start_date': start_date,
-            'end_date': end_date
-            }]
+        if self.object.member.membership.exists():
+            end_date_previous = self.object.member.membership.first().end_date
+            # set start date to the next day after expiry
+            start_date = end_date_previous + timedelta(days=1)
+            # set end_date to the same date the next year (sorry for the leap year folks ;))
+            end_date = end_date_previous.replace(year=end_date_previous.year + 1)
+            self.initial = [{
+                'start_date': start_date,
+                'end_date': end_date
+                }]
+        else:
+            # use model defaults
+            self.initial = []
         return self.initial

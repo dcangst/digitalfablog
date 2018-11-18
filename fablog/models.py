@@ -1,5 +1,6 @@
 # base
 from datetime import timedelta, date
+from decimal import Decimal
 from math import ceil
 
 # Django
@@ -193,14 +194,47 @@ class Fablog(models.Model):
             } for x in self.materialsused_set.all()]
         positions.extend(materials_list)
 
-        # memberships (only one)
-        membership_list = [{
-            'account_to': x.membership.account_to,
-            'amount': x.price(),
-            'comment': _('{full_name} ({membership_type})').format(
-                full_name=self.member.get_full_name(),
-                membership_type=x.membership.get_membership_type_display())
-            } for x in self.fablogmemberships_set.all()]
+        # memberships (should only ever be one, but theoretically possible to have more)
+        membership_list = []
+        for m in self.fablogmemberships_set.all():
+            if m.end_date.year > m.start_date.year:
+                length_total = m.end_date - m.start_date
+                length_thisperiod = date(year=m.start_date.year, month=12,day=31) - m.start_date
+                price_thisperiod = round(Decimal(length_thisperiod / length_total) * m.price(), 0)
+                price_nextperiod = m.price()-price_thisperiod
+                # add position for this period
+                membership_list.append({
+                    'account_to': m.membership.account_to_currentperiod,
+                    'amount': price_thisperiod,
+                    'comment': _('{full_name} {start} - {end} ({membership_type})').format(
+                        full_name=self.member.get_full_name(),
+                        start=m.start_date,
+                        end=date(year=m.start_date.year, month=12, day=31),
+                        membership_type=m.membership.get_membership_type_display())
+                        }
+                    )
+                # add position for next period
+                membership_list.append({
+                    'account_to': m.membership.account_to_nextperiod,
+                    'amount': price_nextperiod,
+                    'comment': _('{full_name} {start} - {end} ({membership_type})').format(
+                        full_name=self.member.get_full_name(),
+                        start=date(year=m.end_date.year, month=1, day=1),
+                        end=m.end_date,
+                        membership_type=m.membership.get_membership_type_display())
+                        }
+                    )
+            else:
+                membership_list.append({
+                    'account_to': m.membership.account_to_thisperiod,
+                    'amount': m.price(),
+                    'comment': _('{full_name} {start} - {end} ({membership_type})').format(
+                        full_name=self.member.get_full_name(),
+                        start=m.start_date,
+                        end=m.end_date,
+                        membership_type=m.membership.get_membership_type_display())
+                        }
+                    )
         positions.extend(membership_list)
 
         # donation
