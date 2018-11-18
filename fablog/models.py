@@ -333,12 +333,12 @@ class FablogMemberships(models.Model):
         null=True)
 
     start_date = models.DateField(
-        default=date(date.today().year, 1, 1),
+        default=date.today,
         verbose_name=_("membership start date"),
         help_text=_("First day of membership"))
 
     end_date = models.DateField(
-        default=date(date.today().year, 12, 31),
+        default=date.today().replace(year = date.today().year + 1),
         verbose_name=_("membership end date"),
         help_text=_("Last day of membership"))
 
