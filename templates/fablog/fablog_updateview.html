@@ -217,16 +217,32 @@
             <hr>
             <div class="row">
               <div class="col-md-10 text-md-right">
-                <b>{% trans "Total" %}</b>
+                <b>{% trans "Total Fablog" %}</b>
               </div>
               <div class="col-md-1">
                 {{fablog.total}}
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-10 text-md-right">
+                <b>{% trans "Total Payments" %}</b>
+              </div>
+              <div class="col-md-1">
+                -{{fablog.total_payments}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-10 text-md-right">
+                <b>{% trans "Total" %}</b>
+              </div>
+              <div class="col-md-1">
+                {{fablog.dues}}
+              </div>
+            </div>
           </div>
           <div class="card-footer text-muted">
             <button class="btn btn-primary" type="submit" name = "save">{% trans "Save" %}</button>
-            <button class="btn btn-warning" type="submit" name = "close">{% trans "Close Fablog" %}</button>
+            <button class="btn btn-warning" type="submit" name = "close">{% trans "Pay" %}</button>
           </div>
         </form>
       </div>
