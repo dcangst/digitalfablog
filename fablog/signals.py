@@ -33,20 +33,20 @@ def make_fablog_bookings(sender, instance, **kwargs):
                     new_booking = Booking.objects.create(
                         booking_type=Booking.BOOKING,
                         journal=payment.payment_method.journal,
-                        account=positions[-1]['account_to'],
+                        account=positions[-1]['contra_account'],
                         amount=positions[-1]['amount'],
-                        comment=positions[-1]['comment'])
+                        text=positions[-1]['text'])
                     new_bookings.append(new_booking)
                     amount = amount - positions[-1]['amount']
                     positions.pop()
                 elif amount < positions[-1]['amount']:
-                    positions[-1]['comment'] += " (part)"
+                    positions[-1]['text'] += " (part)"
                     new_booking = Booking.objects.create(
                         booking_type=Booking.BOOKING,
                         journal=payment.payment_method.journal,
-                        account=positions[-1]['account_to'],
+                        account=positions[-1]['contra_account'],
                         amount=amount,
-                        comment=positions[-1]['comment'])
+                        text=positions[-1]['text'])
                     new_bookings.append(new_booking)
                     positions[-1]['amount'] = positions[-1]['amount'] - amount
 

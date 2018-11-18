@@ -14,6 +14,6 @@ def make_cashcount_bookings(sender, instance, **kwargs):
         journal=instance.journal,
         account=instance.journal.number,
         amount=instance.total,
-        comment=instance.__str__())
+        text=instance.__str__())
 
     CashCount.objects.filter(pk=instance.pk).update(booking=newbooking)

@@ -35,7 +35,7 @@ class Machine(models.Model):
         validators=[MinValueValidator(0)],
         verbose_name=_("price/unit"),
         help_text=_("price per unit"))
-    account_to = models.CharField(
+    contra_account = models.CharField(
         max_length=4,
         default="3000",
         verbose_name=_("account to"),

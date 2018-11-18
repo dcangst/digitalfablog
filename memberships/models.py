@@ -27,12 +27,12 @@ class Membership(models.Model):
         validators=[MinValueValidator(0)],
         verbose_name=_("price"),
         help_text=_("price of membership"))
-    account_to_currentperiod = models.CharField(
+    contra_account_currentperiod = models.CharField(
         max_length=4,
         default="3401",
         verbose_name=_("account to"),
         help_text=_("account to bill to"))
-    account_to_nextperiod = models.CharField(
+    contra_account_nextperiod = models.CharField(
         max_length=4,
         default="2302",
         verbose_name=_("account to"),

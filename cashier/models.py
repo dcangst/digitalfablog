@@ -108,7 +108,7 @@ class Booking(models.Model):
 
     account = models.CharField(
         max_length=4,
-        verbose_name=_("account"),
+        verbose_name=_("contra account"),
         help_text=_("account to make the booking to/from"))
 
     timestamp = models.DateTimeField(
@@ -124,13 +124,13 @@ class Booking(models.Model):
         verbose_name=_('amount'),
         help_text=_('Amount of the booking'))
 
-    comment = models.CharField(
+    text = models.CharField(
         max_length=1000,
         blank=True,
-        verbose_name=_('comment'),
+        verbose_name=_('booking text'),
         help_text=pgettext(
             'Cashier',
-            'Comment on Booking')
+            'Text of Booking')
         )
 
     balance = models.ForeignKey(

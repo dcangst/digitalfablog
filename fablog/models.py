@@ -180,17 +180,17 @@ class Fablog(models.Model):
 
         # machines used
         machines_list = [{
-            'account_to': x.machine.account_to,
+            'contra_account': x.machine.contra_account,
             'amount': x.price(),
-            'comment': _('Usage fee {machine_name}').format(machine_name=x.machine.name)
+            'text': _('Usage fee {machine_name}').format(machine_name=x.machine.name)
             } for x in self.machinesused_set.all()]
         positions.extend(machines_list)
 
         # materials used
         materials_list = [{
-            'account_to': x.material.account_to,
+            'contra_account': x.material.contra_account,
             'amount': x.price(),
-            'comment': _('Sale of {material_name}').format(material_name=x.material.name)
+            'text': _('Sale of {material_name}').format(material_name=x.material.name)
             } for x in self.materialsused_set.all()]
         positions.extend(materials_list)
 
@@ -204,31 +204,31 @@ class Fablog(models.Model):
                 price_nextperiod = m.price()-price_thisperiod
                 # add position for this period
                 membership_list.append({
-                    'account_to': m.membership.account_to_currentperiod,
+                    'contra_account': m.membership.contra_account_currentperiod,
                     'amount': price_thisperiod,
-                    'comment': _('{full_name} {start} - {end} ({membership_type})').format(
+                    'text': _('{full_name} {start} - {end}').format(
                         full_name=self.member.get_full_name(),
-                        start=m.start_date,
-                        end=date(year=m.start_date.year, month=12, day=31),
+                        start=m.start_date.strftime('%d.%m.%Y'),
+                        end=date(year=m.start_date.year, month=12, day=31).strftime('%d.%m.%Y'),
                         membership_type=m.membership.get_membership_type_display())
                         }
                     )
                 # add position for next period
                 membership_list.append({
-                    'account_to': m.membership.account_to_nextperiod,
+                    'contra_account': m.membership.contra_account_nextperiod,
                     'amount': price_nextperiod,
-                    'comment': _('{full_name} {start} - {end} ({membership_type})').format(
+                    'text': _('{full_name} {start} - {end}').format(
                         full_name=self.member.get_full_name(),
-                        start=date(year=m.end_date.year, month=1, day=1),
-                        end=m.end_date,
+                        start=date(year=m.end_date.year, month=1, day=1).strftime('%d.%m.%Y'),
+                        end=m.end_date.strftime('%d.%m.%Y'),
                         membership_type=m.membership.get_membership_type_display())
                         }
                     )
             else:
                 membership_list.append({
-                    'account_to': m.membership.account_to_thisperiod,
+                    'contra_account': m.membership.contra_account_thisperiod,
                     'amount': m.price(),
-                    'comment': _('{full_name} {start} - {end} ({membership_type})').format(
+                    'text': _('{full_name} {start} - {end} ({membership_type})').format(
                         full_name=self.member.get_full_name(),
                         start=m.start_date,
                         end=m.end_date,
@@ -240,9 +240,9 @@ class Fablog(models.Model):
         # donation
         if self.donation != 0:
             donation_list = [{
-                'account_to': "3601",
+                'contra_account': "3601",
                 'ammount': self.donation,
-                'comment': _('Donation from {first_name} {last_name}').format(
+                'text': _('Donation from {first_name} {last_name}').format(
                     first_name=self.member.first_name,
                     last_name=self.member.last_name)
             }]

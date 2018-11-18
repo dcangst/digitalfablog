@@ -12,7 +12,8 @@
         <th>#</th>
         <th>{% trans "Date" %}</th>
         <th>{% trans "Type" %}</th>
-        <th>{% trans "Comment" %}</th>
+        <th>{% trans "Contra account" %}</th>
+        <th>{% trans "Booking text" %}</th>
         <th>{% trans "Income" %}</th>
         <th>{% trans "Expenses" %}</th>
         <th>{% trans "Balance expected" %}</th>
@@ -24,8 +25,9 @@
         <tr>
           <td>{{booking.id}}</td>
           <td>{{booking.timestamp}}</td>
-          <td>{{booking.booking_type}}</td>
-          <td>{% if booking.comment %}{{booking.comment}}{%endif%}</td>
+          <td>{{booking.get_booking_type_display}}</td>
+          <td>{{booking.account}}</td>
+          <td>{% if booking.text %}{{booking.text}}{%endif%}</td>
           <td>{% if booking.amount >= 0 %}{{booking.amount}}{%endif%}</td>
           <td>{% if booking.amount < 0 %}{{booking.amount}}{%endif%}</td>
           <td>{{booking.balance.balance_expected}}</td>
