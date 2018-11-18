@@ -78,23 +78,7 @@ class FablogCreateView(PermissionRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        members = User.members.all()
-        members_list = []
-        for m in members:
-            if m.has_payed:
-                status_class = "text-sucess"
-                status = "expires " + date_format(m.end_date)
-            else:
-                status_class = "text-danger"
-                if m.end_date:
-                    status = "expired " + date_format(m.end_date)
-                else:
-                    status = _("new")
-            members_list.append({
-                'pk': m.pk,
-                'label': m.get_full_name(),
-                'status': status,
-                'status_class': status_class})
+        members_list = User.members.get_members_list()
         context['members_list'] = members_list
         return context
 
@@ -147,22 +131,7 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         members = User.members.all()
-        members_list = []
-        for m in members:
-            if m.has_payed:
-                status_class = "text-sucess"
-                status = "expires " + date_format(m.end_date)
-            else:
-                status_class = "text-danger"
-                if m.end_date:
-                    status = "expired " + date_format(m.end_date)
-                else:
-                    status = _("new")
-            members_list.append({
-                'pk': m.pk,
-                'label': m.get_full_name(),
-                'status': status,
-                'status_class': status_class})
+        members_list = User.members.get_members_list()
         context['members_list'] = members_list
         return context
 

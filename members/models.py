@@ -6,6 +6,7 @@ from os import path
 from django.db import models
 from django.db.models import Q, When, Case, Value, Max
 from django.utils import timezone
+from django.utils.formats import date_format
 from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
@@ -78,6 +79,26 @@ class MemberUserManager(models.Manager):
                 output_field=models.BooleanField()),
             end_date=Max('membership__end_date'))
         return queryset.order_by('-has_payed')
+
+    def get_members_list(self):
+        members = self.all()
+        members_list = []
+        for m in members:
+            if m.has_payed:
+                status_class = "text-sucess"
+                status = _("expires {date}").format(date = date_format(m.end_date))
+            else:
+                status_class = "text-danger"
+                if m.end_date:
+                    status = _("expired {date}").format(date = date_format(m.end_date))
+                else:
+                    status = _("new")
+            members_list.append({
+                'pk': m.pk,
+                'label': m.get_full_name(),
+                'status': status,
+                'status_class': status_class})
+        return(members_list)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
