@@ -108,7 +108,7 @@ class Booking(models.Model):
     account = models.TextField(
         max_length=4,
         verbose_name=_("account"),
-        help_text=_("account"))
+        help_text=_("account to make the booking to/from"))
 
     timestamp = models.DateTimeField(
         auto_now_add=True,
