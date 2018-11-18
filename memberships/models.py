@@ -12,7 +12,7 @@ class Membership(models.Model):
         (MEMBERSHIP, _('Membership')),
         (MEMBERSHIP_REDUCED, _('Membership (Reduced price)')),
     )
-    name = models.TextField(
+    name = models.CharField(
         max_length=50,
         verbose_name=_("name"))
     membership_type = models.PositiveSmallIntegerField(
@@ -27,9 +27,14 @@ class Membership(models.Model):
         validators=[MinValueValidator(0)],
         verbose_name=_("price"),
         help_text=_("price of membership"))
-    account_to = models.TextField(
+    account_to_currentperiod = models.CharField(
         max_length=4,
         default="3401",
+        verbose_name=_("account to"),
+        help_text=_("account to bill to"))
+    account_to_nextperiod = models.CharField(
+        max_length=4,
+        default="2302",
         verbose_name=_("account to"),
         help_text=_("account to bill to"))
 

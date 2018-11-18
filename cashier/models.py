@@ -1,4 +1,4 @@
-# Django
+# django
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
@@ -13,7 +13,8 @@ class Journal(models.Model):
         unique=True,
         verbose_name=_('journal account number'),
         help_text=_('Account number associated with this journal'))
-    name = models.TextField(
+    name = models.CharField(
+        max_length=255,
         verbose_name=_('journal name'),
         help_text=_('Name of the journal'))
 
@@ -105,7 +106,7 @@ class Booking(models.Model):
             'Cashier',
             'Associated journal'))
 
-    account = models.TextField(
+    account = models.CharField(
         max_length=4,
         verbose_name=_("account"),
         help_text=_("account to make the booking to/from"))
@@ -123,8 +124,8 @@ class Booking(models.Model):
         verbose_name=_('amount'),
         help_text=_('Amount of the booking'))
 
-    comment = models.TextField(
-        max_length=255,
+    comment = models.CharField(
+        max_length=1000,
         blank=True,
         verbose_name=_('comment'),
         help_text=_c(
@@ -231,14 +232,14 @@ class Payment(models.Model):
 
 class PaymentMethod(models.Model):
     '''table for storing different available payment types'''
-    short_name = models.TextField(
+    short_name = models.CharField(
         max_length=3,
         verbose_name=_('short name'),
         help_text=_c(
             'payment method',
             'Three letter short name for display.')
         )
-    long_name = models.TextField(
+    long_name = models.CharField(
         max_length=50,
         verbose_name=_('long name'),
         help_text=_c(

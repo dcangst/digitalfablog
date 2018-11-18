@@ -1,9 +1,12 @@
+# base
+from datetime import timedelta
+
 # django
 from django.forms import ModelForm, ModelChoiceField, Select, BaseInlineFormSet
 from django.utils.translation import gettext_lazy as _
 
 # additional
-from extra_views import InlineFormSet
+from extra_views import InlineFormSetFactory
 
 # local
 from .models import Fablog, MachinesUsed, MaterialsUsed, FablogMemberships
@@ -60,7 +63,7 @@ class FablogInlineFormset(BaseInlineFormSet):
         return True
 
 
-class MachinesUsedInline(InlineFormSet):
+class MachinesUsedInline(InlineFormSetFactory):
     model = MachinesUsed
     formset_class = FablogMachinesUsedInlineFormset
     factory_kwargs = {
@@ -69,7 +72,7 @@ class MachinesUsedInline(InlineFormSet):
         'widgets': {'machine': Select(attrs={'class': "custom-select"})}}
 
 
-class MaterialsUsedInline(InlineFormSet):
+class MaterialsUsedInline(InlineFormSetFactory):
     model = MaterialsUsed
     formset_class = FablogInlineFormset
     factory_kwargs = {
@@ -79,7 +82,7 @@ class MaterialsUsedInline(InlineFormSet):
     }
 
 
-class FablogMembershipsInline(InlineFormSet):
+class FablogMembershipsInline(InlineFormSetFactory):
     model = FablogMemberships
     formset_class = FablogMembershipInlineFormset
     factory_kwargs = {
@@ -88,3 +91,19 @@ class FablogMembershipsInline(InlineFormSet):
         'fields': '__all__',
         'widgets': {'membership': Select(attrs={'class': "custom-select"})}
     }
+
+    def get_initial(self):
+        if self.object.member.membership.exists():
+            end_date_previous = self.object.member.membership.first().end_date
+            # set start date to the next day after expiry
+            start_date = end_date_previous + timedelta(days=1)
+            # set end_date to the same date the next year (sorry for the leap year folks ;))
+            end_date = end_date_previous.replace(year=end_date_previous.year + 1)
+            self.initial = [{
+                'start_date': start_date,
+                'end_date': end_date
+                }]
+        else:
+            # use model defaults
+            self.initial = []
+        return self.initial
