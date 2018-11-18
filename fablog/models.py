@@ -170,6 +170,11 @@ class Fablog(models.Model):
     dues.short_description = _("dues")
 
     def get_positions(self):
+        """
+        Get all positions in the fablog and return as a list.
+        splits membership position according to year into multiple positions to allow for booking to
+        different financial years
+        """
         positions = list()
 
         # machines used
