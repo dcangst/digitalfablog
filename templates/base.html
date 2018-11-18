@@ -75,7 +75,9 @@
 
     <div class="alert alert-danger m-3 d-print-none" role="alert">
       <h4 class="alert-heading">Dev Infos</h4>
-      {{ view }}
+      {% get_current_language as LANGUAGE_CODE %}
+      <p>{{ view }}</p>
+      <p>{{ LANGUAGE_CODE }}</p>
     </div>
     
   </main>

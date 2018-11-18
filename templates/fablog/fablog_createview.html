@@ -17,7 +17,7 @@
               <div class="col-lg-6">
                  {% bootstrap_field form.created_at show_label=True show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='btn btn-outline icon ion-ios-clock-outline' type='button'></button>" addon_after_class='input-group-append'%}
                 <div class="form-group">
-                  <label for="id_member">Member</label>
+                  <label for="id_member">{% trans "Member" %}</label>
                   <select name="member"
                     class="form-control custom-select"
                     title="" required="" id="id_member"

@@ -6,365 +6,248 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.5.0\n"
-"Report-Msgid-Bugs-To: dcangst@gmail.com\n"
-"POT-Creation-Date: 2018-07-18 21:05+0200\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-11-18 21:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Daniel Angst <dangst@gmail.com>\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: De\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: cashier/forms.py:15
+#: cashier/forms.py:12
 msgid "Add remainder as a donation"
-msgstr "Rest als Spende hinzufügen"
+msgstr "Restbetrag als Spende hinzufügen"
 
-#: cashier/forms.py:16
+#: cashier/forms.py:13
 msgid "Check to automatically add the remainder as a donation"
 msgstr "Auswählen um den Restbetrag automatisch als Spende hinzuzufügen"
 
-#: cashier/forms.py:21 cashier/models.py:115 cashier/models.py:284
+#: cashier/forms.py:18 cashier/models.py:198 cashier/models.py:267
 msgid "payment method"
 msgstr "Zahlungsmethode"
 
-#: cashier/models.py:15
-msgid "account name"
-msgstr "Kontoname"
+#: cashier/models.py:14
+msgid "journal account number"
+msgstr "Kassenname"
 
-#: cashier/models.py:16
-msgid "Name of the account"
-msgstr "Name des Kontos"
+#: cashier/models.py:15
+msgid "Account number associated with this journal"
+msgstr "Konto zu diesem Kassenbuch"
+
+#: cashier/models.py:18
+msgid "journal name"
+msgstr "Kassenname"
 
 #: cashier/models.py:19
-msgid "default account"
-msgstr "Standardkonto"
-
-#: cashier/models.py:20
-msgid "Is this the default account for which bookings should be made?"
-msgstr "Ist das das Standardkonto für welches Buchungen gemacht werden sollen?"
+msgid "Name of the journal"
+msgstr "Name des Kassenbuches"
 
 #: cashier/models.py:23
-msgid "Financial Account"
-msgstr "Konto"
+msgid "default journal"
+msgstr "Standardkassenbuch"
 
 #: cashier/models.py:24
-msgid "Financial Accounts"
-msgstr "Kontos"
+msgid "Is this the default journal for which cash counts should be recorded?"
+msgstr ""
+"Ist das das Standardkassenbuch für welches Buchungen gemacht werden sollen?"
 
-#: cashier/models.py:26
-msgid "Can view account"
-msgstr "Kann Konto einsehen"
+#: cashier/models.py:27
+msgid "Journal"
+msgstr "Kassenbuch"
 
-#: cashier/models.py:35
+#: cashier/models.py:28
+msgid "Journals"
+msgstr "Kassenbücher"
+
+#: cashier/models.py:31
+#, python-format
+msgid "%(number)s %(name)s"
+msgstr "%(number)s %(name)s"
+
+#: cashier/models.py:40
 msgid "Only one account can be the default!"
-msgstr "Nur ein Konto kann als Standardkonto gesetzt werden"
+msgstr "Nur ein Kassenbuch kann als Standardkassenbuch gesetzt werden"
 
-#: cashier/models.py:51
-msgid "account opening"
-msgstr "Kontoeröffnung"
+#: cashier/models.py:49 cashier/models.py:104 cashier/models.py:310
+msgid "journal"
+msgstr "Kassenbuch"
 
-#: cashier/models.py:59 cashier/models.py:107 cashier/models.py:319
-msgid "account"
-msgstr "Konto"
-
-#: cashier/models.py:67 cashier/models.py:68
-#: templates/cashier/accountbooking_listview.html:18
+#: cashier/models.py:57 cashier/models.py:58
+#: templates/cashier/journal_booking_listview.html:18
 msgid "Balance expected"
 msgstr "Soll"
 
-#: cashier/models.py:75 cashier/models.py:76
-#: templates/cashier/accountbooking_listview.html:19
+#: cashier/models.py:65 cashier/models.py:66
+#: templates/cashier/journal_booking_listview.html:19
 msgid "Balance true"
 msgstr "Ist"
 
-#: cashier/models.py:79
-msgid "Account Balance"
-msgstr "Kontostand"
+#: cashier/models.py:69
+msgid "Journal Balance"
+msgstr "Stand"
 
-#: cashier/models.py:80
-msgid "Account Balances"
-msgstr "Kontostände"
+#: cashier/models.py:70
+msgid "Journal Balances"
+msgstr "Stände"
 
-#: cashier/models.py:82
-msgid "Can view account balances"
-msgstr "Kann Kontostände einsehen"
+#: cashier/models.py:72
+msgid "Can view journal balances"
+msgstr "Kann Kassenbuch Stände einsehen"
 
-#: cashier/models.py:85
+#: cashier/models.py:75
 #, python-format
 msgid "%(acc_name)s %(id)s: %(true)s (%(expected)s)"
 msgstr "%(acc_name)s %(id)s: %(true)s (%(expected)s)"
 
-#: cashier/models.py:99 cashier/models.py:241
-msgid "booking type"
-msgstr "Buchungstyp"
-
-#: cashier/models.py:121
-msgid "Date & Time"
-msgstr "Zeit und Datum"
-
-#: cashier/models.py:131
-msgid "Payed by/to"
-msgstr "Bezahlt von/an"
-
-#: cashier/models.py:141 fablog/models.py:22
-msgid "Created by"
-msgstr "erstellt von"
-
-#: cashier/models.py:148
-msgid "amount"
-msgstr "Betrag"
-
-#: cashier/models.py:149
-msgid "Amount of the booking"
-msgstr "Betrag der Buchung"
-
-#: cashier/models.py:153
-msgid "comment"
-msgstr "Kommentar"
-
-#: cashier/models.py:163
-msgid "Balance"
-msgstr "Kontostand"
-
-#: cashier/models.py:169
+#: cashier/models.py:88 cashier/models.py:146
 msgid "Booking"
 msgstr "Buchung"
 
-#: cashier/models.py:170 fablog/models.py:95
+#: cashier/models.py:89
+msgid "Count"
+msgstr "Anzahl"
+
+#: cashier/models.py:95
+msgid "booking type"
+msgstr "Buchungstyp"
+
+#: cashier/models.py:111
+msgid "account"
+msgstr "Konto"
+
+#: cashier/models.py:112
+msgid "account to make the booking to/from"
+msgstr "Gegenkonto"
+
+#: cashier/models.py:116 cashier/models.py:209
+msgid "Date & Time"
+msgstr "Zeit und Datum"
+
+#: cashier/models.py:124 cashier/models.py:205
+msgid "amount"
+msgstr "Betrag"
+
+#: cashier/models.py:125
+msgid "Amount of the booking"
+msgstr "Betrag der Buchung"
+
+#: cashier/models.py:130
+msgid "comment"
+msgstr "Kommentar"
+
+#: cashier/models.py:140
+msgid "Balance"
+msgstr ""
+
+#: cashier/models.py:147 fablog/models.py:112
 msgid "Bookings"
 msgstr "Buchungen"
 
-#: cashier/models.py:173
+#: cashier/models.py:150 cashier/models.py:219
 msgid "Can view bookings"
 msgstr "Kann Buchungen einsehen"
 
-#: cashier/models.py:176
+#: cashier/models.py:153
 #, python-format
-msgid "%(name)s | %(datetime)s"
-msgstr "%(name)s | %(datetime)s"
+msgid "%(datetime)s | %(type)s | %(journal)s - %(account)s:  %(amount)s "
+msgstr ""
 
-#: cashier/models.py:218 templates/base.html:31
-#: templates/fablog/fablog_bookingupdateview.html:12
-#: templates/fablog/fablog_detailview.html:14
-#: templates/fablog/fablog_updateview.html:15
-msgid "Fablog"
-msgstr "Fablog"
+#: cashier/models.py:206
+msgid "Amount of the payment"
+msgstr "Betrag der Zahlung"
 
-#: cashier/models.py:219
-msgid "Donation"
-msgstr "Spende"
+#: cashier/models.py:215
+msgid "Payment"
+msgstr "Zahlung"
 
-#: cashier/models.py:220
-msgid "Store"
-msgstr "Abschöpfung"
-
-#: cashier/models.py:221 templates/cashier/accountbooking_listview.html:17
-msgid "Expenses"
-msgstr "Auslagen"
+#: cashier/models.py:216 fablog/models.py:107
+msgid "Payments"
+msgstr "Zahlungen"
 
 #: cashier/models.py:222
-msgid "Correction"
-msgstr "Korrektur"
+#, python-format
+msgid "%(datetime)s | %(method)s | %(amount)s"
+msgstr ""
 
-#: cashier/models.py:223 fablog/models.py:272 members/models.py:215
-#: members/models.py:216 memberships/models.py:12
-#: templates/fablog/fablog_updateview.html:155
-msgid "Membership"
-msgstr "Mitgliedschaft"
+#: cashier/models.py:230
+msgid "Enter an amount larger than zero!"
+msgstr "Bitte einen Betrag grösser Null eingeben"
 
-#: cashier/models.py:224
-msgid "CashCount"
-msgstr "Kassenzählung"
-
-#: cashier/models.py:233
-msgid "description"
-msgstr "Beschreibung"
-
-#: cashier/models.py:242
-msgid "booking types"
-msgstr "Buchungstypen"
-
-#: cashier/models.py:244
-msgid "Can view booking types"
-msgstr "Kann Buchungstypen anschauen"
-
-#: cashier/models.py:254
+#: cashier/models.py:237
 msgid "short name"
 msgstr "Kürzel"
 
-#: cashier/models.py:261
+#: cashier/models.py:244
 msgid "long name"
 msgstr "Name"
 
-#: cashier/models.py:268
+#: cashier/models.py:251
 msgid "Selectable"
 msgstr "Auswählbar"
 
-#: cashier/models.py:278
-msgid "Booking to account"
-msgstr "Buchung in Konto"
+#: cashier/models.py:261
+msgid "Bookings to journal"
+msgstr "Buchung in Kassenbuch"
 
-#: cashier/models.py:285
+#: cashier/models.py:268
 msgid "payment methods"
 msgstr "Zahlungsmethoden"
 
-#: cashier/models.py:287
+#: cashier/models.py:270
 msgid "Can view payment methods"
-msgstr "kann Zahlungsmethoden einsehen"
+msgstr "Kann Zahlungsmethoden einsehen"
 
-#: cashier/models.py:298
+#: cashier/models.py:273
+#, python-format
+msgid "%(short_name)s (%(long_name)s)"
+msgstr ""
+
+#: cashier/models.py:289
 msgid "created by"
 msgstr "erstellt von"
 
-#: cashier/models.py:304 fablog/models.py:28
+#: cashier/models.py:295 fablog/models.py:30
 msgid "created at"
 msgstr "erstellt am"
 
-#: cashier/models.py:310
+#: cashier/models.py:301
 msgid "cash count date"
 msgstr "Datum Kassenbestand"
 
-#: cashier/models.py:327
-msgid "Cash"
-msgstr "Bargeld"
-
-#: cashier/models.py:332 cashier/models.py:410
-msgid "currency"
-msgstr "Währung"
-
-#: cashier/models.py:340 fablog/models.py:73
+#: cashier/models.py:318 fablog/models.py:76
 msgid "fabday"
 msgstr "Fabday"
 
-#: cashier/models.py:349 cashier/models.py:350
+#: cashier/models.py:328 cashier/models.py:329
 msgid "total cash"
 msgstr "Total Bargeld"
 
-#: cashier/models.py:359 cashier/models.py:384
+#: cashier/models.py:338
 msgid "cash count"
 msgstr "Kassenbestand"
 
-#: cashier/models.py:360
+#: cashier/models.py:339
 msgid "cash counts"
 msgstr "Kassenbestände"
 
-#: cashier/models.py:363
+#: cashier/models.py:342
 msgid "Can view cash counts"
 msgstr "Kann Kassenbestände einsehen"
 
-#: cashier/models.py:366
+#: cashier/models.py:345
 #, python-format
 msgid "%(name)s %(date)s: %(total)s"
-msgstr "%(name)s %(date)s: %(total)s"
+msgstr ""
 
-#: cashier/models.py:392
-msgid "currency name"
-msgstr "Währung"
-
-#: cashier/models.py:393
-msgid "Name of currency"
-msgstr "Name der Währung"
-
-#: cashier/models.py:397
-msgid "fractional currency name"
-msgstr "Teilwährung"
-
-#: cashier/models.py:398
-msgid "Name of fractional currency"
-msgstr "Name der Teilwährung"
-
-#: cashier/models.py:402
-msgid "currency abbreviation"
-msgstr "Abkürzung"
-
-#: cashier/models.py:403
-msgid "Abbreviation of currency"
-msgstr "Abkürzung der Währung"
-
-#: cashier/models.py:406
-msgid "default currency"
-msgstr "Standardwährung"
-
-#: cashier/models.py:407
-msgid "Is this the default currency?"
-msgstr "Ist das die Standardwährung"
-
-#: cashier/models.py:411
-msgid "currencies"
-msgstr "Währungen"
-
-#: cashier/models.py:412
-msgid "Can view currencies"
-msgstr "Kann Währungen einsehen"
-
-#: cashier/models.py:421
-msgid "Only one curreny can be the default!"
-msgstr "Nur eine Währung kann als Standard gesetzt werden"
-
-#: cashier/models.py:430
-msgid "Coin"
-msgstr "Münze"
-
-#: cashier/models.py:431
-msgid "Banknote"
-msgstr "Note"
-
-#: cashier/models.py:436
-msgid "value"
-msgstr "Wert"
-
-#: cashier/models.py:437
-msgid "Value of denomination"
-msgstr "Wert der Denomination"
-
-#: cashier/models.py:448
-msgid "Cash nominal"
-msgstr "Denomination"
-
-#: cashier/models.py:449
-msgid "Cash nominals"
-msgstr "Denominationen"
-
-#: cashier/models.py:452
-msgid "Can view cash nominals"
-msgstr "Kann Denominationen einsehen"
-
-#: cashier/models.py:471
-msgid "count"
-msgstr "Anzahl"
-
-#: cashier/models.py:472
-#, python-format
-msgid "Count of %(nominal)s"
-msgstr "Anzahl %(nominal)s"
-
-#: cashier/models.py:477
-msgid "Cash count nominal"
-msgstr "Kassenbestand Denomination"
-
-#: cashier/models.py:478
-msgid "Cash count nominals"
-msgstr "Kassenbestand Denominationen"
-
-#: cashier/models.py:479
-msgid "Can view cash count nominals"
-msgstr "Kann Kassenbestand Denominationen einsehen"
-
-#: cashier/views.py:71
+#: cashier/views.py:67
 msgid "Change Amount or check box to convert remainder to a donation!"
-msgstr "Bitte ändere den Betrag oder markiere die Checkbox um den Rest in eine Spende umzuwandeln."
-
-#: cashier/views.py:77
-msgid "Membership must be payed in full."
-msgstr "Mitgliedschaft muss komplett bezahlt werden."
-
-#: cashier/views.py:136
-#, python-format
-msgid "%(name)s payed in %(paymement_method)s"
-msgstr "%(name)s hat %(paymement_method)s bezahlt"
+msgstr ""
+"Bitte ändere den Betrag oder markiere die Checkbox um den Rest in eine "
+"Spende umzuwandeln."
 
 #: fablog/forms.py:40
 msgid "Need an end time to close Fablog!"
@@ -374,170 +257,219 @@ msgstr "Es braucht eine Endzeit um den Fablog zu schliessen!"
 msgid "You must add a membership!"
 msgstr "Du musst eine Mitgliedschaft hinzufügen"
 
-#: fablog/models.py:39
+#: fablog/models.py:23
+msgid "Created by"
+msgstr "erstellt von"
+
+#: fablog/models.py:43
 msgid "Closed by"
-msgstr "Geschlossen durch"
+msgstr "geschlosssen durch"
 
-#: fablog/models.py:46
+#: fablog/models.py:51
 msgid "closed at"
-msgstr "Geschlossen am"
+msgstr "geschlossen am"
 
-#: fablog/models.py:56
+#: fablog/models.py:61
 msgid "member"
 msgstr "Mitglied"
 
-#: fablog/models.py:64
+#: fablog/models.py:68
 msgid "notes"
 msgstr "Notizen"
 
-#: fablog/models.py:83 fablog/models.py:174
+#: fablog/models.py:85 fablog/models.py:283
 msgid "machines used"
 msgstr "Benutzte Maschinen"
 
-#: fablog/models.py:87 fablog/models.py:235
+#: fablog/models.py:90 fablog/models.py:348
 msgid "materials used"
-msgstr "Materialien"
+msgstr "Material"
 
-#: fablog/models.py:91 fablog/models.py:273
+#: fablog/models.py:95 fablog/models.py:390
 msgid "Memberships"
 msgstr "Mitgliedschaft"
 
-#: fablog/models.py:98
+#: fablog/models.py:101
+msgid "donation"
+msgstr "Spende"
+
+#: fablog/models.py:102
+msgid "Donation to add to FabLog"
+msgstr "Spende in FabLog"
+
+#: fablog/models.py:115
 msgid "fablog"
 msgstr "FabLog"
 
-#: fablog/models.py:99
+#: fablog/models.py:116
 msgid "fablogs"
 msgstr "FabLogs"
 
-#: fablog/models.py:114
+#: fablog/models.py:131
 msgid "subtotal machines"
 msgstr "Subtotal Maschinen"
 
-#: fablog/models.py:122
+#: fablog/models.py:139
 msgid "subtotal materials"
 msgstr "Subtotal Materialien"
 
-#: fablog/models.py:130
+#: fablog/models.py:147
 msgid "subtotal memberships"
 msgstr "Subtotal Mitgliedschaft"
 
-#: fablog/models.py:138
+#: fablog/models.py:155
+msgid "total payments"
+msgstr "Total Zahlungen"
+
+#: fablog/models.py:163
 msgid "total bookings"
 msgstr "Total Buchungen"
 
-#: fablog/models.py:142
+#: fablog/models.py:167
 msgid "total overall"
-msgstr "Gesatmttotal"
+msgstr "Gesamttotal"
 
-#: fablog/models.py:146
+#: fablog/models.py:171
 msgid "dues"
 msgstr "Ausstehend"
 
-#: fablog/models.py:160 machines/models.py:84
+#: fablog/models.py:185
+#, python-brace-format
+msgid "Usage fee {machine_name}"
+msgstr "Benutzungsgebühr {machine_name}"
+
+#: fablog/models.py:193
+#, python-brace-format
+msgid "Sale of {material_name}"
+msgstr "Verkauf von {material_name}"
+
+#: fablog/models.py:209 fablog/models.py:220 fablog/models.py:231
+#, python-brace-format
+msgid "{full_name} {start} - {end} ({membership_type})"
+msgstr ""
+
+#: fablog/models.py:245
+#, python-brace-format
+msgid "Donation from {first_name} {last_name}"
+msgstr "Spende {first_name} {last_name}"
+
+#: fablog/models.py:268 machines/models.py:89
 msgid "start time"
 msgstr "Startzeit"
 
-#: fablog/models.py:167 machines/models.py:89
+#: fablog/models.py:276 machines/models.py:94
 msgid "end time"
 msgstr "Endzeit"
 
-#: fablog/models.py:173
+#: fablog/models.py:282
 msgid "machine used"
 msgstr "Benutzte Maschine"
 
-#: fablog/models.py:187
+#: fablog/models.py:296
 msgid "duration"
 msgstr "Dauer"
 
-#: fablog/models.py:197 fablog/models.py:224
+#: fablog/models.py:306 fablog/models.py:336
 msgid "units"
 msgstr "Einheiten"
 
-#: fablog/models.py:201 fablog/models.py:245 fablog/models.py:269
+#: fablog/models.py:310 fablog/models.py:358 fablog/models.py:386
 #: memberships/models.py:28
 msgid "price"
 msgstr "Preis"
 
-#: fablog/models.py:225
+#: fablog/models.py:337
 msgid "Units of Material used"
 msgstr "Benutzte Einheiten von Material"
 
-#: fablog/models.py:230 machines/models.py:36
+#: fablog/models.py:343 machines/models.py:36
 msgid "price/unit"
 msgstr "Preis/Einheit"
 
-#: fablog/models.py:231 machines/models.py:37
+#: fablog/models.py:344 machines/models.py:37
 msgid "price per unit"
 msgstr "Preis pro Einheit"
 
-#: fablog/models.py:234
+#: fablog/models.py:347
 msgid "material used"
 msgstr "Benutztes Material"
 
-#: fablog/models.py:259 members/models.py:202
+#: fablog/models.py:376 members/models.py:202
 msgid "membership start date"
 msgstr "Startdatum Mitgliedschaft"
 
-#: fablog/models.py:260 members/models.py:203
+#: fablog/models.py:377 members/models.py:203
 msgid "First day of membership"
 msgstr "Erster Tag der Mitgliedschaft"
 
-#: fablog/models.py:263 members/models.py:206
+#: fablog/models.py:381 members/models.py:206
 msgid "membership end date"
 msgstr "Enddatum Mitgliedschaft"
 
-#: fablog/models.py:264 members/models.py:207
+#: fablog/models.py:382 members/models.py:207
 msgid "Last day of membership"
 msgstr "Letzter Tag der Mitgliedschaft"
 
-#: fablog/models.py:289
+#: fablog/models.py:389 members/models.py:215 members/models.py:216
+#: memberships/models.py:12 templates/fablog/fablog_updateview.html:159
+msgid "Membership"
+msgstr "Mitgliedschaft"
+
+#: fablog/models.py:409
+msgid "associated Payment"
+msgstr "verknüpfte Zahlung"
+
+#: fablog/models.py:410
+msgid "associated Payments"
+msgstr "verknüpfte Zahlungen"
+
+#: fablog/models.py:426
 msgid "associated Booking"
 msgstr "verknüpfte Buchung"
 
-#: fablog/models.py:290
+#: fablog/models.py:427
 msgid "associated Bookings"
 msgstr "verknüpfte Buchungen"
 
-#: fablog/models.py:296
+#: fablog/models.py:434
 msgid "FabDay"
-msgstr "FabDay"
+msgstr ""
 
-#: fablog/models.py:297
+#: fablog/models.py:435
 msgid "A fabulous day of fabbing at the Fablab"
 msgstr "Ein wunderbarer Tag zum Fabben im Fablab"
 
-#: fablog/models.py:300
+#: fablog/models.py:438
 msgid "Fabday"
 msgstr "FabDay"
 
-#: fablog/models.py:301
+#: fablog/models.py:439
 msgid "Fabdays"
 msgstr "FabDays"
 
-#: fablog/models.py:305
+#: fablog/models.py:443
 #, python-format
 msgid "%(name)s, %(datetime)s"
-msgstr "%(name)s, %(datetime)s"
+msgstr ""
 
-#: fablog/views.py:91 fablog/views.py:159
+#: fablog/views.py:92 fablog/views.py:160
 msgid "new"
-msgstr "Neu"
+msgstr "neu"
 
 #: machines/models.py:16
 msgid "Name"
-msgstr "Name"
+msgstr ""
 
 #: machines/models.py:17
 msgid "machine name"
-msgstr "Maschiene"
+msgstr "Maschinenname"
 
 #: machines/models.py:21
 msgid "Abbreviation"
 msgstr "Abkürzung"
 
 #: machines/models.py:22
-msgid "Abkürzung für Anzeige in Übersichten"
+msgid "Abbreviation shown in overviews"
 msgstr ""
 
 #: machines/models.py:26
@@ -552,71 +484,81 @@ msgstr "Farbe in Übersichten. Beliebiger CSS syntax funktioniert"
 msgid "unit"
 msgstr "Einheit"
 
-#: machines/models.py:41
+#: machines/models.py:41 materials/models.py:15 memberships/models.py:33
+#: memberships/models.py:38
+msgid "account to"
+msgstr "Gegenkonto"
+
+#: machines/models.py:42 materials/models.py:16 memberships/models.py:34
+#: memberships/models.py:39
+msgid "account to bill to"
+msgstr "Gegenkonto"
+
+#: machines/models.py:46
 msgid "machine status"
 msgstr "Maschinenstatus"
 
-#: machines/models.py:44
+#: machines/models.py:49
 msgid "machine"
 msgstr "Maschine"
 
-#: machines/models.py:45
+#: machines/models.py:50
 msgid "machines"
 msgstr "Maschinen"
 
-#: machines/models.py:82 machines/models.py:126
+#: machines/models.py:87 machines/models.py:130
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
-#: machines/models.py:85
+#: machines/models.py:90
 msgid "Machine status start"
 msgstr "Anfang Maschinenstatus"
 
-#: machines/models.py:90
+#: machines/models.py:95
 msgid "Machine status end time"
 msgstr "Ende Maschinenstatus"
 
-#: machines/models.py:94
+#: machines/models.py:98
 msgid "details"
 msgstr "Details"
 
-#: machines/models.py:95
+#: machines/models.py:99
 msgid "Details concerning the machine status"
 msgstr "Details zum Maschinenstatus"
 
-#: machines/models.py:99
+#: machines/models.py:103
 msgid "Machine Satus"
-msgstr "Maschinenstatus"
+msgstr ""
 
-#: machines/models.py:100
+#: machines/models.py:104
 msgid "Machine Statuses"
 msgstr "Maschinenstatus"
 
-#: machines/models.py:113
+#: machines/models.py:117
 msgid "low"
 msgstr "niedrig"
 
-#: machines/models.py:114
+#: machines/models.py:118
 msgid "medium"
 msgstr "mittel"
 
-#: machines/models.py:115
-msgid "high"
-msgstr "schwer"
-
 #: machines/models.py:119
+msgid "high"
+msgstr "hoch"
+
+#: machines/models.py:123
 msgid "severity"
 msgstr "Schweregrad"
 
-#: machines/models.py:120
+#: machines/models.py:124
 msgid "severity of status"
 msgstr "Statusschweregrad"
 
-#: machines/models.py:123 materials/models.py:10 memberships/models.py:17
+#: machines/models.py:127 materials/models.py:10 memberships/models.py:17
 msgid "name"
 msgstr "Name"
 
-#: machines/models.py:127
+#: machines/models.py:131
 msgid "Statuses"
 msgstr "Status"
 
@@ -689,8 +631,8 @@ msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
-"Zeigt an ob dieser Benutzer aktiv ist. Abwählen anstatt"
-"Benutzerkonten zu löschen"
+"Zeigt an ob dieser Benutzer aktiv ist. Abwählen anstattBenutzerkonten zu "
+"löschen"
 
 #: members/models.py:131
 msgid "date joined"
@@ -711,7 +653,7 @@ msgstr "Kann Mitglieder einsehen"
 #: members/models.py:162
 #, python-format
 msgid "%(first_name)s%(initial)s%(last_name)s"
-msgstr "%(first_name)s%(initial)s%(last_name)s"
+msgstr ""
 
 #: members/models.py:220
 #, python-format
@@ -720,67 +662,80 @@ msgstr "Mitgliedschaft %(year)s"
 
 #: memberships/models.py:13
 msgid "Membership (Reduced price)"
-msgstr "Mitgliedschaft (reduziert"
+msgstr "Mitgliedschaft (reduziert)"
 
 #: memberships/models.py:29
-msgid "price of service"
-msgstr "Preis"
+msgid "price of membership"
+msgstr "Kosten Mitgliedschaft"
 
-#: templates/base.html:35 templates/base.html:37
+#: templates/base.html:31 templates/fablog/fablog_bookingupdateview.html:12
+#: templates/fablog/fablog_detailview.html:14
+#: templates/fablog/fablog_updateview.html:15
+msgid "Fablog"
+msgstr "FabLog"
+
+#: templates/base.html:34
+msgid "Workshops"
+msgstr "Workshops"
+
+#: templates/base.html:38 templates/base.html:40
 msgid "Cashier"
-msgstr "Kassenbuch"
+msgstr "Kasse"
 
-#: templates/base.html:38
+#: templates/base.html:41
 msgid "Enter Cash Count"
-msgstr "Kassenbestand eingeben"
+msgstr "neuer Kassenbestand"
 
-#: templates/base.html:39
+#: templates/base.html:42
 msgid "Enter Expenses"
 msgstr "Auslagen eingeben"
 
-#: templates/base.html:43
+#: templates/base.html:46
 msgid "Members"
 msgstr "Mitglieder"
 
-#: templates/base.html:47 templates/base.html:51
+#: templates/base.html:50 templates/base.html:54
 msgid "Services"
 msgstr "Services"
 
-#: templates/base.html:49 templates/fablog/fablog_updateview.html:44
+#: templates/base.html:52 templates/fablog/fablog_updateview.html:45
 msgid "Machines"
 msgstr "Maschinen"
 
-#: templates/base.html:50
+#: templates/base.html:53
 msgid "Material"
 msgstr "Material"
-
-#: templates/cashier/accountbooking_listview.html:13
-msgid "Date"
-msgstr "Datum"
-
-#: templates/cashier/accountbooking_listview.html:14
-msgid "Type"
-msgstr "Typ"
-
-#: templates/cashier/accountbooking_listview.html:15
-msgid "Comment"
-msgstr "Kommentar"
-
-#: templates/cashier/accountbooking_listview.html:16
-msgid "Income"
-msgstr "Einnahmen"
 
 #: templates/cashier/cashcount_createview.html:13
 msgid "Cash Count"
 msgstr "Kassenbestand"
 
-#: templates/cashier/cashcount_createview.html:70
-#: templates/fablog/fablog_updateview.html:224
+#: templates/cashier/cashcount_createview.html:37
+#: templates/fablog/fablog_updateview.html:244
 msgid "Save"
 msgstr "Speichern"
 
+#: templates/cashier/journal_booking_listview.html:13
+msgid "Date"
+msgstr "Datum"
+
+#: templates/cashier/journal_booking_listview.html:14
+msgid "Type"
+msgstr "Typ"
+
+#: templates/cashier/journal_booking_listview.html:15
+msgid "Comment"
+msgstr "Buchungstext"
+
+#: templates/cashier/journal_booking_listview.html:16
+msgid "Income"
+msgstr "Einnahmen"
+
+#: templates/cashier/journal_booking_listview.html:17
+msgid "Expenses"
+msgstr "Ausgaben"
+
 #: templates/fablog/fablog_bookingupdateview.html:32
-#: templates/fablog/fablog_updateview.html:225
 msgid "Close Fablog"
 msgstr "Fablog schliessen"
 
@@ -788,10 +743,16 @@ msgstr "Fablog schliessen"
 msgid "New Fablog"
 msgstr "Neuer Fablog"
 
+#: templates/fablog/fablog_createview.html:20
+#, fuzzy
+#| msgid "Members"
+msgid "Member"
+msgstr "Mitglieder"
+
 #: templates/fablog/fablog_createview.html:24
 #: templates/fablog/fablog_updateview.html:29
 msgid "Select member..."
-msgstr "Benutzer auswählen..."
+msgstr "Mitglied auswählen ..."
 
 #: templates/fablog/fablog_detailview.html:15
 msgid "Receipt"
@@ -817,35 +778,47 @@ msgstr "Dauer"
 #: templates/fablog/fablog_updateview.html:8
 #: templates/includes/fablog_table.html:8
 msgid "Price"
-msgstr "Preis"
+msgstr "Presi"
 
 #: templates/fablog/fablog_updateview.html:9
 msgid "Delete?"
 msgstr "Löschen?"
 
-#: templates/fablog/fablog_updateview.html:96
+#: templates/fablog/fablog_updateview.html:98
 #: templates/includes/fablog_table.html:37
 msgid "Subtotal Machines"
 msgstr "Subtotal Maschinen"
 
-#: templates/fablog/fablog_updateview.html:104
+#: templates/fablog/fablog_updateview.html:107
 msgid "Materials"
 msgstr "Material"
 
-#: templates/fablog/fablog_updateview.html:147
+#: templates/fablog/fablog_updateview.html:151
 #: templates/includes/fablog_table.html:57
 msgid "Subtotal Materials"
 msgstr "Subtotal Material"
 
-#: templates/fablog/fablog_updateview.html:205
+#: templates/fablog/fablog_updateview.html:209
 msgid "Subtotal Membership"
 msgstr "Subtotal Mitgliedschaft"
 
-#: templates/fablog/fablog_updateview.html:212
 #: templates/fablog/fablog_updateview.html:216
+#: templates/fablog/fablog_updateview.html:236
 #: templates/includes/fablog_table.html:86
 msgid "Total"
 msgstr "Total"
+
+#: templates/fablog/fablog_updateview.html:220
+msgid "Total Fablog"
+msgstr "Total Fablog"
+
+#: templates/fablog/fablog_updateview.html:228
+msgid "Total Payments"
+msgstr "Total Zahlungen"
+
+#: templates/fablog/fablog_updateview.html:245
+msgid "Pay"
+msgstr "Zahlen"
 
 #: templates/includes/fablog_table.html:6
 msgid "Item"
@@ -859,10 +832,6 @@ msgstr "bis"
 msgid "Subtotal Memberships"
 msgstr "Subtotal Mitgliedschaft"
 
-#: templates/includes/fablog_table.html:95
-msgid "Payment"
-msgstr "Zahlung"
-
 #: templates/includes/fablog_table.html:104
 msgid "Due"
 msgstr "Ausstehend"
@@ -872,6 +841,11 @@ msgid "digitalFablog Login"
 msgstr "digitalFablog Login"
 
 #: templates/members/login.html:30
+#, fuzzy
+#| msgid ""
+#| "\n"
+#| "              Your account doesn't have access to this page.\n"
+#| "              To proceed, please login with an account that has access.\n"
 msgid ""
 "\n"
 "              Your account doesn't have access to this page.\n"
@@ -880,7 +854,8 @@ msgid ""
 msgstr ""
 "\n"
 "              Ihr Account hat keinen Zugriff auf diese Seite.\n"
-"              Bitte loggen Sie sich mit einem anderen Account ein um fortzufahren.\n"
+"              Bitte loggen Sie sich mit einem anderen Account ein um "
+"fortzufahren.\n"
 "              "
 
 #: templates/members/login.html:38
@@ -921,7 +896,7 @@ msgstr "Adresse"
 
 #: templates/members/members_listview.html:22
 msgid "ZIP"
-msgstr "PLZ"
+msgstr "Postleitzahl"
 
 #: templates/members/members_listview.html:24
 msgid "enddate"
@@ -933,7 +908,7 @@ msgstr "hat bezahlt"
 
 #: templates/members/registration.html:16
 msgid "Become a Fablab Member!"
-msgstr "Fablab Member weden"
+msgstr "Fablab-Mitglied werden!"
 
 #: templates/members/registration.html:36
 msgid "Register"

@@ -20,8 +20,8 @@ class Journal(models.Model):
 
     default_account = models.BooleanField(
         default=False,
-        verbose_name=_('default account'),
-        help_text=_('Is this the default account for which cash counts should be recorded?'))
+        verbose_name=_('default journal'),
+        help_text=_('Is this the default journal for which cash counts should be recorded?'))
 
     class Meta:
         verbose_name = _('Journal')
