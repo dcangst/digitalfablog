@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-18 21:10+0100\n"
+"POT-Creation-Date: 2018-11-18 22:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,6 +76,13 @@ msgstr "Nur ein Kassenbuch kann als Standardkassenbuch gesetzt werden"
 msgid "journal"
 msgstr "Kassenbuch"
 
+#: cashier/models.py:52 cashier/models.py:107
+#, fuzzy
+#| msgid "associated Booking"
+msgctxt "Cashier"
+msgid "Associated journal"
+msgstr "verknüpfte Buchung"
+
 #: cashier/models.py:57 cashier/models.py:58
 #: templates/cashier/journal_booking_listview.html:18
 msgid "Balance expected"
@@ -115,6 +122,13 @@ msgstr "Anzahl"
 msgid "booking type"
 msgstr "Buchungstyp"
 
+#: cashier/models.py:98
+#, fuzzy
+#| msgid "total bookings"
+msgctxt "Cashier"
+msgid "type of booking"
+msgstr "Total Buchungen"
+
 #: cashier/models.py:111
 msgid "account"
 msgstr "Konto"
@@ -126,6 +140,13 @@ msgstr "Gegenkonto"
 #: cashier/models.py:116 cashier/models.py:209
 msgid "Date & Time"
 msgstr "Zeit und Datum"
+
+#: cashier/models.py:119
+#, fuzzy
+#| msgid "Machine status end time"
+msgctxt "Cashier"
+msgid "Booking date and time"
+msgstr "Ende Maschinenstatus"
 
 #: cashier/models.py:124 cashier/models.py:205
 msgid "amount"
@@ -139,9 +160,23 @@ msgstr "Betrag der Buchung"
 msgid "comment"
 msgstr "Kommentar"
 
+#: cashier/models.py:133
+#, fuzzy
+#| msgid "Amount of the booking"
+msgctxt "Cashier"
+msgid "Comment on Booking"
+msgstr "Betrag der Buchung"
+
 #: cashier/models.py:140
 msgid "Balance"
-msgstr ""
+msgstr "Stand"
+
+#: cashier/models.py:143
+#, fuzzy
+#| msgid "Can view bookings"
+msgctxt "Cashier"
+msgid "Balance after booking"
+msgstr "Kann Buchungen einsehen"
 
 #: cashier/models.py:147 fablog/models.py:112
 msgid "Bookings"
@@ -156,9 +191,23 @@ msgstr "Kann Buchungen einsehen"
 msgid "%(datetime)s | %(type)s | %(journal)s - %(account)s:  %(amount)s "
 msgstr ""
 
+#: cashier/models.py:201
+#, fuzzy
+#| msgid "payment method"
+msgctxt "Cashier"
+msgid "payment method"
+msgstr "Zahlungsmethode"
+
 #: cashier/models.py:206
 msgid "Amount of the payment"
 msgstr "Betrag der Zahlung"
+
+#: cashier/models.py:212
+#, fuzzy
+#| msgid "Machine status end time"
+msgctxt "Cashier"
+msgid "Payment date and time"
+msgstr "Ende Maschinenstatus"
 
 #: cashier/models.py:215
 msgid "Payment"
@@ -181,17 +230,41 @@ msgstr "Bitte einen Betrag grösser Null eingeben"
 msgid "short name"
 msgstr "Kürzel"
 
+#: cashier/models.py:240
+msgctxt "payment method"
+msgid "Three letter short name for display."
+msgstr "Kürzel (3 Zeichen) für Anzeige"
+
 #: cashier/models.py:244
 msgid "long name"
 msgstr "Name"
+
+#: cashier/models.py:247
+#, fuzzy
+#| msgid "Can view payment methods"
+msgctxt "payment method"
+msgid "Long name of payment method"
+msgstr "Kann Zahlungsmethoden einsehen"
 
 #: cashier/models.py:251
 msgid "Selectable"
 msgstr "Auswählbar"
 
+#: cashier/models.py:254
+msgctxt "payment method"
+msgid "Used to restrict Select Widgets in Forms"
+msgstr "Anzeige in Select Widgets?"
+
 #: cashier/models.py:261
 msgid "Bookings to journal"
 msgstr "Buchung in Kassenbuch"
+
+#: cashier/models.py:264
+#, fuzzy
+#| msgid "Can view payment methods"
+msgctxt "Cashier"
+msgid "Journal for this payment method"
+msgstr "Kann Zahlungsmethoden einsehen"
 
 #: cashier/models.py:268
 msgid "payment methods"
@@ -210,17 +283,54 @@ msgstr ""
 msgid "created by"
 msgstr "erstellt von"
 
+#: cashier/models.py:292
+#, fuzzy
+#| msgctxt "Fablog"
+#| msgid "Labmanager who closed the Fablog"
+msgctxt "Cash"
+msgid "Labmanager who created the cash account"
+msgstr "Labmanager der den Fablog geschlossen hat"
+
 #: cashier/models.py:295 fablog/models.py:30
 msgid "created at"
 msgstr "erstellt am"
+
+#: cashier/models.py:298
+#, fuzzy
+#| msgid "Machine status end time"
+msgctxt "Cash"
+msgid "Creation date and time"
+msgstr "Ende Maschinenstatus"
 
 #: cashier/models.py:301
 msgid "cash count date"
 msgstr "Datum Kassenbestand"
 
+#: cashier/models.py:304
+#, fuzzy
+#| msgid "cash count date"
+msgctxt "Cash"
+msgid "Cash count date"
+msgstr "Datum Kassenbestand"
+
+#: cashier/models.py:313
+#, fuzzy
+#| msgid "associated Booking"
+msgctxt "Accounts"
+msgid "Associated journal"
+msgstr "verknüpfte Buchung"
+
 #: cashier/models.py:318 fablog/models.py:76
 msgid "fabday"
 msgstr "Fabday"
+
+#: cashier/models.py:322
+#, fuzzy
+#| msgctxt "Fablog"
+#| msgid "FabDay of this Fablog"
+msgctxt "Cashier"
+msgid "FabDay of this CashCount"
+msgstr "FabDay dieses Fablogs"
 
 #: cashier/models.py:328 cashier/models.py:329
 msgid "total cash"
@@ -261,21 +371,62 @@ msgstr "Du musst eine Mitgliedschaft hinzufügen"
 msgid "Created by"
 msgstr "erstellt von"
 
+#: fablog/models.py:26
+msgctxt "Fablog"
+msgid "Labmanager who created the Fablog"
+msgstr "Labmanager der den Fablog erstellt hat"
+
+#: fablog/models.py:33
+#, fuzzy
+#| msgid "Machine status end time"
+msgctxt "Fablog"
+msgid "Creation date and time"
+msgstr "Ende Maschinenstatus"
+
 #: fablog/models.py:43
 msgid "Closed by"
 msgstr "geschlosssen durch"
+
+#: fablog/models.py:46
+msgctxt "Fablog"
+msgid "Labmanager who closed the Fablog"
+msgstr "Labmanager der den Fablog geschlossen hat"
 
 #: fablog/models.py:51
 msgid "closed at"
 msgstr "geschlossen am"
 
+#: fablog/models.py:54
+msgctxt "Fablog"
+msgid "Closure date and time"
+msgstr "Zeit und Datum Fablog Abschluss"
+
 #: fablog/models.py:61
 msgid "member"
 msgstr "Mitglied"
 
+#: fablog/models.py:64
+#, fuzzy
+#| msgid "Members"
+msgctxt "Fablog"
+msgid "Member"
+msgstr "Mitglieder"
+
 #: fablog/models.py:68
 msgid "notes"
 msgstr "Notizen"
+
+#: fablog/models.py:71
+#, fuzzy
+#| msgid "Close Fablog"
+msgctxt "Fablog"
+msgid "Notes on the Fablog"
+msgstr "Notizen zum Fablog"
+
+#: fablog/models.py:80
+msgctxt "Fablog"
+msgid "FabDay of this Fablog"
+msgstr "FabDay dieses Fablogs"
 
 #: fablog/models.py:85 fablog/models.py:283
 msgid "machines used"
@@ -357,9 +508,23 @@ msgstr "Spende {first_name} {last_name}"
 msgid "start time"
 msgstr "Startzeit"
 
+#: fablog/models.py:271
+#, fuzzy
+#| msgid "Machine status start"
+msgctxt "Machines used"
+msgid "Machine use start time"
+msgstr "Anfang Maschinenstatus"
+
 #: fablog/models.py:276 machines/models.py:94
 msgid "end time"
 msgstr "Endzeit"
+
+#: fablog/models.py:279
+#, fuzzy
+#| msgid "Machine status end time"
+msgctxt "Machines used"
+msgid "Machine use end time"
+msgstr "Ende Maschinenstatus"
 
 #: fablog/models.py:282
 msgid "machine used"
@@ -394,24 +559,28 @@ msgstr "Preis pro Einheit"
 msgid "material used"
 msgstr "Benutztes Material"
 
-#: fablog/models.py:376 members/models.py:202
+#: fablog/models.py:376 members/models.py:223
 msgid "membership start date"
 msgstr "Startdatum Mitgliedschaft"
 
-#: fablog/models.py:377 members/models.py:203
+#: fablog/models.py:377 members/models.py:224
 msgid "First day of membership"
 msgstr "Erster Tag der Mitgliedschaft"
 
-#: fablog/models.py:381 members/models.py:206
+#: fablog/models.py:381 members/models.py:227
 msgid "membership end date"
 msgstr "Enddatum Mitgliedschaft"
 
-#: fablog/models.py:382 members/models.py:207
+#: fablog/models.py:382 members/models.py:228
 msgid "Last day of membership"
 msgstr "Letzter Tag der Mitgliedschaft"
 
-#: fablog/models.py:389 members/models.py:215 members/models.py:216
-#: memberships/models.py:12 templates/fablog/fablog_updateview.html:159
+#: fablog/models.py:389 members/models.py:236 members/models.py:237
+#: memberships/models.py:12 templates/fablog/fablog_createview.html:53
+#: templates/fablog/fablog_createview.html:63
+#: templates/fablog/fablog_updateview.html:159
+#: templates/fablog/fablog_updateview.html:268
+#: templates/fablog/fablog_updateview.html:278
 msgid "Membership"
 msgstr "Mitgliedschaft"
 
@@ -452,10 +621,6 @@ msgstr "FabDays"
 msgid "%(name)s, %(datetime)s"
 msgstr ""
 
-#: fablog/views.py:92 fablog/views.py:160
-msgid "new"
-msgstr "neu"
-
 #: machines/models.py:16
 msgid "Name"
 msgstr ""
@@ -470,7 +635,7 @@ msgstr "Abkürzung"
 
 #: machines/models.py:22
 msgid "Abbreviation shown in overviews"
-msgstr ""
+msgstr "Abkürzung in Übersichten"
 
 #: machines/models.py:26
 msgid "Overview color"
@@ -528,7 +693,7 @@ msgstr "Details zum Maschinenstatus"
 
 #: machines/models.py:103
 msgid "Machine Satus"
-msgstr ""
+msgstr "Machinenstatus"
 
 #: machines/models.py:104
 msgid "Machine Statuses"
@@ -578,55 +743,69 @@ msgstr "Berechtigunen"
 msgid "Important dates"
 msgstr "Wichtige Daten"
 
-#: members/models.py:91
+#: members/models.py:89
+#, python-brace-format
+msgid "expires {date}"
+msgstr "Läuft am {date} ab"
+
+#: members/models.py:93
+#, python-brace-format
+msgid "expired {date}"
+msgstr "Abgelaufen am {date}"
+
+#: members/models.py:95
+msgid "new"
+msgstr "neu"
+
+#: members/models.py:112
 msgid "email address"
 msgstr "Emailadresse"
 
-#: members/models.py:94
+#: members/models.py:115
 msgid "first name"
 msgstr "Vorname"
 
-#: members/models.py:99
+#: members/models.py:120
 msgid "middle name"
 msgstr "zweiter Name"
 
-#: members/models.py:101
+#: members/models.py:122
 msgid "last name"
 msgstr "Nachname"
 
-#: members/models.py:104
+#: members/models.py:125
 msgid "Street and number"
 msgstr "Strasse und Nummer"
 
-#: members/models.py:107
+#: members/models.py:128
 msgid "ZIP Code"
 msgstr "Postleitzahl"
 
-#: members/models.py:110 templates/members/members_listview.html:23
+#: members/models.py:131 templates/members/members_listview.html:23
 msgid "City"
 msgstr "Ort"
 
-#: members/models.py:113
+#: members/models.py:134
 msgid "Phone"
 msgstr "Telefon"
 
-#: members/models.py:116
+#: members/models.py:137
 msgid "Birthday"
 msgstr "Geburtstag"
 
-#: members/models.py:119
+#: members/models.py:140
 msgid "staff status"
 msgstr "Mitarbeiterstatus"
 
-#: members/models.py:121
+#: members/models.py:142
 msgid "Designates whether the user can log into this admin site."
 msgstr "Bestimmt ob der Benutzer Zugriff auf diese Adminseite hat"
 
-#: members/models.py:124
+#: members/models.py:145
 msgid "active"
 msgstr "aktiv"
 
-#: members/models.py:127
+#: members/models.py:148
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
@@ -634,28 +813,28 @@ msgstr ""
 "Zeigt an ob dieser Benutzer aktiv ist. Abwählen anstattBenutzerkonten zu "
 "löschen"
 
-#: members/models.py:131
+#: members/models.py:152
 msgid "date joined"
 msgstr "Beitrittsdatum"
 
-#: members/models.py:143
+#: members/models.py:164
 msgid "User"
 msgstr "Benutzer"
 
-#: members/models.py:144
+#: members/models.py:165
 msgid "Users"
 msgstr "Benutzer"
 
-#: members/models.py:147
+#: members/models.py:168
 msgid "Can view members"
 msgstr "Kann Mitglieder einsehen"
 
-#: members/models.py:162
+#: members/models.py:183
 #, python-format
 msgid "%(first_name)s%(initial)s%(last_name)s"
 msgstr ""
 
-#: members/models.py:220
+#: members/models.py:241
 #, python-format
 msgid "Membership %(year)s"
 msgstr "Mitgliedschaft %(year)s"
@@ -744,10 +923,9 @@ msgid "New Fablog"
 msgstr "Neuer Fablog"
 
 #: templates/fablog/fablog_createview.html:20
-#, fuzzy
-#| msgid "Members"
+#: templates/fablog/fablog_updateview.html:25
 msgid "Member"
-msgstr "Mitglieder"
+msgstr "Mitglied"
 
 #: templates/fablog/fablog_createview.html:24
 #: templates/fablog/fablog_updateview.html:29
@@ -778,7 +956,7 @@ msgstr "Dauer"
 #: templates/fablog/fablog_updateview.html:8
 #: templates/includes/fablog_table.html:8
 msgid "Price"
-msgstr "Presi"
+msgstr "Preis"
 
 #: templates/fablog/fablog_updateview.html:9
 msgid "Delete?"
