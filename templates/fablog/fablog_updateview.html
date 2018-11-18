@@ -22,7 +22,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <div class="form-group">
-                    <label for="id_member">Member</label>
+                    <label for="id_member">{% trans "Member" %}</label>
                     <select name="member"
                       class="form-control custom-select"
                       title="" required="" id="id_member"
@@ -265,7 +265,7 @@
               return '<div>' +
                 '<div>' +
                   '<span class="name">' + escape(item.label) + '</span>' + " " +
-                  '<span class="small text-muted">Membership: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
+                  '<span class="small text-muted">{% trans "Membership" %}: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
                 '</div>' +
             '</div>';
                 },
@@ -275,7 +275,7 @@
                     '<span class="name">' + escape(item.label) + '</span>' +
                 '</div>' +
                 '<div>' +
-                  '<span class="small text-muted">Membership: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
+                  '<span class="small text-muted">{% trans "Membership" %}: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
                 '</div>' +
             '</div>';
         }

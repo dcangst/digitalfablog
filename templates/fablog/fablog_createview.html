@@ -50,7 +50,7 @@
               return '<div>' +
                 '<div>' +
                   '<span class="name">' + escape(item.label) + '</span>' + " " +
-                  '<span class="small text-muted">Membership: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
+                  '<span class="small text-muted">{% trans "Membership" %}: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
                 '</div>' +
             '</div>';
                 },
@@ -60,7 +60,7 @@
                     '<span class="name">' + escape(item.label) + '</span>' +
                 '</div>' +
                 '<div>' +
-                  '<span class="small text-muted">Membership: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
+                  '<span class="small text-muted">{% trans "Membership" %}: </span>' + '<span class="small ' + escape(item.status_class) + '">' + escape(item.status) + '</span>' +
                 '</div>' +
             '</div>';
         }
