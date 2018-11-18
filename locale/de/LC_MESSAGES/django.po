@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-18 22:10+0100\n"
+"POT-Creation-Date: 2018-11-18 22:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,25 +77,23 @@ msgid "journal"
 msgstr "Kassenbuch"
 
 #: cashier/models.py:52 cashier/models.py:107
-#, fuzzy
-#| msgid "associated Booking"
 msgctxt "Cashier"
 msgid "Associated journal"
 msgstr "verknüpfte Buchung"
 
 #: cashier/models.py:57 cashier/models.py:58
-#: templates/cashier/journal_booking_listview.html:18
+#: templates/cashier/journal_booking_listview.html:19
 msgid "Balance expected"
 msgstr "Soll"
 
 #: cashier/models.py:65 cashier/models.py:66
-#: templates/cashier/journal_booking_listview.html:19
+#: templates/cashier/journal_booking_listview.html:20
 msgid "Balance true"
 msgstr "Ist"
 
 #: cashier/models.py:69
 msgid "Journal Balance"
-msgstr "Stand"
+msgstr "Kassenstand"
 
 #: cashier/models.py:70
 msgid "Journal Balances"
@@ -116,15 +114,13 @@ msgstr "Buchung"
 
 #: cashier/models.py:89
 msgid "Count"
-msgstr "Anzahl"
+msgstr "Stand"
 
 #: cashier/models.py:95
 msgid "booking type"
 msgstr "Buchungstyp"
 
 #: cashier/models.py:98
-#, fuzzy
-#| msgid "total bookings"
 msgctxt "Cashier"
 msgid "type of booking"
 msgstr "Total Buchungen"
@@ -142,11 +138,9 @@ msgid "Date & Time"
 msgstr "Zeit und Datum"
 
 #: cashier/models.py:119
-#, fuzzy
-#| msgid "Machine status end time"
 msgctxt "Cashier"
 msgid "Booking date and time"
-msgstr "Ende Maschinenstatus"
+msgstr "Datum und Zeit der Buchung"
 
 #: cashier/models.py:124 cashier/models.py:205
 msgid "amount"
@@ -157,26 +151,22 @@ msgid "Amount of the booking"
 msgstr "Betrag der Buchung"
 
 #: cashier/models.py:130
-msgid "comment"
-msgstr "Kommentar"
+msgid "booking text"
+msgstr "Buchungstext"
 
 #: cashier/models.py:133
-#, fuzzy
-#| msgid "Amount of the booking"
 msgctxt "Cashier"
-msgid "Comment on Booking"
-msgstr "Betrag der Buchung"
+msgid "Text of Booking"
+msgstr "Buchungstext"
 
 #: cashier/models.py:140
 msgid "Balance"
 msgstr "Stand"
 
 #: cashier/models.py:143
-#, fuzzy
-#| msgid "Can view bookings"
 msgctxt "Cashier"
 msgid "Balance after booking"
-msgstr "Kann Buchungen einsehen"
+msgstr "Kassenstand nach Buchung"
 
 #: cashier/models.py:147 fablog/models.py:112
 msgid "Bookings"
@@ -192,8 +182,6 @@ msgid "%(datetime)s | %(type)s | %(journal)s - %(account)s:  %(amount)s "
 msgstr ""
 
 #: cashier/models.py:201
-#, fuzzy
-#| msgid "payment method"
 msgctxt "Cashier"
 msgid "payment method"
 msgstr "Zahlungsmethode"
@@ -203,11 +191,9 @@ msgid "Amount of the payment"
 msgstr "Betrag der Zahlung"
 
 #: cashier/models.py:212
-#, fuzzy
-#| msgid "Machine status end time"
 msgctxt "Cashier"
 msgid "Payment date and time"
-msgstr "Ende Maschinenstatus"
+msgstr "Datum und Zeit der Zahlung"
 
 #: cashier/models.py:215
 msgid "Payment"
@@ -240,11 +226,9 @@ msgid "long name"
 msgstr "Name"
 
 #: cashier/models.py:247
-#, fuzzy
-#| msgid "Can view payment methods"
 msgctxt "payment method"
 msgid "Long name of payment method"
-msgstr "Kann Zahlungsmethoden einsehen"
+msgstr "Bezeichnung Zahlungsmethode"
 
 #: cashier/models.py:251
 msgid "Selectable"
@@ -260,11 +244,9 @@ msgid "Bookings to journal"
 msgstr "Buchung in Kassenbuch"
 
 #: cashier/models.py:264
-#, fuzzy
-#| msgid "Can view payment methods"
 msgctxt "Cashier"
 msgid "Journal for this payment method"
-msgstr "Kann Zahlungsmethoden einsehen"
+msgstr "Kassenbuch für diese Zahlungsmethode"
 
 #: cashier/models.py:268
 msgid "payment methods"
@@ -284,53 +266,41 @@ msgid "created by"
 msgstr "erstellt von"
 
 #: cashier/models.py:292
-#, fuzzy
-#| msgctxt "Fablog"
-#| msgid "Labmanager who closed the Fablog"
-msgctxt "Cash"
-msgid "Labmanager who created the cash account"
-msgstr "Labmanager der den Fablog geschlossen hat"
+msgctxt "CashCount"
+msgid "Labmanager who created the cash count"
+msgstr "Labmanager der diesen Kassenbestand erstellt hat"
 
 #: cashier/models.py:295 fablog/models.py:30
 msgid "created at"
 msgstr "erstellt am"
 
 #: cashier/models.py:298
-#, fuzzy
-#| msgid "Machine status end time"
-msgctxt "Cash"
+msgctxt "CashCount"
 msgid "Creation date and time"
-msgstr "Ende Maschinenstatus"
+msgstr "Erstellungsdatum dieses Kassenbestandes"
 
 #: cashier/models.py:301
 msgid "cash count date"
 msgstr "Datum Kassenbestand"
 
 #: cashier/models.py:304
-#, fuzzy
-#| msgid "cash count date"
-msgctxt "Cash"
+msgctxt "CashCount"
 msgid "Cash count date"
 msgstr "Datum Kassenbestand"
 
 #: cashier/models.py:313
-#, fuzzy
-#| msgid "associated Booking"
 msgctxt "Accounts"
 msgid "Associated journal"
-msgstr "verknüpfte Buchung"
+msgstr "verknüpftes Kassenbuch"
 
 #: cashier/models.py:318 fablog/models.py:76
 msgid "fabday"
 msgstr "Fabday"
 
 #: cashier/models.py:322
-#, fuzzy
-#| msgctxt "Fablog"
-#| msgid "FabDay of this Fablog"
 msgctxt "Cashier"
 msgid "FabDay of this CashCount"
-msgstr "FabDay dieses Fablogs"
+msgstr "FabDay dieses Kassenbestands"
 
 #: cashier/models.py:328 cashier/models.py:329
 msgid "total cash"
@@ -377,11 +347,9 @@ msgid "Labmanager who created the Fablog"
 msgstr "Labmanager der den Fablog erstellt hat"
 
 #: fablog/models.py:33
-#, fuzzy
-#| msgid "Machine status end time"
 msgctxt "Fablog"
 msgid "Creation date and time"
-msgstr "Ende Maschinenstatus"
+msgstr "Erstellungsdatum und -zeit"
 
 #: fablog/models.py:43
 msgid "Closed by"
@@ -406,19 +374,15 @@ msgid "member"
 msgstr "Mitglied"
 
 #: fablog/models.py:64
-#, fuzzy
-#| msgid "Members"
 msgctxt "Fablog"
 msgid "Member"
-msgstr "Mitglieder"
+msgstr "Mitglied"
 
 #: fablog/models.py:68
 msgid "notes"
 msgstr "Notizen"
 
 #: fablog/models.py:71
-#, fuzzy
-#| msgid "Close Fablog"
 msgctxt "Fablog"
 msgid "Notes on the Fablog"
 msgstr "Notizen zum Fablog"
@@ -509,22 +473,18 @@ msgid "start time"
 msgstr "Startzeit"
 
 #: fablog/models.py:271
-#, fuzzy
-#| msgid "Machine status start"
 msgctxt "Machines used"
 msgid "Machine use start time"
-msgstr "Anfang Maschinenstatus"
+msgstr "Anfang Maschinenbenützung"
 
 #: fablog/models.py:276 machines/models.py:94
 msgid "end time"
 msgstr "Endzeit"
 
 #: fablog/models.py:279
-#, fuzzy
-#| msgid "Machine status end time"
 msgctxt "Machines used"
 msgid "Machine use end time"
-msgstr "Ende Maschinenstatus"
+msgstr "Ende Maschinenbenutzung"
 
 #: fablog/models.py:282
 msgid "machine used"
@@ -903,14 +863,18 @@ msgid "Type"
 msgstr "Typ"
 
 #: templates/cashier/journal_booking_listview.html:15
-msgid "Comment"
-msgstr "Buchungstext"
+msgid "Contra account"
+msgstr "Gegenkonto"
 
 #: templates/cashier/journal_booking_listview.html:16
+msgid "Booking text"
+msgstr "Buchungstext"
+
+#: templates/cashier/journal_booking_listview.html:17
 msgid "Income"
 msgstr "Einnahmen"
 
-#: templates/cashier/journal_booking_listview.html:17
+#: templates/cashier/journal_booking_listview.html:18
 msgid "Expenses"
 msgstr "Ausgaben"
 
@@ -1018,33 +982,15 @@ msgstr "Ausstehend"
 msgid "digitalFablog Login"
 msgstr "digitalFablog Login"
 
-#: templates/members/login.html:30
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "              Your account doesn't have access to this page.\n"
-#| "              To proceed, please login with an account that has access.\n"
-msgid ""
-"\n"
-"              Your account doesn't have access to this page.\n"
-"              To proceed, please login with an account that has access.\n"
-"              "
-msgstr ""
-"\n"
-"              Ihr Account hat keinen Zugriff auf diese Seite.\n"
-"              Bitte loggen Sie sich mit einem anderen Account ein um "
-"fortzufahren.\n"
-"              "
-
-#: templates/members/login.html:38
+#: templates/members/login.html:35
 msgid "please log in"
 msgstr "Bitte loggen sie sich ein"
 
-#: templates/members/login.html:60
+#: templates/members/login.html:57
 msgid "Sign in"
 msgstr "Einloggen"
 
-#: templates/members/login.html:66
+#: templates/members/login.html:63
 msgid "Become a Member of Fablab Zürich!"
 msgstr "Werde Mitglied im Fablab Zürich!"
 

@@ -288,19 +288,19 @@ class CashCount(models.Model):
         on_delete=models.PROTECT,
         verbose_name=_('created by'),
         help_text=pgettext(
-            'Cash',
-            'Labmanager who created the cash account'))
+            'CashCount',
+            'Labmanager who created the cash count'))
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('created at'),
         help_text=pgettext(
-            'Cash',
+            'CashCount',
             'Creation date and time'))
     cashier_date = models.DateField(
         default=timezone.now,
         verbose_name=_('cash count date'),
         help_text=pgettext(
-            'Cash',
+            'CashCount',
             'Cash count date'))
 
     journal = models.ForeignKey(
