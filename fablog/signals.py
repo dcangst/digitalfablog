@@ -9,7 +9,7 @@ from django.conf import settings
 from django.utils import timezone
 
 # local
-from .models import Fablog
+from fablog.models import Fablog
 
 
 @receiver(post_save, sender=Fablog)
@@ -33,18 +33,20 @@ def make_fablog_bookings(sender, instance, **kwargs):
                     new_booking = Booking.objects.create(
                         booking_type=Booking.BOOKING,
                         journal=payment.payment_method.journal,
-                        account=positions[-1]['contra_account'],
+                        contra_account=positions[-1]['contra_account'],
                         amount=positions[-1]['amount'],
                         text=positions[-1]['text'])
                     new_bookings.append(new_booking)
                     amount = amount - positions[-1]['amount']
                     positions.pop()
+                    if amount == 0:
+                        break
                 elif amount < positions[-1]['amount']:
                     positions[-1]['text'] += " (part)"
                     new_booking = Booking.objects.create(
                         booking_type=Booking.BOOKING,
                         journal=payment.payment_method.journal,
-                        account=positions[-1]['contra_account'],
+                        contra_account=positions[-1]['contra_account'],
                         amount=amount,
                         text=positions[-1]['text'])
                     new_bookings.append(new_booking)
