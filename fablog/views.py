@@ -14,7 +14,7 @@ from extra_views import UpdateWithInlinesView, NamedFormsetsMixin
 
 # local
 from .models import Fablog, FablogMemberships, FabDay
-from .forms import NewFablogForm, FablogForm, MachinesUsedInline, FablogMembershipsInline
+from .forms import NewFablogForm, FablogForm, MachinesUsedInline, FablogMembershipsInline, FablogVariaInline
 from members.models import User, MembershipType
 
 
@@ -86,8 +86,8 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
     template_name = "fablog/fablog_updateview.html"
     model = Fablog
     form_class = FablogForm
-    inlines = [MachinesUsedInline, FablogMembershipsInline]
-    inlines_names = ['machinesFS', "membershipsFS"]
+    inlines = [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline]
+    inlines_names = ['machinesFS', "membershipsFS", "variaFS"]
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()

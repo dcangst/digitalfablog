@@ -3,6 +3,7 @@
 {% load bootstrap4 %}
 {% load humanize %}
 {% load i18n %}
+{% load l10n %}
 {% block main-content %}
 <div class="container-fluid pt-3">
   <div class="row justify-content-lg-center">
@@ -48,7 +49,7 @@
   <script type="text/javascript">
     $( document ).ready(function() {
       value = $('#id_amount').val()
-      if ( value > {{ fablog.dues }}){
+      if ( value > {{ fablog.dues|unlocalize }}){
         $('#id_remainder_as_donation').parents(".helper").removeClass("invisible");
       } else {
         $('#id_remainder_as_donation').parents(".helper").addClass("invisible");
@@ -56,7 +57,7 @@
     });
     $( '#id_amount' ).on('change ready', function() {
       value = $(this).val()
-      if ( value > {{ fablog.dues }}){
+      if ( value >= {{ fablog.dues|unlocalize }}){
         $('#id_remainder_as_donation').parents(".helper").removeClass("invisible");
       } else {
         $('#id_remainder_as_donation').parents(".helper").addClass("invisible");

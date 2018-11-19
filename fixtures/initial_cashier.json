@@ -4,8 +4,7 @@
   "pk": 1,
   "fields": {
     "number": 1000,
-    "name": "Kasse",
-    "default_journal": true
+    "name": "Kasse"
   }
 },
 {
@@ -13,8 +12,7 @@
   "pk": 2,
   "fields": {
     "number": 1020,
-    "name": "PostFinance",
-    "default_journal": false
+    "name": "PostFinance"
   }
 },
 {
@@ -205,6 +203,16 @@
     "name": "Entsorgung",
     "description": "Entsorgungsgeb\u00fchren",
     "expense_account": true
+  }
+},
+{
+  "model": "cashier.contraaccount",
+  "pk": 20,
+  "fields": {
+    "number": "3403",
+    "name": "Vermietung FabRocket Lastenvelo",
+    "description": "",
+    "expense_account": false
   }
 },
 {

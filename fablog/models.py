@@ -6,6 +6,7 @@ from math import ceil
 # Django
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -83,6 +84,11 @@ class Fablog(models.Model):
         through="MachinesUsed",
         verbose_name=_("machines used"))
 
+    varia = models.ManyToManyField(
+        "fablog.Varia",
+        through="FablogVaria",
+        verbose_name=_("Various"))
+
     memberships = models.ManyToManyField(
         "members.MembershipType",
         through="FablogMemberships",
@@ -124,6 +130,14 @@ class Fablog(models.Model):
         return total_machine_costs
     total_machines.short_description = _("subtotal machines")
 
+    def total_varia(self):
+        varia = self.fablogvaria_set.all()
+        total_varia_costs = 0
+        for var in varia:
+            total_varia_costs += var.price()
+        return total_varia_costs
+    total_machines.short_description = _("subtotal varia")
+
     def total_memberships(self):
         memberships = self.fablogmemberships_set.all()
         total_membership_costs = 0
@@ -149,7 +163,7 @@ class Fablog(models.Model):
     total_bookings.short_description = _("total bookings")
 
     def total(self):
-        return self.total_machines() + self.total_memberships() + self.donation
+        return self.total_machines() + self.total_memberships() + self.total_varia()
     total.short_description = _("total overall")
 
     def dues(self):
@@ -178,13 +192,13 @@ class Fablog(models.Model):
             } for x in self.machinesused_set.all()]
         positions.extend(machines_list)
 
-        # # materials used
-        # materials_list = [{
-        #     'contra_account': x.material.contra_account,
-        #     'amount': x.price(),
-        #     'text': _('Sale of {material_name}').format(material_name=x.material.name)
-        #     } for x in self.materialsused_set.all()]
-        # positions.extend(materials_list)
+        # varia
+        varia_list = [{
+            'contra_account': x.varia.contra_account,
+            'amount': x.price(),
+            'text': x.booking_text()
+            } for x in self.fablogvaria_set.all()]
+        positions.extend(varia_list)
 
         # memberships (should only ever be one, but theoretically possible to have more)
         membership_list = []
@@ -229,17 +243,6 @@ class Fablog(models.Model):
                         }
                     )
         positions.extend(membership_list)
-
-        # donation
-        if self.donation != 0:
-            donation_list = [{
-                'contra_account': "3601",
-                'ammount': self.donation,
-                'text': _('Donation from {first_name} {last_name}').format(
-                    first_name=self.member.first_name,
-                    last_name=self.member.last_name)
-            }]
-            positions.extend(donation_list)
 
         return positions
 
@@ -309,6 +312,78 @@ class MachinesUsed(models.Model):
             if self.end_time < self.start_time:
                 raise ValidationError({
                     'end_time': 'End Time must be after start time!'})
+
+
+class Varia(models.Model):
+    """ Various positions for Fablog """
+    name = models.CharField(
+        max_length=255,
+        verbose_name=_("name"),
+        help_text=_("varia name"))
+    contra_account = models.ForeignKey(
+        "cashier.ContraAccount",
+        on_delete=models.PROTECT,
+        verbose_name=_("account to"),
+        help_text=_("account to bill to"))
+    order = models.PositiveSmallIntegerField(
+        default=1000,
+        verbose_name=_("order"),
+        help_text=_("Number to set ordering"))
+
+    class Meta:
+        verbose_name = _('varia')
+        verbose_name_plural = _('varia')
+        ordering = ['order', ]
+
+    def __str__(self):
+        return str(self.name)
+
+
+class FablogVaria(models.Model):
+    fablog = models.ForeignKey(
+        "Fablog",
+        on_delete=models.SET_NULL,
+        null=True)
+    varia = models.ForeignKey(
+        "fablog.Varia",
+        on_delete=models.SET_NULL,
+        null=True)
+    details = models.CharField(
+        max_length=255,
+        verbose_name=_("details"),
+        help_text=_("details"))
+
+    units = models.PositiveSmallIntegerField(
+            default=1,
+            verbose_name=_("units"),
+            help_text=_("Units of Material used"))
+    price_per_unit = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        verbose_name=_("price/unit"),
+        help_text=_("price per unit"))
+
+    class Meta:
+        verbose_name = _('varia position')
+        verbose_name_plural = _('various positions')
+
+    def __str__(self):
+        return str(self.varia.name)
+
+    def price(self):
+        if self.price_per_unit:
+            return self.units * self.price_per_unit
+        else:
+            return 0
+    price.short_description = _("price")
+
+    def booking_text(self):
+        text = _('%(varia_name)s: %(details)s') % {
+            'varia_name': self.varia.name,
+            'details': self.details
+            }
+        return text
 
 
 class FablogMemberships(models.Model):
