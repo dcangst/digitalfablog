@@ -5,7 +5,7 @@
   "fields": {
     "number": 1000,
     "name": "Kasse",
-    "default_account": true
+    "default_journal": true
   }
 },
 {
@@ -14,7 +14,7 @@
   "fields": {
     "number": 1020,
     "name": "PostFinance",
-    "default_account": false
+    "default_journal": false
   }
 },
 {

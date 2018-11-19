@@ -107,7 +107,7 @@ class CashCountCreateView(PermissionRequiredMixin, CreateView):
         return reverse('fablog:home')
 
     def get_initial(self):
-        journal = Journal.objects.get(default_account=True)
+        journal = Journal.objects.get(default_journal=True)
         self.initial = {'journal': journal}
         return super(CashCountCreateView, self).get_initial()
 
