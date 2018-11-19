@@ -14,7 +14,7 @@ from .models import Fablog
 
 @receiver(post_save, sender=Fablog)
 def make_fablog_bookings(sender, instance, **kwargs):
-    if instance.total() > 0 and instance.dues() == 0:
+    if instance.total() > 0 and instance.dues() == 0 and not instance.is_closed():
         # get Models
         Booking = apps.get_model('cashier', 'Booking')
         FablogBookings = apps.get_model('fablog', 'FablogBookings')

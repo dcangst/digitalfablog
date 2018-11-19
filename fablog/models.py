@@ -156,6 +156,12 @@ class Fablog(models.Model):
         return self.total()-self.total_payments()
     dues.short_description = _("dues")
 
+    def is_closed(self):
+        if self.closed_at:
+            return True
+        else:
+            return False
+
     def get_positions(self):
         """
         Get all positions in the fablog and return as a list.
