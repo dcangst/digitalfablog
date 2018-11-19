@@ -78,6 +78,47 @@ class JournalBalance(models.Model):
         return name
 
 
+class ContraAccount(models.Model):
+    number = models.CharField(
+        max_length=4,
+        unique=True,
+        verbose_name=_("contra account number"),
+        help_text=_("Accounting Number of the contra account"))
+
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_("contra account name"),
+        help_text=_("Name of the contra account"))
+
+    description = models.TextField(
+        blank=True,
+        verbose_name=_("Description"),
+        help_text=pgettext(
+            "Cashier",
+            "description of usage of account (keep it short)"))
+
+    expense_account = models.BooleanField(
+        default=True,
+        verbose_name=_('expense account'),
+        help_text=pgettext(
+            'Contra account',
+            'Is this an expense account?'))
+
+    class Meta:
+        verbose_name = _('contra account')
+        verbose_name_plural = _('contra accounts')
+        ordering = ['number', ]
+        permissions = (
+            ('view_bookings', _('Can view bookings')),)
+
+    def __str__(self):
+        name = _('%(number)s %(name)s') % {
+            'number': self.number,
+            'name': self.name
+            }
+        return name
+
+
 class Booking(models.Model):
     """ A booking to an account """
     BOOKING = 0
@@ -104,8 +145,9 @@ class Booking(models.Model):
             'Cashier',
             'Associated journal'))
 
-    account = models.CharField(
-        max_length=4,
+    contra_account = models.ForeignKey(
+        'ContraAccount',
+        on_delete=models.PROTECT,
         verbose_name=_("contra account"),
         help_text=_("account to make the booking to/from"))
 

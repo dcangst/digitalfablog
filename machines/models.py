@@ -35,9 +35,9 @@ class Machine(models.Model):
         validators=[MinValueValidator(0)],
         verbose_name=_("price/unit"),
         help_text=_("price per unit"))
-    contra_account = models.CharField(
-        max_length=4,
-        default="3000",
+    contra_account = models.ForeignKey(
+        "cashier.ContraAccount",
+        on_delete=models.PROTECT,
         verbose_name=_("account to"),
         help_text=_("account to bill to"))
     status = models.ManyToManyField(

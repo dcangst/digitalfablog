@@ -252,23 +252,25 @@ class MembershipType(models.Model):
         verbose_name=_('default membership'),
         help_text=_('Is this the default membership type?'))
     duration = models.DurationField(
-        default=timedelta(weeks=52))
+        default=timedelta(days=365))
     price = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(0)],
         verbose_name=_("price"),
         help_text=_("price of membership"))
-    contra_account_currentperiod = models.CharField(
-        max_length=4,
-        default="3401",
-        verbose_name=_("account to"),
-        help_text=_("account to bill to"))
-    contra_account_nextperiod = models.CharField(
-        max_length=4,
-        default="2302",
-        verbose_name=_("account to"),
-        help_text=_("account to bill to"))
+    contra_account_currentperiod = models.ForeignKey(
+        "cashier.ContraAccount",
+        related_name="contra_account_thisperiod",
+        on_delete=models.PROTECT,
+        verbose_name=_("contra account current period"),
+        help_text=_("account to bill to for current financial period"))
+    contra_account_nextperiod = models.ForeignKey(
+        "cashier.ContraAccount",
+        on_delete=models.PROTECT,
+        related_name="contra_account_nextperiod",
+        verbose_name=_("contra account next period"),
+        help_text=_("account to bill to for next financial period"))
 
     def __str__(self):
         return "{0} ({1})".format(self.name, self.price)

@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 # local
-from .models import CashCount, Journal, Payment, PaymentMethod, Booking, JournalBalance
+from .models import CashCount, Journal, ContraAccount, Payment, PaymentMethod, Booking, JournalBalance
 
 
 class BookingInline(admin.TabularInline):
@@ -22,6 +22,7 @@ class JournalAdmin(admin.ModelAdmin):
 
 admin.site.register(CashCount)
 admin.site.register(Journal, JournalAdmin)
+admin.site.register(ContraAccount)
 admin.site.register(Payment)
 admin.site.register(PaymentMethod)
 admin.site.register(Booking)

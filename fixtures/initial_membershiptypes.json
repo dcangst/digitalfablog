@@ -1,0 +1,26 @@
+[
+{
+  "model": "members.membershiptype",
+  "pk": 1,
+  "fields": {
+    "name": "Mitgliedschaft",
+    "default_type": true,
+    "duration": "365 00:00:00",
+    "price": "156.00",
+    "contra_account_currentperiod": 4,
+    "contra_account_nextperiod": 8
+  }
+},
+{
+  "model": "members.membershiptype",
+  "pk": 2,
+  "fields": {
+    "name": "Mitgliedschaft (KulturLegi)",
+    "default_type": false,
+    "duration": "365 00:00:00",
+    "price": "78.00",
+    "contra_account_currentperiod": 4,
+    "contra_account_nextperiod": 8
+  }
+}
+]
