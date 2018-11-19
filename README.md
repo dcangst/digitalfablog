@@ -42,7 +42,7 @@ echo "from members.models import User; User.objects.create_superuser(email='bruc
 7. (somewhat optional) load initial data from fixtures
 
 ```
-python manage.py loaddata initial_cashier initial_machines initial_materials initial_authgroups initial_memberships
+python manage.py loaddata initial_cashier initial_machines initial_authgroups initial_memberships
 ```
 
 ### Code Style

@@ -31,7 +31,7 @@
         </td>
       </tr>
     {% endfor %}
-    {% if fablog.machinesused_set.all %}
+    <!-- {% if fablog.machinesused_set.all %}
       <tr>
         <td colspan="2" align="right">
           <em>{% trans "Subtotal Machines" %}</em>
@@ -60,7 +60,7 @@
           <em>{{fablog.total_materials}}</em>
         </td>
       </tr>
-    {% endif %}
+    {% endif %} -->
     {% for fablogmembership in fablog.fablogmemberships_set.all %}
         <tr>
           <td colspan="2" align="left">

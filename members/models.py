@@ -208,7 +208,7 @@ def legitimation_image_path(instance, filename):
 
 
 class Membership(models.Model):
-    """Intermediate table for User Memberships -> Fablog"""
+    """Membership of the user"""
     member = models.ForeignKey(
         User,
         related_name="membership",

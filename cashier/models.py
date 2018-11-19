@@ -55,7 +55,6 @@ class JournalBalance(models.Model):
         decimal_places=2,
         verbose_name=_('Balance expected'),
         help_text=_('Balance expected'))
-
     balance_counted = models.DecimalField(
         max_digits=20,
         decimal_places=2,

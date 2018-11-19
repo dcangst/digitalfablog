@@ -8,15 +8,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.http import HttpResponseRedirect
 from django.forms.formsets import all_valid
 from django.shortcuts import redirect
-from django.utils.formats import date_format
-from django.utils.translation import gettext_lazy as _
 
 # additional
 from extra_views import UpdateWithInlinesView, NamedFormsetsMixin
 
 # local
 from .models import Fablog, FablogMemberships, FabDay
-from .forms import NewFablogForm, FablogForm, MachinesUsedInline, MaterialsUsedInline, FablogMembershipsInline
+from .forms import NewFablogForm, FablogForm, MachinesUsedInline, FablogMembershipsInline
 from members.models import User
 from memberships.models import Membership
 
@@ -89,8 +87,8 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
     template_name = "fablog/fablog_updateview.html"
     model = Fablog
     form_class = FablogForm
-    inlines = [MachinesUsedInline, MaterialsUsedInline, FablogMembershipsInline]
-    inlines_names = ['machinesFS', 'materialsFS', "membershipsFS"]
+    inlines = [MachinesUsedInline, FablogMembershipsInline]
+    inlines_names = ['machinesFS', "membershipsFS"]
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -130,7 +128,6 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        members = User.members.all()
         members_list = User.members.get_members_list()
         context['members_list'] = members_list
         return context

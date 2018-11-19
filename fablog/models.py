@@ -84,11 +84,6 @@ class Fablog(models.Model):
         through="MachinesUsed",
         verbose_name=_("machines used"))
 
-    materials = models.ManyToManyField(
-        "materials.Material",
-        through="MaterialsUsed",
-        verbose_name=_("materials used"))
-
     memberships = models.ManyToManyField(
         "memberships.Membership",
         through="FablogMemberships",
@@ -130,14 +125,6 @@ class Fablog(models.Model):
         return total_machine_costs
     total_machines.short_description = _("subtotal machines")
 
-    def total_materials(self):
-        materials = self.materialsused_set.all()
-        total_material_costs = 0
-        for material in materials:
-            total_material_costs += material.price()
-        return total_material_costs
-    total_materials.short_description = _("subtotal materials")
-
     def total_memberships(self):
         memberships = self.fablogmemberships_set.all()
         total_membership_costs = 0
@@ -163,7 +150,7 @@ class Fablog(models.Model):
     total_bookings.short_description = _("total bookings")
 
     def total(self):
-        return self.total_machines() + self.total_materials() + self.total_memberships() + self.donation
+        return self.total_machines() + self.total_memberships() + self.donation
     total.short_description = _("total overall")
 
     def dues(self):
@@ -186,13 +173,13 @@ class Fablog(models.Model):
             } for x in self.machinesused_set.all()]
         positions.extend(machines_list)
 
-        # materials used
-        materials_list = [{
-            'contra_account': x.material.contra_account,
-            'amount': x.price(),
-            'text': _('Sale of {material_name}').format(material_name=x.material.name)
-            } for x in self.materialsused_set.all()]
-        positions.extend(materials_list)
+        # # materials used
+        # materials_list = [{
+        #     'contra_account': x.material.contra_account,
+        #     'amount': x.price(),
+        #     'text': _('Sale of {material_name}').format(material_name=x.material.name)
+        #     } for x in self.materialsused_set.all()]
+        # positions.extend(materials_list)
 
         # memberships (should only ever be one, but theoretically possible to have more)
         membership_list = []
@@ -316,46 +303,6 @@ class MachinesUsed(models.Model):
             if self.end_time < self.start_time:
                 raise ValidationError({
                     'end_time': 'End Time must be after start time!'})
-
-
-class MaterialsUsed(models.Model):
-    """materials used in Fablog"""
-
-    fablog = models.ForeignKey(
-        Fablog,
-        on_delete=models.SET_NULL,
-        null=True)
-
-    material = models.ForeignKey(
-        "materials.Material",
-        on_delete=models.SET_NULL,
-        null=True)
-
-    units = models.PositiveSmallIntegerField(
-        default=1,
-        verbose_name=_("units"),
-        help_text=_("Units of Material used"))
-
-    price_per_unit = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        validators=[MinValueValidator(0)],
-        verbose_name=_("price/unit"),
-        help_text=_("price per unit"))
-
-    class Meta:
-        verbose_name = _('material used')
-        verbose_name_plural = _('materials used')
-
-    def __str__(self):
-        return str(self.material.name)
-
-    def price(self):
-        if self.price_per_unit:
-            return self.units * self.price_per_unit
-        else:
-            return 0
-    price.short_description = _("price")
 
 
 class FablogMemberships(models.Model):
