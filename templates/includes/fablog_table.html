@@ -64,7 +64,7 @@
     {% for fablogmembership in fablog.fablogmemberships_set.all %}
         <tr>
           <td colspan="2" align="left">
-            {{fablogmembership.membership.name}} {% trans "until" %} {{ fablogmembership.end_date }}
+            {{fablogmembership.membership_type.name}} {% trans "until" %} {{ fablogmembership.end_date }}
           </td>
           <td align="right">
             {{fablogmembership.price}}

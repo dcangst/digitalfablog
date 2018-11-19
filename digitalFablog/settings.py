@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     # apps
     'fablog',
     'machines',
-    'memberships',
     'members',
     'cashier'
 ]

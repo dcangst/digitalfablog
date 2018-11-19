@@ -6,7 +6,6 @@ from math import ceil
 # Django
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -85,7 +84,7 @@ class Fablog(models.Model):
         verbose_name=_("machines used"))
 
     memberships = models.ManyToManyField(
-        "memberships.Membership",
+        "members.MembershipType",
         through="FablogMemberships",
         verbose_name=_("Memberships"))
 
@@ -184,42 +183,43 @@ class Fablog(models.Model):
         # memberships (should only ever be one, but theoretically possible to have more)
         membership_list = []
         for m in self.fablogmemberships_set.all():
-            if m.end_date.year > m.start_date.year:
-                length_total = m.end_date - m.start_date
-                length_thisperiod = date(year=m.start_date.year, month=12,day=31) - m.start_date
+            end_date = m.end_date()
+            if end_date.year > m.start_date.year:
+                length_total = end_date - m.start_date
+                length_thisperiod = date(year=m.start_date.year, month=12, day=31) - m.start_date
                 price_thisperiod = round(Decimal(length_thisperiod / length_total) * m.price(), 0)
                 price_nextperiod = m.price()-price_thisperiod
                 # add position for this period
                 membership_list.append({
-                    'contra_account': m.membership.contra_account_currentperiod,
+                    'contra_account': m.membership_type.contra_account_currentperiod,
                     'amount': price_thisperiod,
                     'text': _('{full_name} {start} - {end}').format(
                         full_name=self.member.get_full_name(),
                         start=m.start_date.strftime('%d.%m.%Y'),
                         end=date(year=m.start_date.year, month=12, day=31).strftime('%d.%m.%Y'),
-                        membership_type=m.membership.get_membership_type_display())
+                        membership_type=m.membership_type.name)
                         }
                     )
                 # add position for next period
                 membership_list.append({
-                    'contra_account': m.membership.contra_account_nextperiod,
+                    'contra_account': m.membership_type.contra_account_nextperiod,
                     'amount': price_nextperiod,
                     'text': _('{full_name} {start} - {end}').format(
                         full_name=self.member.get_full_name(),
-                        start=date(year=m.end_date.year, month=1, day=1).strftime('%d.%m.%Y'),
-                        end=m.end_date.strftime('%d.%m.%Y'),
-                        membership_type=m.membership.get_membership_type_display())
+                        start=date(year=end_date.year, month=1, day=1).strftime('%d.%m.%Y'),
+                        end=end_date.strftime('%d.%m.%Y'),
+                        membership_type=m.membership_type.name)
                         }
                     )
             else:
                 membership_list.append({
-                    'contra_account': m.membership.contra_account_thisperiod,
+                    'contra_account': m.membership_type.contra_account_thisperiod,
                     'amount': m.price(),
                     'text': _('{full_name} {start} - {end} ({membership_type})').format(
                         full_name=self.member.get_full_name(),
-                        start=m.start_date,
-                        end=m.end_date,
-                        membership_type=m.membership.get_membership_type_display())
+                        start=m.start_date.strftime('%d.%m.%Y'),
+                        end=end_date.strftime('%d.%m.%Y'),
+                        membership_type=m.membership_type.name)
                         }
                     )
         positions.extend(membership_list)
@@ -313,8 +313,8 @@ class FablogMemberships(models.Model):
         on_delete=models.SET_NULL,
         null=True)
 
-    membership = models.ForeignKey(
-        "memberships.Membership",
+    membership_type = models.ForeignKey(
+        "members.MembershipType",
         on_delete=models.SET_NULL,
         null=True)
 
@@ -323,21 +323,20 @@ class FablogMemberships(models.Model):
         verbose_name=_("membership start date"),
         help_text=_("First day of membership"))
 
-    end_date = models.DateField(
-        default=date.today().replace(year = date.today().year + 1),
-        verbose_name=_("membership end date"),
-        help_text=_("Last day of membership"))
+    def end_date(self):
+        return self.start_date + self.membership_type.duration
+    end_date.short_description = _("end date")
 
     def price(self):
-        return self.membership.price
+        return self.membership_type.price
     price.short_description = _("price")
 
     class Meta:
-        verbose_name = _('Membership')
-        verbose_name_plural = _('Memberships')
+        verbose_name = _('associated Membership')
+        verbose_name_plural = _('associated Memberships')
 
     def __str__(self):
-        return str(self.membership.name)
+        return str(self.membership_type.name)
 
 
 class FablogPayments(models.Model):

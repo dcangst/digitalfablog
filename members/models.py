@@ -1,9 +1,10 @@
 # base
-from datetime import date
+from datetime import date, timedelta
 from os import path
 
 # django
 from django.db import models
+from django.core.validators import MinValueValidator
 from django.db.models import Q, When, Case, Value, Max
 from django.utils import timezone
 from django.utils.formats import date_format
@@ -212,18 +213,17 @@ class Membership(models.Model):
     member = models.ForeignKey(
         User,
         related_name="membership",
-        on_delete=models.PROTECT,
-        null=True)
+        on_delete=models.PROTECT)
+    membershipType = models.OneToOneField(
+        "members.MembershipType",
+        on_delete=models.PROTECT)
     fablog = models.OneToOneField(
         "fablog.Fablog",
-        on_delete=models.PROTECT,
-        null=True)
+        on_delete=models.PROTECT)
     start_date = models.DateField(
-        default=date(date.today().year, 1, 1),
         verbose_name=_("membership start date"),
         help_text=_("First day of membership"))
     end_date = models.DateField(
-        default=date(date.today().year, 12, 31),
         verbose_name=_("membership end date"),
         help_text=_("Last day of membership"))
 
@@ -240,3 +240,35 @@ class Membership(models.Model):
     def __str__(self):
         return _("Membership %(year)s") % {
             "year": self.start_date.year}
+
+
+class MembershipType(models.Model):
+    """ types of membership available """
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_("name"))
+    default_type = models.BooleanField(
+        default=False,
+        verbose_name=_('default membership'),
+        help_text=_('Is this the default membership type?'))
+    duration = models.DurationField(
+        default=timedelta(weeks=52))
+    price = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        verbose_name=_("price"),
+        help_text=_("price of membership"))
+    contra_account_currentperiod = models.CharField(
+        max_length=4,
+        default="3401",
+        verbose_name=_("account to"),
+        help_text=_("account to bill to"))
+    contra_account_nextperiod = models.CharField(
+        max_length=4,
+        default="2302",
+        verbose_name=_("account to"),
+        help_text=_("account to bill to"))
+
+    def __str__(self):
+        return "{0} ({1})".format(self.name, self.price)

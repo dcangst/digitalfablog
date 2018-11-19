@@ -62,15 +62,16 @@ def make_fablog_bookings(sender, instance, **kwargs):
                 fablog=instance,
                 booking=booking)
 
-        # if a memebership was payed, add it to member model
+        # if a membership was payed, add it to member model
         if instance.memberships.exists():
-            Membership = apps.get_model('members', 'Membership')
-            Membership.objects.create(
-                member=instance.member,
-                fablog=instance,
-                # use first, because only on should be present. (as defined in the modelform)
-                start_date=instance.fablogmemberships_set.first().start_date,
-                end_date=instance.fablogmemberships_set.first().end_date)
+            for m in instance.fablogmemberships_set.all():
+                Membership = apps.get_model('members', 'Membership')
+                Membership.objects.create(
+                    member=instance.member,
+                    membershipType=m.membership_type,
+                    fablog=instance,
+                    start_date=m.start_date,
+                    end_date=m.end_date())
 
         # set fablog to closed
         Fablog.objects.filter(pk=instance.pk).update(closed_at=timezone.now())

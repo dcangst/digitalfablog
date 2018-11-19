@@ -49,7 +49,7 @@ class FablogMembershipInlineFormset(BaseInlineFormSet):
             form_valid = True
             for i in range(0, self.total_form_count()):
                 data = self.forms[i].cleaned_data
-                if not data.get("membership"):
+                if not data.get("membership_type"):
                     form_valid = False
                     self.forms[0].add_error(None, _('You must add a membership!'))
             return form_valid
@@ -79,7 +79,7 @@ class FablogMembershipsInline(InlineFormSetFactory):
         'extra': 1,
         'max_num': 1,
         'fields': '__all__',
-        'widgets': {'membership': Select(attrs={'class': "custom-select"})}
+        'widgets': {'membership_type': Select(attrs={'class': "custom-select"})}
     }
 
     def get_initial(self):
@@ -87,11 +87,8 @@ class FablogMembershipsInline(InlineFormSetFactory):
             end_date_previous = self.object.member.membership.first().end_date
             # set start date to the next day after expiry
             start_date = end_date_previous + timedelta(days=1)
-            # set end_date to the same date the next year (sorry for the leap year folks ;))
-            end_date = end_date_previous.replace(year=end_date_previous.year + 1)
             self.initial = [{
                 'start_date': start_date,
-                'end_date': end_date
                 }]
         else:
             # use model defaults

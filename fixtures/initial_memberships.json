@@ -1,19 +1,18 @@
 [
 {
-  "model": "memberships.membership",
+  "model": "members.MembershipType",
   "pk": 1,
   "fields": {
     "name": "Mitgliedschaft",
-    "membership_type": 0,
+    "default_type": true,
     "price": "156.00"
   }
 },
 {
-  "model": "memberships.membership",
+  "model": "members.MembershipType",
   "pk": 2,
   "fields": {
     "name": "Mitgliedschaft KulturLegi",
-    "membership_type": 1,
     "price": "78.00"
   }
 }

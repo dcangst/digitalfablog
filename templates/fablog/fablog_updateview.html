@@ -159,9 +159,9 @@
             </a>{% trans "Membership" %}</h4>
             <div class="collapse show" id="collapse-services">
             <div class="row">
-              <div class="col-md-3 d-none d-md-block"><label class="font-weight-bold">{{membershipsFS.0.membership.label}}</label></div>
-              <div class="col-md-3 d-none d-md-block"><label class="font-weight-bold">{{membershipsFS.0.start_date.label}}</label></div>
-              <div class="col-md-3 d-none d-md-block"><label class="font-weight-bold">{{membershipsFS.0.end_date.label}}</label></div>
+              <div class="col-md-4 d-none d-md-block"><label class="font-weight-bold">{{membershipsFS.0.membership_type.label}}</label></div>
+              <div class="col-md-4 d-none d-md-block"><label class="font-weight-bold">{{membershipsFS.0.start_date.label}}</label></div>
+              <div class="col-md-2 d-none d-md-block"></div>
               <div class="col-md-1 d-none d-md-block"><label class="font-weight-bold">{{ price }}</label></div>
               <div class="col-md-1 d-none d-md-block"><label class="font-weight-bold">{{ delete }}</label></div>     
             </div>
@@ -176,21 +176,19 @@
               </div>
               {% endif %}
               <div class="row">
-                <div class="col-md-3">
-                  <label class="font-weight-bold d-md-none">{{membershipsFS.0.membership.label}}</label>
-                  {% bootstrap_field form.membership show_label=False show_help=False %}
+                <div class="col-md-4">
+                  <label class="font-weight-bold d-md-none">{{membershipsFS.0.membership_type.label}}</label>
+                  {% bootstrap_field form.membership_type show_label=False show_help=False %}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                   <label class="font-weight-bold d-md-none">{{membershipsFS.0.start_date.label}}</label>
                     {% bootstrap_field form.start_date show_label=False show_help=False %}
-                  </div>
-                  <div class="col-md-3">
-                    <label class="font-weight-bold d-md-none">{{membershipsFS.0.end_date.label}}</label>
-                    {% bootstrap_field form.end_date show_label=False show_help=False %}
-                  </div>
+                </div>
+                <div class="col-md-2">
+                </div>
                 <div class="col-md-1">
                   <label class="font-weight-bold d-md-none mr-5">{{ price }}</label>
-                  {% if form.instance.membership %}
+                  {% if form.instance.membership_type %}
                     {{ form.instance.price }}
                   {% else %}
                     ...

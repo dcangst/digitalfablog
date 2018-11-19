@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
 # local
-from .models import User, Membership
+from .models import User, Membership, MembershipType
 from fablog.models import Fablog
 
 
@@ -54,3 +54,4 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Membership)
+admin.site.register(MembershipType)

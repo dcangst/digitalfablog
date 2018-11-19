@@ -15,8 +15,7 @@ from extra_views import UpdateWithInlinesView, NamedFormsetsMixin
 # local
 from .models import Fablog, FablogMemberships, FabDay
 from .forms import NewFablogForm, FablogForm, MachinesUsedInline, FablogMembershipsInline
-from members.models import User
-from memberships.models import Membership
+from members.models import User, MembershipType
 
 
 class Home(LoginRequiredMixin, ListView):
@@ -70,8 +69,8 @@ class FablogCreateView(PermissionRequiredMixin, CreateView):
         self.object.save()
         if not self.object.member.membership_valid():
             # add membership to fablog
-            membership = Membership.objects.get(membership_type=0)
-            FablogMemberships.objects.create(fablog=self.object, membership=membership)
+            membership_type = MembershipType.objects.get(default_type=True)
+            FablogMemberships.objects.create(fablog=self.object, membership_type=membership_type)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
