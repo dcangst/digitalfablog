@@ -17,10 +17,6 @@ class Journal(models.Model):
         max_length=255,
         verbose_name=_('journal name'),
         help_text=_('Name of the journal'))
-    default_journal = models.BooleanField(
-        default=False,
-        verbose_name=_('default journal'),
-        help_text=_('Is this the default journal for which cash counts should be recorded?'))
 
     class Meta:
         verbose_name = _('Journal')
@@ -31,12 +27,6 @@ class Journal(models.Model):
             'number': self.number,
             'name': self.name}
         return name
-
-    def clean(self):
-        # check for default account
-        if self.default_journal:
-            if self._meta.model.objects.filter(default_journal=True).exclude(id=self.id).exists():
-                raise ValidationError({'default_journal': _('Only one account can be the default!')})
 
 
 class JournalBalance(models.Model):
@@ -194,7 +184,7 @@ class Booking(models.Model):
             'type': self.get_booking_type_display(),
             'datetime': self.timestamp.strftime('%d.%m.%Y %H:%M'),
             'journal': self.journal.number,
-            'account': self.account,
+            'account': self.contra_account.number,
             'amount': self.amount
             }
         return name

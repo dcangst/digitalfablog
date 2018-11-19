@@ -178,3 +178,9 @@ BOOTSTRAP4 = {
         'inline': 'bootstrap4.renderers.InlineFieldRenderer',
     },
 }
+
+# Application Settings
+
+# default accounts.
+DONATION_CONTRA_ACCOUNT_NUMBER = 3601
+DEFAULT_JOURNAL_NUMBER = 1000

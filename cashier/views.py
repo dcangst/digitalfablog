@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.conf import settings
 
 
 # local
@@ -79,8 +80,30 @@ class FablogPaymentCreateView(PermissionRequiredMixin, CreateView):
         fablog = Fablog.objects.get(pk=self.kwargs['pk'])
         # add donation to fablog if necessary
         if self.donation_amount:
-            fablog.donation = fablog.donation + self.donation_amount
-            fablog.save()
+            Varia = apps.get_model('fablog', 'Varia')
+            if not Varia.objects.filter(contra_account__number=settings.DONATION_CONTRA_ACCOUNT_NUMBER).exists():
+                # create defaults
+                ContraAccount = apps.get_model('cashier', 'ContraAccount')
+                donation_contra_account, created = ContraAccount.objects.get_or_create(
+                    number=settings.DONATION_CONTRA_ACCOUNT_NUMBER,
+                    defaults={'name': 'DEFAULT DONATION ACCOUNT'})
+                if created:
+                    # IMPLEMENT LOGGING
+                    pass
+                donation_varia = Varia.objects.create(
+                    name='DEFAULT DONATION VARIA',
+                    contra_account=donation_contra_account)
+            else:
+                donation_varia = Varia.objects.filter(
+                    contra_account__number=settings.DONATION_CONTRA_ACCOUNT_NUMBER).first()
+            
+            FablogVaria = apps.get_model('fablog', 'FablogVaria')
+            FablogVaria.objects.create(
+                fablog=fablog,
+                varia=donation_varia,
+                details=fablog.member.get_full_name(),
+                units=1,
+                price_per_unit=self.donation_amount)
         # add payment to fablog
         FablogPayments = apps.get_model('fablog', 'FablogPayments')
         self.object = form.save()
@@ -107,7 +130,12 @@ class CashCountCreateView(PermissionRequiredMixin, CreateView):
         return reverse('fablog:home')
 
     def get_initial(self):
-        journal = Journal.objects.get(default_journal=True)
+        journal, created = Journal.objects.get_or_create(
+            number=settings.DEFAULT_JOURNAL_NUMBER,
+            defaults={"name": "DEFAULT DONATION ACCOUNT"})
+        if created:
+            # IMPLEMENT LOGGING
+            pass
         self.initial = {'journal': journal}
         return super(CashCountCreateView, self).get_initial()
 
