@@ -13,6 +13,10 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django.urls import reverse
 
+# additional
+from localflavor.generic.models import IBANField
+from localflavor.generic.countries.sepa import IBAN_SEPA_COUNTRIES
+
 
 class Fablog(models.Model):
     """Fablog object"""
@@ -94,12 +98,29 @@ class Fablog(models.Model):
         through="FablogMemberships",
         verbose_name=_("Memberships"))
 
-    donation = models.DecimalField(
+    expenses = models.ManyToManyField(
+        "cashier.ContraAccount",
+        through="FablogExpenses",
+        verbose_name=_("Expenses"))
+
+    CASH = 0
+    BANK_TRANSFER = 1
+    REFUNG_METHOD_CHOICES = (
+        (CASH, _('Cash from Cashier')),
+        (BANK_TRANSFER, _('Count'))
+    )
+
+    refund_method = models.PositiveSmallIntegerField(
+        choices=REFUNG_METHOD_CHOICES,
         default=0,
-        max_digits=10,
-        decimal_places=2,
-        verbose_name=_('donation'),
-        help_text=_('Donation to add to FabLog'))
+        verbose_name=_('refund method'),
+        help_text=pgettext_lazy(
+            'Cashier',
+            'method for refund'))
+
+    refund_account_iban = IBANField(
+        null=True,
+        include_countries=IBAN_SEPA_COUNTRIES)
 
     payments = models.ManyToManyField(
         "cashier.Payment",
@@ -121,6 +142,12 @@ class Fablog(models.Model):
 
     def get_absolute_url(self):
         return reverse('fablog:detail', args=[str(self.id)])
+
+    def clean(self):
+        if self.expenses.exists() and self.refund_method == self.BANK_TRANSFER and not self.refund_account_iban:
+            raise ValidationError({
+                'refund_account_iban': _(
+                    'Enter an IBAN to get your refund! Also make sure that your address in your profile is correct!')})
 
     def total_machines(self):
         machines = self.machinesused_set.all()
@@ -418,6 +445,40 @@ class FablogMemberships(models.Model):
 
     def __str__(self):
         return str(self.membership_type.name)
+
+
+class FablogExpenses(models.Model):
+    fablog = models.ForeignKey(
+        "Fablog",
+        on_delete=models.SET_NULL,
+        null=True)
+    contra_account = models.ForeignKey(
+        "cashier.ContraAccount",
+        on_delete=models.SET_NULL,
+        null=True)
+    details = models.CharField(
+        max_length=255,
+        verbose_name=_("details"),
+        help_text=_("details"))
+
+    amount = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        verbose_name=_("expense amount"),
+        help_text=_("expense amount"))
+
+    def booking_text(self):
+        return self.details
+
+    class Meta:
+        verbose_name = _('Expense')
+        verbose_name_plural = _('Expenses')
+
+    def __str__(self):
+        name = _('Expense: %(details)s') % {
+            'details': self.details
+            }
+        return name
 
 
 class FablogPayments(models.Model):
