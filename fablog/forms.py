@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from extra_views import InlineFormSetFactory
 
 # local
-from .models import Fablog, MachinesUsed, FablogMemberships, FablogVaria
+from .models import Fablog, MachinesUsed, FablogMemberships, FablogVaria, FablogExpenses
 from members.models import User
 
 
@@ -79,6 +79,16 @@ class FablogVariaInline(InlineFormSetFactory):
         'extra': 1,
         'fields': '__all__',
         'widgets': {'varia': Select(attrs={'class': "custom-select"})}
+    }
+
+
+class FablogExpensesInline(InlineFormSetFactory):
+    model = FablogExpenses
+    formset_class = FablogInlineFormset
+    factory_kwargs = {
+        'extra': 1,
+        'fields': '__all__',
+        'widgets': {'contra_account': Select(attrs={'class': "custom-select"})}
     }
 
 
