@@ -15,7 +15,7 @@
             {% csrf_token %}
             <div class="row">
               <div class="col-lg-6">
-                 {% bootstrap_field form.created_at show_label=True show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='btn btn-outline icon ion-ios-clock-outline' type='button'></button>" addon_after_class='input-group-append'%}
+                 {% bootstrap_field form.created_at show_label=True show_help=False addon_after="<button name='now' data-toggle='tooltip' title='Enter current time' class='input-group-text icon ion-ios-clock-outline' type='button'></button>" addon_after_class='input-group-append'%}
                 <div class="form-group">
                   <label for="id_member">{% trans "Member" %}</label>
                   <select name="member"
