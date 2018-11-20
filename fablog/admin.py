@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Fablog, MachinesUsed, FablogMemberships, FablogPayments,\
-    FablogBookings, FabDay, FablogVaria, Varia
+    FablogBookings, FabDay, FablogVaria, Varia, FablogExpenses
 
 
 class MachinesUsedInline(admin.TabularInline):
@@ -26,15 +26,20 @@ class FablogPaymentsInline(admin.TabularInline):
     extra = 1
 
 
+class FablogExpensesInline(admin.TabularInline):
+    model = FablogExpenses
+    extra = 1
+
+
 class FablogBookingsInline(admin.TabularInline):
     model = FablogBookings
     extra = 1
 
 
 class FablogAdmin(admin.ModelAdmin):
-    inlines = (MachinesUsedInline, FablogVariaInline, FablogMembershipsInline, FablogBookingsInline,
-               FablogPaymentsInline)
-    readonly_fields = ("total_machines", "total_memberships", "total")
+    inlines = (MachinesUsedInline, FablogVariaInline, FablogMembershipsInline, FablogExpensesInline,
+               FablogBookingsInline, FablogPaymentsInline)
+    readonly_fields = ("total_machines", "total_varia", "total_memberships", "total")
 
 
 admin.site.register(Fablog, FablogAdmin)
