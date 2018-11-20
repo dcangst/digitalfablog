@@ -69,11 +69,11 @@
 </script>
 <script type="text/javascript" src={% static "js/dateJs/date.min.js"%}></script>
 <script type="text/javascript">
-    $( "button[name*='now']" ).click(function() {
-      t = new Date()
-      $( this ).parent().siblings('input').val(t.toString( "yyyy-MM-dd HH:mm:ss" ))
-    })
-  </script>
+  $( 'button[name="now"]' ).click(function() {
+    t = new Date()
+    $( this ).parent().parent().siblings('input').val(t.toString( "yyyy-MM-dd HH:mm:ss" ))
+  })
+</script>
 {% endblock extra-javascript %}
 {% block extra_head %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.bootstrap3.css' %}"/>
