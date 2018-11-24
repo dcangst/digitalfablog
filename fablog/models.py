@@ -2,9 +2,11 @@
 from datetime import timedelta, date
 from decimal import Decimal
 from math import ceil
+from operator import itemgetter
 
 # Django
 from django.db import models
+from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.conf import settings
@@ -142,6 +144,72 @@ class Fablog(models.Model):
     def __str__(self):
         return self._meta.verbose_name + " " + str(self.id)
 
+    def save(self, *args, **kwargs):
+        if self.total() > 0 and self.dues() == 0 and not self.is_closed():
+            # get Models
+            Booking = apps.get_model('cashier', 'Booking')
+            FablogBookings = apps.get_model('fablog', 'FablogBookings')
+
+            # payments
+            payments = self.payments.all().order_by('-amount')
+            # create list of fablog positions
+            positions = self.get_positions()
+            positions.sort(key=itemgetter('amount'))
+            # make bookings for all positions
+            new_bookings = list()
+            for payment in payments:
+                amount = payment.amount
+                while len(positions) > 0:
+                    if amount >= positions[-1]['amount']:
+                        new_booking = Booking.objects.create(
+                            booking_type=Booking.BOOKING,
+                            journal=payment.payment_method.journal,
+                            contra_account=positions[-1]['contra_account'],
+                            amount=positions[-1]['amount'],
+                            text=positions[-1]['text'])
+                        new_bookings.append(new_booking)
+                        amount = amount - positions[-1]['amount']
+                        positions.pop()
+                        if amount == 0:
+                            break
+                    elif amount < positions[-1]['amount']:
+                        positions[-1]['text'] += " (part)"
+                        new_booking = Booking.objects.create(
+                            booking_type=Booking.BOOKING,
+                            journal=payment.payment_method.journal,
+                            contra_account=positions[-1]['contra_account'],
+                            amount=amount,
+                            text=positions[-1]['text'])
+                        new_bookings.append(new_booking)
+                        positions[-1]['amount'] = positions[-1]['amount'] - amount
+
+            if settings.DEBUG:
+                # check bookings - just for sanity
+                total_bookings = sum([x.amount for x in new_bookings])
+                total_payments = sum([x.amount for x in payments])
+                assert total_bookings == total_payments
+
+            # add bookings to fablog
+            for booking in new_bookings:
+                FablogBookings.objects.create(
+                    fablog=self,
+                    booking=booking)
+
+            # if a membership was payed, add it to member model
+            if self.memberships.exists():
+                for m in self.fablogmemberships_set.all():
+                    Membership = apps.get_model('members', 'Membership')
+                    Membership.objects.create(
+                        member=self.member,
+                        membershipType=m.membership_type,
+                        fablog=self,
+                        start_date=m.start_date,
+                        end_date=m.end_date())
+
+            # set fablog to closed
+            self.closed_at = timezone.now()
+        super(Fablog, self).save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse('fablog:detail', args=[str(self.id)])
 
@@ -150,7 +218,8 @@ class Fablog(models.Model):
             if self.expenses.exists() and self.refund_method == self.BANK_TRANSFER and not self.refund_account_iban:
                 raise ValidationError({
                     'refund_account_iban': _(
-                        'Enter an IBAN to get your refund! Also make sure that your address in your profile is correct!')})
+                        'Enter an IBAN to get your refund!'
+                        ' Also make sure that your address in your profile is correct!')})
 
     def total_machines(self):
         machines = self.machinesused_set.all()
