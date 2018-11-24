@@ -107,18 +107,20 @@ class Fablog(models.Model):
     BANK_TRANSFER = 1
     REFUNG_METHOD_CHOICES = (
         (CASH, _('Cash from Cashier')),
-        (BANK_TRANSFER, _('Count'))
+        (BANK_TRANSFER, _('bank transfer'))
     )
 
     refund_method = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
         choices=REFUNG_METHOD_CHOICES,
-        default=0,
         verbose_name=_('refund method'),
         help_text=pgettext_lazy(
             'Cashier',
             'method for refund'))
 
     refund_account_iban = IBANField(
+        blank=True,
         null=True,
         include_countries=IBAN_SEPA_COUNTRIES)
 
@@ -144,10 +146,11 @@ class Fablog(models.Model):
         return reverse('fablog:detail', args=[str(self.id)])
 
     def clean(self):
-        if self.expenses.exists() and self.refund_method == self.BANK_TRANSFER and not self.refund_account_iban:
-            raise ValidationError({
-                'refund_account_iban': _(
-                    'Enter an IBAN to get your refund! Also make sure that your address in your profile is correct!')})
+        if self.id:
+            if self.expenses.exists() and self.refund_method == self.BANK_TRANSFER and not self.refund_account_iban:
+                raise ValidationError({
+                    'refund_account_iban': _(
+                        'Enter an IBAN to get your refund! Also make sure that your address in your profile is correct!')})
 
     def total_machines(self):
         machines = self.machinesused_set.all()

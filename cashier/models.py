@@ -256,8 +256,8 @@ class Payment(models.Model):
         return name
 
     def clean(self):
-        if not self.amount > 0:
-            raise ValidationError({'amount': _('Enter an amount larger than zero!')})
+        if not self.amount >= 0:
+            raise ValidationError({'amount': _("Amount can't be negative!")})
 
 
 class PaymentMethod(models.Model):
