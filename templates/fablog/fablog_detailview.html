@@ -28,9 +28,7 @@
         </div>
         <div class="card-footer text-muted d-print-none">
           <a class="btn btn-primary" href="{% url 'fablog:home' %}">{% trans "Home" %}</a>
-          {% if is_labmanager %}
           <button class="btn btn-info" onclick="print_page()">{% trans "print receipt" %}</button>
-          {% endif %}
         </div>
         </form>
         <div class="card-footer d-none d-print-block">
