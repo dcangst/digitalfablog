@@ -92,7 +92,7 @@
               <div class="col-md-10 text-md-right">
                 <b>{% trans "Subtotal Machines" %}</b>
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 text-md-right">
                 {{fablog.total_machines}}
               </div>
             </div>
@@ -150,7 +150,7 @@
               <div class="col-md-10 text-md-right">
                 <b>{% trans "Subtotal Varia" %}</b>
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 text-md-right">
                 {{fablog.total_varia}}
               </div>
             </div>
@@ -206,7 +206,7 @@
               <div class="col-md-10 text-md-right">
                 <b>{% trans "Subtotal Membership" %}</b>
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 text-md-right">
                 {{fablog.total_memberships}}
               </div>
             </div>
@@ -262,6 +262,14 @@
                   <hr>
                 {% endfor %}
               </div>
+              <div class="row">
+                <div class="col-md-10 text-md-right">
+                  <b>{% trans "Subtotal Expenses" %}</b>
+                </div>
+                <div class="col-md-1 text-md-right">
+                  {{fablog.total_expenses}}
+                </div>
+              </div>
             {% endif %}
             
               
@@ -271,7 +279,7 @@
               <div class="col-md-10 text-md-right">
                 <b>{% trans "Total Fablog" %}</b>
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 text-right">
                 {{fablog.total}}
               </div>
             </div>
@@ -279,15 +287,21 @@
               <div class="col-md-10 text-md-right">
                 <b>{% trans "Total Payments" %}</b>
               </div>
-              <div class="col-md-1">
-                -{{fablog.total_payments}}
+              <div class="col-md-1 text-right">
+                {% if fablog.total_payments > 0 %}
+                  -{{fablog.total_payments}}
+                {% else %}
+                  0
+                {% endif %}
               </div>
             </div>
+            
             <div class="row">
-              <div class="col-md-10 text-md-right">
+              <div class="col-md-8"></div>
+              <div class="col-md-2 border-top text-md-right">
                 <b>{% trans "Total" %}</b>
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 text-right border-top">
                 {{fablog.dues}}
               </div>
             </div>
