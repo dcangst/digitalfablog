@@ -31,7 +31,7 @@
         </td>
       </tr>
     {% endfor %}
-    <!-- {% if fablog.machinesused_set.all %}
+    {% if fablog.machinesused_set.all %}
       <tr>
         <td colspan="2" align="right">
           <em>{% trans "Subtotal Machines" %}</em>
@@ -41,26 +41,26 @@
         </td>
       </tr>
     {% endif %}
-    {% for materialsused in fablog.materialsused_set.all %}
+    {% for varia in fablog.fablogvaria_set.all %}
         <tr>
           <td  colspan="2" align="left">
-            {{materialsused.units}} x {{ materialsused.material.name }}
+            {{varia.units}} x {{ varia.details }}
           </td>
           <td align="right">
-            {{materialsused.price}}
+            {{varia.price}}
           </td>
         </tr>
     {% endfor %}
-    {% if fablog.materialsused_set.all %}
+    {% if fablog.fablogvaria_set.all %}
       <tr>
         <td colspan="2" align="right">
-          <em>{% trans "Subtotal Materials" %}</em>
+          <em>{% trans "Subtotal Varia" %}</em>
         </td>
         <td class="border-top border-dark" align="right">
-          <em>{{fablog.total_materials}}</em>
+          <em>{{fablog.total_varia}}</em>
         </td>
       </tr>
-    {% endif %} -->
+    {% endif %}
     {% for fablogmembership in fablog.fablogmemberships_set.all %}
         <tr>
           <td colspan="2" align="left">
@@ -78,6 +78,26 @@
         </td>
         <td class="border-top border-dark" align="right">
           <em>{{fablog.total_memberships}}</em>
+        </td>
+      </tr>
+    {% endif %}
+    {% for expenses in fablog.fablogexpenses_set.all %}
+        <tr>
+          <td colspan="2" align="left">
+            {{expenses.details}}
+          </td>
+          <td align="right">
+            {{expenses.price}}
+          </td>
+        </tr>
+    {% endfor %}
+    {% if fablog.fablogexpenses_set.all %}
+      <tr>
+        <td colspan="2" align="right">
+          <em>{% trans "Subtotal Expenses" %}</em>
+        </td>
+        <td class="border-top border-dark" align="right">
+          <em>{{fablog.total_expenses}}</em>
         </td>
       </tr>
     {% endif %}
