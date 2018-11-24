@@ -83,22 +83,7 @@ class MemberUserManager(models.Manager):
 
     def get_members_list(self):
         members = self.all()
-        members_list = []
-        for m in members:
-            if m.has_payed:
-                status_class = "text-sucess"
-                status = _("expires {date}").format(date = date_format(m.end_date))
-            else:
-                status_class = "text-danger"
-                if m.end_date:
-                    status = _("expired {date}").format(date = date_format(m.end_date))
-                else:
-                    status = _("new")
-            members_list.append({
-                'pk': m.pk,
-                'label': m.get_full_name(),
-                'status': status,
-                'status_class': status_class})
+        members_list = [m.get_member_list_dict() for m in members]
         return(members_list)
 
 
@@ -132,9 +117,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name=_('City'),
         max_length=255)
     phone = models.CharField(
+        blank=True,
         verbose_name=_('Phone'),
         max_length=255)
     birthday = models.DateField(
+        blank=True,
         verbose_name=_('Birthday'))
 
     is_staff = models.BooleanField(
@@ -198,6 +185,23 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return True
         return False
 
+    def get_member_list_dict(self):
+        if self.membership_valid():
+            status_class = "text-sucess"
+            status = _("expires {date}").format(date=date_format(self.membership.first().end_date))
+        else:
+            status_class = "text-danger"
+            if self.membership.exists():
+                status = _("expired {date}").format(date=date_format(self.membership.first().end_date))
+            else:
+                status = _("new")
+        member_dict = {
+            'pk': self.pk,
+            'label': self.get_full_name(),
+            'status': status,
+            'status_class': status_class}
+        return(member_dict)
+
 
 def legitimation_image_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -214,10 +218,10 @@ class Membership(models.Model):
         User,
         related_name="membership",
         on_delete=models.PROTECT)
-    membershipType = models.OneToOneField(
+    membershipType = models.ForeignKey(
         "members.MembershipType",
         on_delete=models.PROTECT)
-    fablog = models.OneToOneField(
+    fablog = models.ForeignKey(
         "fablog.Fablog",
         on_delete=models.PROTECT)
     start_date = models.DateField(

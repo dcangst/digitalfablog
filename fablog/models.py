@@ -427,7 +427,6 @@ class FablogMemberships(models.Model):
         null=True)
 
     start_date = models.DateField(
-        default=date.today,
         verbose_name=_("membership start date"),
         help_text=_("First day of membership"))
 

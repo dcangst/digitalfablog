@@ -48,7 +48,7 @@ class FablogDetailView(LoginRequiredMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not self.object.closed_at and request.user.has_perm('fablog.add_fablog'):
+        if not self.object.closed_at:
             return redirect('fablog:update', **kwargs)
         return super(FablogDetailView, self).get(request, *args, **kwargs)
 
@@ -71,14 +71,25 @@ class FablogCreateView(PermissionRequiredMixin, CreateView):
         if not self.object.member.membership_valid():
             # add membership to fablog
             membership_type = MembershipType.objects.get(default_type=True)
-            FablogMemberships.objects.create(fablog=self.object, membership_type=membership_type)
+            FablogMemberships.objects.create(
+                fablog=self.object,
+                membership_type=membership_type,
+                start_date=date.today())
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        members_list = User.members.get_members_list()
-        context['members_list'] = members_list
+        # only get full list of members for labmanagers
+        if self.request.user.groups.filter(name="labmanager").exists():
+            members_list = User.members.get_members_list()
+            context['members_list'] = members_list
+        else:
+            context['members_list'] = [self.request.user.get_member_list_dict()]
         return context
+
+    def get_initial(self):
+        """Return the initial data to use for forms on this view."""
+        return self.initial.copy()
 
 
 class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithInlinesView):
@@ -87,8 +98,7 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
     template_name = "fablog/fablog_updateview.html"
     model = Fablog
     form_class = FablogForm
-    inlines = [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline, FablogExpensesInline]
-    inlines_names = ['machinesFS', "membershipsFS", "variaFS", "expensesFS"]
+    # inlines definition moved to get_inlines and get_inline_names
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -126,10 +136,26 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
         else:
             return self.forms_invalid(form, inlines)
 
+    def get_inlines(self):
+        if self.request.user.groups.filter(name="labmanager").exists():
+            return [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline, FablogExpensesInline]
+        else:
+            return [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline]
+
+    def get_inlines_names(self):
+        if self.request.user.groups.filter(name="labmanager").exists():
+            return ['machinesFS', "membershipsFS", "variaFS", "expensesFS"]
+        else:
+            return ['machinesFS', "membershipsFS", "variaFS"]
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        members_list = User.members.get_members_list()
-        context['members_list'] = members_list
+        # only get full list of members for labmanagers
+        if self.request.user.groups.filter(name="labmanager").exists():
+            members_list = User.members.get_members_list()
+            context['members_list'] = members_list
+        else:
+            context['members_list'] = [self.request.user.get_member_list_dict()]
         return context
 
     def get_success_url(self):

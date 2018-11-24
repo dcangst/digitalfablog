@@ -1,8 +1,5 @@
-# base
-from datetime import timedelta
-
 # django
-from django.forms import ModelForm, ModelChoiceField, Select, BaseInlineFormSet
+from django.forms import ModelForm, ModelChoiceField, Select, BaseInlineFormSet, DateTimeField
 from django.utils.translation import gettext_lazy as _
 
 # additional
@@ -14,6 +11,7 @@ from members.models import User
 
 
 class FablogForm(ModelForm):
+    created_at = DateTimeField(disabled=True)
 
     class Meta:
         model = Fablog
@@ -86,7 +84,7 @@ class FablogExpensesInline(InlineFormSetFactory):
     model = FablogExpenses
     formset_class = FablogInlineFormset
     factory_kwargs = {
-        'extra': 1,
+        'extra': 2,
         'fields': '__all__',
         'widgets': {'contra_account': Select(attrs={'class': "custom-select"})}
     }
@@ -101,16 +99,3 @@ class FablogMembershipsInline(InlineFormSetFactory):
         'fields': '__all__',
         'widgets': {'membership_type': Select(attrs={'class': "custom-select"})}
     }
-
-    def get_initial(self):
-        if self.object.member.membership.exists():
-            end_date_previous = self.object.member.membership.first().end_date
-            # set start date to the next day after expiry
-            start_date = end_date_previous + timedelta(days=1)
-            self.initial = [{
-                'start_date': start_date,
-                }]
-        else:
-            # use model defaults
-            self.initial = []
-        return self.initial

@@ -31,12 +31,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group">
-                  <label for="id_member">{{form.created_at.label}}</label>
-                  <div class="form-control-plaintext">
-                    {{form.created_at.value}}
-                  </div>
-                </div>
+                    {% bootstrap_field form.created_at show_help=False%}
               </div>
             </div>
 
@@ -306,9 +301,11 @@
             </div>
             </div> 
           </div>
-          <div class="card-footer text-muted">
+          <div class="card-footer text-muted ">
             <button class="btn btn-primary" type="submit" name = "save">{% trans "Save" %}</button>
-            <button class="btn btn-warning" type="submit" name = "close">{% trans "Pay" %}</button>
+            {% if is_labmanager %}
+              <button class="btn btn-warning float-rigth" type="submit" name = "close">{% trans "Pay" %}</button>
+            {% endif %}
           </div>
         </form>
       </div>
