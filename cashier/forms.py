@@ -24,12 +24,6 @@ class FablogTransactionForm(ModelForm):
         model = Transaction
         fields = ("amount", "transaction_method", "remainder_as_donation")
 
-    def __init__(self, *args, **kwargs):
-        super(FablogTransactionForm, self).__init__(*args, **kwargs)
-        if self.initial['amount'] < 0:
-            self.fields['transaction_method'].queryset = TransactionMethod.objects.filter(
-                short_name=settings.TRANSACTION_NAME_FOR_DEFAULT_ACCOUNT)
-
 
 class CashCountForm(ModelForm):
 
