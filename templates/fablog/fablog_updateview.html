@@ -18,7 +18,7 @@
         <form method="post" class="form">
           <div class="card-body">
             {% csrf_token %}
-            <!-- Member & Creation -->
+        <!-- Member & Creation -->
             <div class="form-row">
               <div class="col-md-6">
                 <div class="form-group">
@@ -35,7 +35,8 @@
                     {% bootstrap_field form.created_at show_help=False%}
               </div>
             </div>
-            <!-- Machines -->
+            
+        <!-- Machines -->
             <h4 class="mt-3">
               <a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-machines" role="button" aria-expanded="false" aria-controls="collapseMachines"></a>
               {% trans "Machines" %}
@@ -97,7 +98,7 @@
                 {{fablog.total_machines}}
               </div>
             </div>
-            <!-- Varia -->
+        <!-- Varia -->
             <h4 class="mt-3">
               <a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-varia" role="button" aria-expanded="false" aria-controls="collapseMaterials"></a>
             {% trans "Varia" %}
@@ -155,7 +156,7 @@
                 {{fablog.total_varia}}
               </div>
             </div>
-            <!-- Memberships -->
+        <!-- Memberships -->
             <h4 class="mt-3"><a data-toggle="collapse" class="icon ion-arrow-down-b" href="#collapse-membership" role="button" aria-expanded="false" aria-controls="collapseMembership"></a>
             {% trans "Membership" %}</h4>
             <div class="collapse show" id="collapse-membership">
@@ -211,73 +212,7 @@
                 {{fablog.total_memberships}}
               </div>
             </div>
-
-            {% if is_labmanager %}
-            <!-- Expenses -->
-              <h4 class="mt-3">
-                {% if refundsFS.3 %}
-                <a data-toggle="collapse" class="icon ion-arrow-down-b"{% else} href="#collapse-expenses" role="button" aria-expanded="false" aria-controls="collapseMaterials"></a>
-                {% else %}
-                <a data-toggle="collapse" class="icon ion-arrow-right-b"{% else} href="#collapse-expenses" role="button" aria-expanded="false" aria-controls="collapseMaterials"></a>
-                {% endif %}
-              {% trans "Refunds" context "Fablog" %}
-              {{ refundsFS.management_form }}
-              </h4>
-              {% if refundsFS.3 %}
-              <div class="collapse show" id="collapse-expenses">
-              {% else %}
-              <div class="collapse hide" id="collapse-expenses">
-              {% endif %}
-                <div class="alert alert-warning" role="alert">
-                  {% blocktrans %}
-                    Please be carefull when entering refunds! For expenses please use the expenses form.
-                  {% endblocktrans %}
-                </div> 
-                <div class="row">
-                  <div class="col-md-3 d-none d-md-block"><label class="font-weight-bold">{{refundsFS.0.contra_account.label}}</label></div>
-                  <div class="col-md-6 d-none d-md-block"><label class="font-weight-bold">{{refundsFS.0.details.label}}</label></div>
-                  <div class="col-md-2 d-none d-md-block"><label class="font-weight-bold">{{refundsFS.0.amount.label }}</label></div>
-                  <div class="col-md-1 d-none d-md-block"><label class="font-weight-bold">{{ delete }}</label></div>     
-                </div>
-                {% for form in refundsFS %}
-                  {{ form.id }}
-                  {% if form.non_field_errors %}
-                  <div class="alert alert-danger" role="alert">
-                    {% for error in form.non_field_errors %}
-                      <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
-                    {% endfor %}
-                  </div>
-                  {% endif %}
-                  <div class="row">
-                    <div class="col-md-3">
-                      <label class="font-weight-bold d-md-none">{{refundsFS.0.contra_account.label}}</label>
-                      {% bootstrap_field form.contra_account show_label=False show_help=False %}
-                    </div>
-                    <div class="col-md-6">
-                      <label class="font-weight-bold d-md-none">{{refundsFS.0.details.label}}</label>
-                      {% bootstrap_field form.details show_label=False show_help=False %}
-                    </div>
-                    <div class="col-md-2">
-                      <label class="font-weight-bold d-md-none">{{refundsFS.0.price.label}}</label>
-                      {% bootstrap_field form.price show_label=False show_help=False %}
-                    </div>
-                    <div class="col-md-1 text-md-center">
-                      <label class="font-weight-bold d-md-none mr-5">{{ delete }}</label>
-                      {{form.DELETE}}
-                    </div>
-                  </div>
-                  <hr>
-                {% endfor %}
-              </div>
-              <div class="row">
-                <div class="col-md-10 text-md-right">
-                  <b>{% trans "Subtotal Expenses" %}</b>
-                </div>
-                <div class="col-md-1 text-md-right">
-                  {{fablog.total_expenses}}
-                </div>
-              </div>
-            {% endif %}
+        <!-- Totals -->
             <h4 class="mt-3">{% trans "Total" %}</h4>
             <hr>
             <div class="row">
@@ -310,6 +245,7 @@
                 {{fablog.dues}}
               </div>
             </div>
+        <!-- Notes -->
             <h4 class="mt-3"><a data-toggle="collapse" class="icon ion-arrow-right-b" href="#collapse-notes" role="button" aria-expanded="false" aria-controls="collapseMembership"></a>
             {% trans "Notes" %}</h4>
             <div class="collapse hide" id="collapse-notes">
@@ -320,6 +256,7 @@
             </div>
             </div> 
           </div>
+        <!-- buttons -->
           <div class="card-footer text-muted clearfix">
             <button class="btn btn-primary" type="submit" name = "save">{% trans "Save" %}</button>
             {% if is_labmanager %}

@@ -15,7 +15,7 @@ from extra_views import UpdateWithInlinesView, NamedFormsetsMixin
 # local
 from .models import Fablog, FablogMemberships, FabDay
 from .forms import (NewFablogForm, FablogForm, MachinesUsedInline, FablogMembershipsInline,
-                    FablogVariaInline, FablogRefundsInline)
+                    FablogVariaInline)
 from members.models import User, MembershipType
 
 
@@ -90,7 +90,8 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
     template_name = "fablog/fablog_updateview.html"
     model = Fablog
     form_class = FablogForm
-    # inlines definition moved to get_inlines and get_inline_names
+    inlines = [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline]
+    inlines_names = ['machinesFS', "membershipsFS", "variaFS"]
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -127,18 +128,6 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
                     return HttpResponseRedirect(self.get_close_url())
         else:
             return self.forms_invalid(form, inlines)
-
-    def get_inlines(self):
-        if self.request.user.groups.filter(name="labmanager").exists():
-            return [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline, FablogRefundsInline]
-        else:
-            return [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline]
-
-    def get_inlines_names(self):
-        if self.request.user.groups.filter(name="labmanager").exists():
-            return ['machinesFS', "membershipsFS", "variaFS", "refundsFS"]
-        else:
-            return ['machinesFS', "membershipsFS", "variaFS"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -9,6 +9,7 @@
     </tr>
   </thead>
   <tbody>
+  <!-- machines -->
     {% for machinesused in fablog.machinesused_set.all %}
       <tr>
         <td>
@@ -41,6 +42,7 @@
         </td>
       </tr>
     {% endif %}
+  <!-- varia -->
     {% for varia in fablog.fablogvaria_set.all %}
         <tr>
           <td  colspan="2" align="left">
@@ -61,6 +63,7 @@
         </td>
       </tr>
     {% endif %}
+  <!-- Memberships -->
     {% for fablogmembership in fablog.fablogmemberships_set.all %}
         <tr>
           <td colspan="2" align="left">
@@ -81,26 +84,7 @@
         </td>
       </tr>
     {% endif %}
-    {% for refund in fablog.fablogrefunds_set.all %}
-        <tr>
-          <td colspan="2" align="left">
-            {{refund.details}}
-          </td>
-          <td align="right">
-            {{refund.amount|mul:-1}}
-          </td>
-        </tr>
-    {% endfor %}
-    {% if fablog.fablogrefunds_set.all %}
-      <tr>
-        <td colspan="2" align="right">
-          <em>{% trans "Subtotal refunds" %}</em>
-        </td>
-        <td class="border-top border-dark" align="right">
-          <em>{{fablog.total_refunds|mul:-1}}</em>
-        </td>
-      </tr>
-    {% endif %}
+  <!-- totals -->
     <tr>
       <td colspan="2" align="right">
         <b>{% trans "Total" %}</b>

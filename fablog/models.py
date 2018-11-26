@@ -100,11 +100,6 @@ class Fablog(models.Model):
         through="FablogMemberships",
         verbose_name=_("Memberships"))
 
-    refunds = models.ManyToManyField(
-        "cashier.FinancialAccount",
-        through="FablogRefunds",
-        verbose_name=_("Refunds"))
-
     transactions = models.ManyToManyField(
         "cashier.Transaction",
         through="fablogTransactions",
@@ -148,10 +143,6 @@ class Fablog(models.Model):
         return self.subtotal(self.fablogmemberships_set.all())
     total_memberships.short_description = _("subtotal memberships")
 
-    def total_refunds(self):
-        return self.subtotal(self.fablogrefunds_set.all())
-    total_memberships.short_description = _("subtotal expenses")
-
     def total_transactions(self):
         return self.subtotal(self.fablogtransactions_set.all())
     total_transactions.short_description = _("total transactions")
@@ -163,8 +154,7 @@ class Fablog(models.Model):
     def total(self):
         return (self.total_machines() +
                 self.total_memberships() +
-                self.total_varia() -
-                self.total_refunds())
+                self.total_varia())
     total.short_description = _("total overall")
 
     def dues(self):
@@ -244,13 +234,6 @@ class Fablog(models.Model):
                         }
                     )
         positions.extend(membership_list)
-
-        refunds_list = [{
-            'contra_account': x.contra_account,
-            'amount': x.amount(),
-            'text': x.details
-            } for x in self.fablogrefunds_set.all()]
-        positions.extend(refunds_list)
 
         return positions
 
@@ -426,44 +409,6 @@ class FablogMemberships(models.Model):
 
     def __str__(self):
         return str(self.membership_type.name)
-
-
-class FablogRefunds(models.Model):
-    fablog = models.ForeignKey(
-        "Fablog",
-        on_delete=models.SET_NULL,
-        null=True)
-    contra_account = models.ForeignKey(
-        "cashier.FinancialAccount",
-        on_delete=models.SET_NULL,
-        null=True)
-    details = models.CharField(
-        max_length=255,
-        verbose_name=_("details"),
-        help_text=_("details"))
-
-    price = models.DecimalField(
-        max_digits=7,
-        decimal_places=2,
-        verbose_name=_("amount"),
-        help_text=_("amount"))
-
-    def booking_text(self):
-        return self.details
-
-    class Meta:
-        verbose_name = _('Refunds')
-        verbose_name_plural = _('Refunds')
-
-    def amount(self):
-        """for consistency with other positions"""
-        return self.price
-
-    def __str__(self):
-        name = _('Refund: %(details)s') % {
-            'details': self.details
-            }
-        return name
 
 
 class FablogTransactions(models.Model):
