@@ -168,5 +168,35 @@
     "description": "Unterhalt, Reinigung und Ersatzteile Maschinen",
     "account_type": 1
   }
+},
+{
+  "model": "cashier.financialaccount",
+  "pk": 18,
+  "fields": {
+    "number": 3510,
+    "name": "Ertrag FabCaf\u00e9",
+    "description": "",
+    "account_type": 0
+  }
+},
+{
+  "model": "cashier.transactionmethod",
+  "pk": 1,
+  "fields": {
+    "short_name": "BAR",
+    "long_name": "Barzahlung",
+    "selectable": true,
+    "account": 4
+  }
+},
+{
+  "model": "cashier.transactionmethod",
+  "pk": 2,
+  "fields": {
+    "short_name": "EFT",
+    "long_name": "EC etc.",
+    "selectable": true,
+    "account": 5
+  }
 }
 ]

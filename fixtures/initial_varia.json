@@ -1,0 +1,29 @@
+[
+{
+  "model": "fablog.varia",
+  "pk": 1,
+  "fields": {
+    "name": "Spenden",
+    "contra_account": 8,
+    "order": 10000
+  }
+},
+{
+  "model": "fablog.varia",
+  "pk": 2,
+  "fields": {
+    "name": "Materialverkauf",
+    "contra_account": 6,
+    "order": 1000
+  }
+},
+{
+  "model": "fablog.varia",
+  "pk": 3,
+  "fields": {
+    "name": "Getr\u00e4nke/Kuchen",
+    "contra_account": 18,
+    "order": 2000
+  }
+}
+]
