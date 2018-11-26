@@ -36,9 +36,9 @@ class Machine(models.Model):
         verbose_name=_("price/unit"),
         help_text=_("price per unit"))
     contra_account = models.ForeignKey(
-        "cashier.ContraAccount",
+        "cashier.FinancialAccount",
         on_delete=models.PROTECT,
-        verbose_name=_("account to"),
+        verbose_name=_("contra account"),
         help_text=_("account to bill to"))
     status = models.ManyToManyField(
         "Status",

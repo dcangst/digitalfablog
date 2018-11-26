@@ -38,6 +38,15 @@ class Fablog(models.Model):
             "Fablog",
             "Creation date and time"))
 
+    fabday = models.ForeignKey(
+        "FabDay",
+        related_name="fablogs",
+        verbose_name=_("fabday"),
+        on_delete=models.PROTECT,
+        help_text=pgettext_lazy(
+            "Fablog",
+            "FabDay of this Fablog"))
+
     # this is set to the last labmanager who took a payment. Fablogs are closed in post-save signal
     # when fablog.dues() is = 0.
     closed_by = models.ForeignKey(
@@ -76,15 +85,6 @@ class Fablog(models.Model):
             "Fablog",
             "Notes on the Fablog"))
 
-    fabday = models.ForeignKey(
-        "FabDay",
-        related_name="fablogs",
-        verbose_name=_("fabday"),
-        on_delete=models.PROTECT,
-        help_text=pgettext_lazy(
-            "Fablog",
-            "FabDay of this Fablog"))
-
     machines = models.ManyToManyField(
         "machines.Machine",
         through="MachinesUsed",
@@ -100,41 +100,20 @@ class Fablog(models.Model):
         through="FablogMemberships",
         verbose_name=_("Memberships"))
 
-    expenses = models.ManyToManyField(
-        "cashier.ContraAccount",
-        through="FablogExpenses",
-        verbose_name=_("Expenses"))
+    refunds = models.ManyToManyField(
+        "cashier.FinancialAccount",
+        through="FablogRefunds",
+        verbose_name=_("Refunds"))
 
-    CASH = 0
-    BANK_TRANSFER = 1
-    REFUNG_METHOD_CHOICES = (
-        (CASH, _('Cash from Cashier')),
-        (BANK_TRANSFER, _('bank transfer'))
-    )
+    transactions = models.ManyToManyField(
+        "cashier.Transaction",
+        through="fablogTransactions",
+        verbose_name=_("Transactions"))
 
-    refund_method = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
-        choices=REFUNG_METHOD_CHOICES,
-        verbose_name=_('refund method'),
-        help_text=pgettext_lazy(
-            'Cashier',
-            'method for refund'))
-
-    refund_account_iban = IBANField(
-        blank=True,
-        null=True,
-        include_countries=IBAN_SEPA_COUNTRIES)
-
-    payments = models.ManyToManyField(
-        "cashier.Payment",
-        through="fablogPayments",
-        verbose_name=_("Payments"))
-
-    bookings = models.ManyToManyField(
-        "cashier.Booking",
-        through="fablogBookings",
-        verbose_name=_("Bookings"))
+    entries = models.ManyToManyField(
+        "cashier.Entry",
+        through="fablogEntries",
+        verbose_name=_("Entries"))
 
     class Meta:
         verbose_name = _('fablog')
@@ -145,128 +124,51 @@ class Fablog(models.Model):
         return self._meta.verbose_name + " " + str(self.id)
 
     def save(self, *args, **kwargs):
-        if self.total() > 0 and self.dues() == 0 and not self.is_closed():
-            # get Models
-            Booking = apps.get_model('cashier', 'Booking')
-            FablogBookings = apps.get_model('fablog', 'FablogBookings')
-
-            # payments
-            payments = self.payments.all().order_by('-amount')
-            # create list of fablog positions
-            positions = self.get_positions()
-            positions.sort(key=itemgetter('amount'))
-            # make bookings for all positions
-            new_bookings = list()
-            for payment in payments:
-                amount = payment.amount
-                while len(positions) > 0:
-                    if amount >= positions[-1]['amount']:
-                        new_booking = Booking.objects.create(
-                            booking_type=Booking.BOOKING,
-                            journal=payment.payment_method.journal,
-                            contra_account=positions[-1]['contra_account'],
-                            amount=positions[-1]['amount'],
-                            text=positions[-1]['text'])
-                        new_bookings.append(new_booking)
-                        amount = amount - positions[-1]['amount']
-                        positions.pop()
-                        if amount == 0:
-                            break
-                    elif amount < positions[-1]['amount']:
-                        positions[-1]['text'] += " (part)"
-                        new_booking = Booking.objects.create(
-                            booking_type=Booking.BOOKING,
-                            journal=payment.payment_method.journal,
-                            contra_account=positions[-1]['contra_account'],
-                            amount=amount,
-                            text=positions[-1]['text'])
-                        new_bookings.append(new_booking)
-                        positions[-1]['amount'] = positions[-1]['amount'] - amount
-
-            if settings.DEBUG:
-                # check bookings - just for sanity
-                total_bookings = sum([x.amount for x in new_bookings])
-                total_payments = sum([x.amount for x in payments])
-                assert total_bookings == total_payments
-
-            # add bookings to fablog
-            for booking in new_bookings:
-                FablogBookings.objects.create(
-                    fablog=self,
-                    booking=booking)
-
-            # if a membership was payed, add it to member model
-            if self.memberships.exists():
-                for m in self.fablogmemberships_set.all():
-                    Membership = apps.get_model('members', 'Membership')
-                    Membership.objects.create(
-                        member=self.member,
-                        membershipType=m.membership_type,
-                        fablog=self,
-                        start_date=m.start_date,
-                        end_date=m.end_date())
-
-            # set fablog to closed
-            self.closed_at = timezone.now()
+        # make entries to accounts here
         super(Fablog, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('fablog:detail', args=[str(self.id)])
 
-    def clean(self):
-        if self.id:
-            if self.expenses.exists() and self.refund_method == self.BANK_TRANSFER and not self.refund_account_iban:
-                raise ValidationError({
-                    'refund_account_iban': _(
-                        'Enter an IBAN to get your refund!'
-                        ' Also make sure that your address in your profile is correct!')})
+    def subtotal(self, positions_set):
+        subtotal = 0
+        for position in positions_set:
+            subtotal += position.amount()
+        return subtotal
 
     def total_machines(self):
-        machines = self.machinesused_set.all()
-        total_machine_costs = 0
-        for machine in machines:
-            total_machine_costs += machine.price()
-        return total_machine_costs
+        return self.subtotal(self.machinesused_set.all())
     total_machines.short_description = _("subtotal machines")
 
     def total_varia(self):
-        varia = self.fablogvaria_set.all()
-        total_varia_costs = 0
-        for var in varia:
-            total_varia_costs += var.price()
-        return total_varia_costs
-    total_machines.short_description = _("subtotal varia")
+        return self.subtotal(self.fablogvaria_set.all())
+    total_varia.short_description = _("subtotal varia")
 
     def total_memberships(self):
-        memberships = self.fablogmemberships_set.all()
-        total_membership_costs = 0
-        for membership in memberships:
-            total_membership_costs += membership.price()
-        return total_membership_costs
+        return self.subtotal(self.fablogmemberships_set.all())
     total_memberships.short_description = _("subtotal memberships")
 
-    def total_payments(self):
-        payments = self.fablogpayments_set.all()
-        total_payments = 0
-        for payment in payments:
-            total_payments += payment.payment.amount
-        return total_payments
-    total_payments.short_description = _("total payments")
+    def total_refunds(self):
+        return self.subtotal(self.fablogrefunds_set.all())
+    total_memberships.short_description = _("subtotal expenses")
 
-    def total_bookings(self):
-        bookings = self.fablogbookings_set.all()
-        total_bookings = 0
-        for payment in bookings:
-            total_bookings += payment.booking.amount
-        return total_bookings
-    total_bookings.short_description = _("total bookings")
+    def total_transactions(self):
+        return self.subtotal(self.fablogtransactions_set.all())
+    total_transactions.short_description = _("total transactions")
+
+    def total_entries(self):
+        return self.subtotal(self.fablogentries_set.all())
+    total_entries.short_description = _("total bookings")
 
     def total(self):
-        return self.total_machines() + self.total_memberships() + self.total_varia()
+        return (self.total_machines() +
+                self.total_memberships() +
+                self.total_varia() -
+                self.total_refunds())
     total.short_description = _("total overall")
 
     def dues(self):
-        return self.total()-self.total_payments()
+        return self.total()-self.total_transactions()
     dues.short_description = _("dues")
 
     def is_closed(self):
@@ -286,7 +188,7 @@ class Fablog(models.Model):
         # machines used
         machines_list = [{
             'contra_account': x.machine.contra_account,
-            'amount': x.price(),
+            'amount': x.amount(),
             'text': _('Usage fee {machine_name}').format(machine_name=x.machine.name)
             } for x in self.machinesused_set.all()]
         positions.extend(machines_list)
@@ -294,8 +196,8 @@ class Fablog(models.Model):
         # varia
         varia_list = [{
             'contra_account': x.varia.contra_account,
-            'amount': x.price(),
-            'text': x.booking_text()
+            'amount': x.amount(),
+            'text': x.entry_text()
             } for x in self.fablogvaria_set.all()]
         positions.extend(varia_list)
 
@@ -306,12 +208,12 @@ class Fablog(models.Model):
             if end_date.year > m.start_date.year:
                 length_total = end_date - m.start_date
                 length_thisperiod = date(year=m.start_date.year, month=12, day=31) - m.start_date
-                price_thisperiod = round(Decimal(length_thisperiod / length_total) * m.price(), 0)
-                price_nextperiod = m.price()-price_thisperiod
+                amount_thisperiod = round(Decimal(length_thisperiod / length_total) * m.amount(), 0)
+                amount_nextperiod = m.amount()-amount_thisperiod
                 # add position for this period
                 membership_list.append({
                     'contra_account': m.membership_type.contra_account_currentperiod,
-                    'amount': price_thisperiod,
+                    'amount': amount_thisperiod,
                     'text': _('{full_name} {start} - {end}').format(
                         full_name=self.member.get_full_name(),
                         start=m.start_date.strftime('%d.%m.%Y'),
@@ -322,7 +224,7 @@ class Fablog(models.Model):
                 # add position for next period
                 membership_list.append({
                     'contra_account': m.membership_type.contra_account_nextperiod,
-                    'amount': price_nextperiod,
+                    'amount': amount_nextperiod,
                     'text': _('{full_name} {start} - {end}').format(
                         full_name=self.member.get_full_name(),
                         start=date(year=end_date.year, month=1, day=1).strftime('%d.%m.%Y'),
@@ -342,6 +244,13 @@ class Fablog(models.Model):
                         }
                     )
         positions.extend(membership_list)
+
+        refunds_list = [{
+            'contra_account': x.contra_account,
+            'amount': x.amount(),
+            'text': x.details
+            } for x in self.fablogrefunds_set.all()]
+        positions.extend(refunds_list)
 
         return positions
 
@@ -400,9 +309,9 @@ class MachinesUsed(models.Model):
         return ceil(self.duration() / self.machine.unit)
     units.short_description = _("units")
 
-    def price(self):
+    def amount(self):
         return self.units() * self.machine.price_per_unit
-    price.short_description = _("price")
+    amount.short_description = _("amount")
 
     def clean(self):
         super().clean()
@@ -420,9 +329,9 @@ class Varia(models.Model):
         verbose_name=_("name"),
         help_text=_("varia name"))
     contra_account = models.ForeignKey(
-        "cashier.ContraAccount",
+        "cashier.FinancialAccount",
         on_delete=models.PROTECT,
-        verbose_name=_("account to"),
+        verbose_name=_("contra account"),
         help_text=_("account to bill to"))
     order = models.PositiveSmallIntegerField(
         default=1000,
@@ -466,18 +375,19 @@ class FablogVaria(models.Model):
     class Meta:
         verbose_name = _('varia position')
         verbose_name_plural = _('various positions')
+        ordering = ['varia', ]
 
     def __str__(self):
         return str(self.varia.name)
 
-    def price(self):
+    def amount(self):
         if self.price_per_unit:
             return self.units * self.price_per_unit
         else:
             return 0
-    price.short_description = _("price")
+    amount.short_description = _("amount")
 
-    def booking_text(self):
+    def entry_text(self):
         text = _('%(varia_name)s: %(details)s') % {
             'varia_name': self.varia.name,
             'details': self.details
@@ -506,9 +416,9 @@ class FablogMemberships(models.Model):
         return self.start_date + self.membership_type.duration
     end_date.short_description = _("end date")
 
-    def price(self):
+    def amount(self):
         return self.membership_type.price
-    price.short_description = _("price")
+    amount.short_description = _("amount")
 
     class Meta:
         verbose_name = _('associated Membership')
@@ -518,13 +428,13 @@ class FablogMemberships(models.Model):
         return str(self.membership_type.name)
 
 
-class FablogExpenses(models.Model):
+class FablogRefunds(models.Model):
     fablog = models.ForeignKey(
         "Fablog",
         on_delete=models.SET_NULL,
         null=True)
     contra_account = models.ForeignKey(
-        "cashier.ContraAccount",
+        "cashier.FinancialAccount",
         on_delete=models.SET_NULL,
         null=True)
     details = models.CharField(
@@ -532,27 +442,31 @@ class FablogExpenses(models.Model):
         verbose_name=_("details"),
         help_text=_("details"))
 
-    amount = models.DecimalField(
-        max_digits=5,
+    price = models.DecimalField(
+        max_digits=7,
         decimal_places=2,
-        verbose_name=_("expense amount"),
-        help_text=_("expense amount"))
+        verbose_name=_("amount"),
+        help_text=_("amount"))
 
     def booking_text(self):
         return self.details
 
     class Meta:
-        verbose_name = _('Expense')
-        verbose_name_plural = _('Expenses')
+        verbose_name = _('Refunds')
+        verbose_name_plural = _('Refunds')
+
+    def amount(self):
+        """for consistency with other positions"""
+        return self.price
 
     def __str__(self):
-        name = _('Expense: %(details)s') % {
+        name = _('Refund: %(details)s') % {
             'details': self.details
             }
         return name
 
 
-class FablogPayments(models.Model):
+class FablogTransactions(models.Model):
     """ intermediate table linking Fablogs and Payments"""
 
     fablog = models.ForeignKey(
@@ -560,30 +474,39 @@ class FablogPayments(models.Model):
         on_delete=models.SET_NULL,
         null=True)
 
-    payment = models.OneToOneField(
-        "cashier.Payment",
+    transaction = models.OneToOneField(
+        "cashier.Transaction",
         on_delete=models.PROTECT)
 
     class Meta:
-        verbose_name = _('associated Payment')
-        verbose_name_plural = _('associated Payments')
+        verbose_name = _('associated transaction')
+        verbose_name_plural = _('associated transactions')
+
+    def amount(self):
+        """for consistency with positions on fablog"""
+        return self.transaction.amount
 
 
-class FablogBookings(models.Model):
-    """ intermediate table linking Fablogs and Bookings"""
+class FablogEntries(models.Model):
+    """ intermediate table linking Fablogs and Entries"""
 
     fablog = models.ForeignKey(
         Fablog,
         on_delete=models.SET_NULL,
         null=True)
 
-    booking = models.OneToOneField(
-        "cashier.Booking",
+    entry = models.OneToOneField(
+        "cashier.Entry",
         on_delete=models.PROTECT)
 
     class Meta:
-        verbose_name = _('associated Booking')
-        verbose_name_plural = _('associated Bookings')
+        verbose_name = _('associated entry')
+        verbose_name_plural = _('associated entries')
+
+    def amount(self):
+        """for consistency with positions on fablog"""
+        return self.entry.amount
+
 
 
 class FabDay(models.Model):

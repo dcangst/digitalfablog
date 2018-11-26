@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from extra_views import InlineFormSetFactory
 
 # local
-from .models import Fablog, MachinesUsed, FablogMemberships, FablogVaria, FablogExpenses
+from .models import Fablog, MachinesUsed, FablogMemberships, FablogVaria, FablogRefunds
 from members.models import User
 
 
@@ -80,8 +80,8 @@ class FablogVariaInline(InlineFormSetFactory):
     }
 
 
-class FablogExpensesInline(InlineFormSetFactory):
-    model = FablogExpenses
+class FablogRefundsInline(InlineFormSetFactory):
+    model = FablogRefunds
     formset_class = FablogInlineFormset
     factory_kwargs = {
         'extra': 2,

@@ -2,11 +2,12 @@
 from django.contrib import admin
 
 # local
-from .models import CashCount, Journal, ContraAccount, Payment, PaymentMethod, Booking, JournalBalance
+from .models import CashCount, FinancialAccount, Transaction, TransactionMethod, Entry
 
 
-class BookingInline(admin.TabularInline):
-    model = Booking
+class EntryInline(admin.TabularInline):
+    model = Entry
+    fk_name = 'account'
     extra = 1
 
 
@@ -16,14 +17,17 @@ class CashCountInline(admin.TabularInline):
     extra = 1
 
 
-class JournalAdmin(admin.ModelAdmin):
-    inlines = (BookingInline, CashCountInline)
+class FinancialAccountAdmin(admin.ModelAdmin):
+    list_display = ('number', 'name', 'description', 'account_type')
+    inlines = (EntryInline, CashCountInline)
+
+
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ("timestamp", "transaction_method", "amount")
 
 
 admin.site.register(CashCount)
-admin.site.register(Journal, JournalAdmin)
-admin.site.register(ContraAccount)
-admin.site.register(Payment)
-admin.site.register(PaymentMethod)
-admin.site.register(Booking)
-admin.site.register(JournalBalance)
+admin.site.register(FinancialAccount, FinancialAccountAdmin)
+admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(TransactionMethod)
+admin.site.register(Entry)

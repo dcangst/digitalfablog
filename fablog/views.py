@@ -15,7 +15,7 @@ from extra_views import UpdateWithInlinesView, NamedFormsetsMixin
 # local
 from .models import Fablog, FablogMemberships, FabDay
 from .forms import (NewFablogForm, FablogForm, MachinesUsedInline, FablogMembershipsInline,
-                    FablogVariaInline, FablogExpensesInline)
+                    FablogVariaInline, FablogRefundsInline)
 from members.models import User, MembershipType
 
 
@@ -32,14 +32,6 @@ class Home(LoginRequiredMixin, ListView):
         if not self.request.user.has_perm('fablog.add_fablog'):
             queryset = queryset.filter(fablogs__member=self.request.user)
         return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # included_fablogs_dates = [i['created_at'].date() for i in context['fablogs'].values("created_at")]
-        # context["cashcounts"] = CashCount.objects.filter(
-        #     cashier_date__in=included_fablogs_dates).distinct('cashier_date')
-        return context
 
 
 class FablogDetailView(LoginRequiredMixin, DetailView):
@@ -138,13 +130,13 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
 
     def get_inlines(self):
         if self.request.user.groups.filter(name="labmanager").exists():
-            return [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline, FablogExpensesInline]
+            return [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline, FablogRefundsInline]
         else:
             return [MachinesUsedInline, FablogMembershipsInline, FablogVariaInline]
 
     def get_inlines_names(self):
         if self.request.user.groups.filter(name="labmanager").exists():
-            return ['machinesFS', "membershipsFS", "variaFS", "expensesFS"]
+            return ['machinesFS', "membershipsFS", "variaFS", "refundsFS"]
         else:
             return ['machinesFS', "membershipsFS", "variaFS"]
 
@@ -162,7 +154,7 @@ class FablogUpdateView(PermissionRequiredMixin, NamedFormsetsMixin, UpdateWithIn
         return reverse('fablog:home')
 
     def get_close_url(self):
-        return reverse('fablog:payment', args=(self.get_object().id,))
+        return reverse('fablog:transaction', args=(self.get_object().id,))
 
     def forms_valid(self, form, inlines):
         """

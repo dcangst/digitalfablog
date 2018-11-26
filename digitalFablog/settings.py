@@ -113,7 +113,7 @@ PASSWORD_HASHERS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'de'
+LANGUAGE_CODE = 'en-US'
 TIME_ZONE = 'CET'
 USE_I18N = True
 USE_L10N = True
@@ -183,4 +183,5 @@ BOOTSTRAP4 = {
 
 # default accounts.
 DONATION_CONTRA_ACCOUNT_NUMBER = 3601
-DEFAULT_JOURNAL_NUMBER = 1000
+DEFAULT_ACCOUNT_NUMBER = 1000
+TRANSACTION_NAME_FOR_DEFAULT_ACCOUNT = "BAR"

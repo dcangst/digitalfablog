@@ -37,7 +37,7 @@
         <li class="nav-item dropdown{% if 'cashier' in request.path %} active{% endif %}">
           <a class="nav-link dropdown-toggle" id="cashierDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Cashier" %}</a>
           <div class="dropdown-menu" aria-labelledby="cashierDropdown">
-            <a class="dropdown-item" href="{% url 'cashier:account' 1 %}">{% trans "Cashier" %}</a>
+            <a class="dropdown-item" href="{% url 'cashier:journal' 1 %}">{% trans "Cashier" %}</a>
             <a class="dropdown-item" href="{% url 'cashier:new_cash_count' %}">{% trans "Enter Cash Count" %}</a>
             <a class="dropdown-item" href="#">{% trans "Enter Expenses" %}</a>
           </div>

@@ -27,14 +27,14 @@
           {% endif %}
         </td>
         <td align="right">
-          {{ machinesused.price }}
+          {{ machinesused.amount }}
         </td>
       </tr>
     {% endfor %}
     {% if fablog.machinesused_set.all %}
       <tr>
         <td colspan="2" align="right">
-          <em>{% trans "Subtotal Machines" %}</em>
+          <em>{% trans "Subtotal machines" %}</em>
         </td>
         <td class="border-top border-dark" align="right">
           <em>{{fablog.total_machines}}<em>
@@ -47,14 +47,14 @@
             {{varia.units}} x {{ varia.details }}
           </td>
           <td align="right">
-            {{varia.price}}
+            {{varia.amount}}
           </td>
         </tr>
     {% endfor %}
     {% if fablog.fablogvaria_set.all %}
       <tr>
         <td colspan="2" align="right">
-          <em>{% trans "Subtotal Varia" %}</em>
+          <em>{% trans "Subtotal varia" %}</em>
         </td>
         <td class="border-top border-dark" align="right">
           <em>{{fablog.total_varia}}</em>
@@ -67,37 +67,37 @@
             {{fablogmembership.membership_type.name}} {% trans "until" %} {{ fablogmembership.end_date }}
           </td>
           <td align="right">
-            {{fablogmembership.price}}
+            {{fablogmembership.amount}}
           </td>
         </tr>
     {% endfor %}
     {% if fablog.fablogmemberships_set.all %}
       <tr>
         <td colspan="2" align="right">
-          <em>{% trans "Subtotal Memberships" %}</em>
+          <em>{% trans "Subtotal memberships" %}</em>
         </td>
         <td class="border-top border-dark" align="right">
           <em>{{fablog.total_memberships}}</em>
         </td>
       </tr>
     {% endif %}
-    {% for expenses in fablog.fablogexpenses_set.all %}
+    {% for refund in fablog.fablogrefunds_set.all %}
         <tr>
           <td colspan="2" align="left">
-            {{expenses.details}}
+            {{refund.details}}
           </td>
           <td align="right">
-            {{expenses.price}}
+            {{refund.amount|mul:-1}}
           </td>
         </tr>
     {% endfor %}
-    {% if fablog.fablogexpenses_set.all %}
+    {% if fablog.fablogrefunds_set.all %}
       <tr>
         <td colspan="2" align="right">
-          <em>{% trans "Subtotal Expenses" %}</em>
+          <em>{% trans "Subtotal refunds" %}</em>
         </td>
         <td class="border-top border-dark" align="right">
-          <em>{{fablog.total_expenses}}</em>
+          <em>{{fablog.total_refunds|mul:-1}}</em>
         </td>
       </tr>
     {% endif %}
@@ -109,13 +109,13 @@
         <b>{{fablog.total}}</b>
       </td>
     </tr>
-    {% for fablogpayments in fablog.fablogpayments_set.all %}
+    {% for transaction in fablog.fablogtransactions_set.all %}
         <tr>
           <td colspan="2" align="left">
-            {{ fablogpayments.payment }}
+            {{ transaction.transaction }}
           </td>
           <td align="right">
-            {{fablogpayments.payment.amount|mul:-1}}
+            {{ transaction.amount|mul:-1 }}
           </td>
         </tr>
     {% endfor %}

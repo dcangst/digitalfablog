@@ -12,40 +12,40 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.conf import settings
 
-
 # local
-from .models import Payment, Booking, Journal, CashCount
-from .forms import FablogPaymentForm, CashCountForm
+from .models import Transaction, Entry, FinancialAccount, CashCount
+from .forms import FablogTransactionForm, CashCountForm
 from fablog.models import FabDay
 
 
-class JournalBookingListView(PermissionRequiredMixin, ListView):
-    permission_required = 'cashier.can_view_bookings'
+class AccountJournalView(PermissionRequiredMixin, ListView):
+    permission_required = 'cashier.can_view_entries'
 
-    template_name = 'cashier/journal_booking_listview.html'
-    context_object_name = 'bookings'
+    template_name = 'cashier/account_journal_view.html'
+    context_object_name = 'entries'
 
     def get_queryset(self):
-        self.journal = get_object_or_404(Journal, pk=self.kwargs['pk'])
-        return Booking.objects.filter(journal=self.journal)
+        self.account = get_object_or_404(FinancialAccount, pk=self.kwargs['pk'])
+        # annotate balance expected here
+        return Entry.objects.filter(account=self.account)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['journal'] = self.journal
+        context['account'] = self.account
         return context
 
 
-class FablogPaymentCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = 'cashier.add_booking'
+class FablogTransactionCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = 'cashier.add_entry'
 
     template_name = 'fablog/fablog_bookingupdateview.html'
-    model = Payment
-    form_class = FablogPaymentForm
+    model = Transaction
+    form_class = FablogTransactionForm
 
     def get_context_data(self, **kwargs):
         Fablog = apps.get_model('fablog', 'Fablog')
         fablog = Fablog.objects.get(pk=self.kwargs['pk'])
-        self.initial = {'amount': fablog.dues}
+        self.initial = {'amount': fablog.dues()}
         context = super().get_context_data(**kwargs)
         context['fablog'] = fablog
         return context
@@ -83,10 +83,12 @@ class FablogPaymentCreateView(PermissionRequiredMixin, CreateView):
             Varia = apps.get_model('fablog', 'Varia')
             if not Varia.objects.filter(contra_account__number=settings.DONATION_CONTRA_ACCOUNT_NUMBER).exists():
                 # create defaults
-                ContraAccount = apps.get_model('cashier', 'ContraAccount')
-                donation_contra_account, created = ContraAccount.objects.get_or_create(
+                FinancialAccount = apps.get_model('cashier', 'FinancialAccount')
+                donation_contra_account, created = FinancialAccount.objects.get_or_create(
                     number=settings.DONATION_CONTRA_ACCOUNT_NUMBER,
-                    defaults={'name': 'DEFAULT DONATION ACCOUNT'})
+                    defaults={
+                        'name': 'DEFAULT DONATION ACCOUNT',
+                        'account_type': FinancialAccount.REVENUES})
                 if created:
                     # IMPLEMENT LOGGING
                     pass
@@ -96,7 +98,6 @@ class FablogPaymentCreateView(PermissionRequiredMixin, CreateView):
             else:
                 donation_varia = Varia.objects.filter(
                     contra_account__number=settings.DONATION_CONTRA_ACCOUNT_NUMBER).first()
-            
             FablogVaria = apps.get_model('fablog', 'FablogVaria')
             FablogVaria.objects.create(
                 fablog=fablog,
@@ -104,13 +105,13 @@ class FablogPaymentCreateView(PermissionRequiredMixin, CreateView):
                 details=fablog.member.get_full_name(),
                 units=1,
                 price_per_unit=self.donation_amount)
-        # add payment to fablog
-        FablogPayments = apps.get_model('fablog', 'FablogPayments')
+        # add transaction to fablog
+        FablogTransactions = apps.get_model('fablog', 'FablogTransactions')
         self.object = form.save()
-        FablogPayments.objects.create(
+        FablogTransactions.objects.create(
             fablog=fablog,
-            payment=self.object)
-        # update fablog.closed_by == the last labmanager who took a payment
+            transaction=self.object)
+        # update fablog.closed_by == the last labmanager who took a transaction
         fablog.closed_by = self.request.user
         fablog.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -130,13 +131,15 @@ class CashCountCreateView(PermissionRequiredMixin, CreateView):
         return reverse('fablog:home')
 
     def get_initial(self):
-        journal, created = Journal.objects.get_or_create(
-            number=settings.DEFAULT_JOURNAL_NUMBER,
-            defaults={"name": "DEFAULT DONATION ACCOUNT"})
+        account, created = FinancialAccount.objects.get_or_create(
+            number=settings.DEFAULT_ACCOUNT_NUMBER,
+            defaults={
+                "name": "DEFAULT CASH ACCOUNT",
+                'account_type': FinancialAccount.REVENUES})
         if created:
             # IMPLEMENT LOGGING
             pass
-        self.initial = {'journal': journal}
+        self.initial = {'account': account}
         return super(CashCountCreateView, self).get_initial()
 
     def form_valid(self, form):

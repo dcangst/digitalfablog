@@ -264,13 +264,13 @@ class MembershipType(models.Model):
         verbose_name=_("price"),
         help_text=_("price of membership"))
     contra_account_currentperiod = models.ForeignKey(
-        "cashier.ContraAccount",
+        "cashier.FinancialAccount",
         related_name="contra_account_thisperiod",
         on_delete=models.PROTECT,
         verbose_name=_("contra account current period"),
         help_text=_("account to bill to for current financial period"))
     contra_account_nextperiod = models.ForeignKey(
-        "cashier.ContraAccount",
+        "cashier.FinancialAccount",
         on_delete=models.PROTECT,
         related_name="contra_account_nextperiod",
         verbose_name=_("contra account next period"),

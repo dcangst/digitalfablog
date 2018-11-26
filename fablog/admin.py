@@ -1,51 +1,55 @@
 from django.contrib import admin
-from .models import Fablog, MachinesUsed, FablogMemberships, FablogPayments,\
-    FablogBookings, FabDay, FablogVaria, Varia, FablogExpenses
+from .models import Fablog, MachinesUsed, FablogMemberships, FablogTransactions,\
+    FablogEntries, FabDay, FablogVaria, Varia, FablogRefunds
 
 
 class MachinesUsedInline(admin.TabularInline):
-    readonly_fields = ("start_time", "duration", "units", "price")
+    readonly_fields = ("start_time", "duration", "units", "amount")
     model = MachinesUsed
     extra = 1
 
 
 class FablogVariaInline(admin.TabularInline):
-    readonly_fields = ("units", "price")
+    readonly_fields = ("units", "amount")
     model = FablogVaria
     extra = 1
 
 
 class FablogMembershipsInline(admin.TabularInline):
-    readonly_fields = ("price", )
+    readonly_fields = ("amount", )
     model = FablogMemberships
     extra = 1
 
 
-class FablogPaymentsInline(admin.TabularInline):
-    model = FablogPayments
+class FablogTransactionsInline(admin.TabularInline):
+    model = FablogTransactions
     extra = 1
 
 
-class FablogExpensesInline(admin.TabularInline):
-    model = FablogExpenses
+class FablogRefundsInline(admin.TabularInline):
+    model = FablogRefunds
     extra = 1
 
 
-class FablogBookingsInline(admin.TabularInline):
-    model = FablogBookings
+class FablogEntriesInline(admin.TabularInline):
+    model = FablogEntries
     extra = 1
 
 
 class FablogAdmin(admin.ModelAdmin):
-    inlines = (MachinesUsedInline, FablogVariaInline, FablogMembershipsInline, FablogExpensesInline,
-               FablogBookingsInline, FablogPaymentsInline)
+    inlines = (MachinesUsedInline, FablogVariaInline, FablogMembershipsInline, FablogRefundsInline,
+               FablogEntriesInline, FablogTransactionsInline)
     readonly_fields = ("total_machines", "total_varia", "total_memberships", "total")
+
+
+class VariaAdmin(admin.ModelAdmin):
+    list_display = ("name", "contra_account", "order")
 
 
 admin.site.register(Fablog, FablogAdmin)
 admin.site.register(MachinesUsed)
 admin.site.register(FablogMemberships)
-admin.site.register(FablogBookings)
-admin.site.register(FablogPayments)
+admin.site.register(FablogEntries)
+admin.site.register(FablogTransactions)
 admin.site.register(FabDay)
-admin.site.register(Varia)
+admin.site.register(Varia, VariaAdmin)

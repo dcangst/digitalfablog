@@ -1,258 +1,172 @@
 [
 {
-  "model": "cashier.journal",
+  "model": "cashier.financialaccount",
   "pk": 1,
+  "fields": {
+    "number": 3401,
+    "name": "Mitgliederbeitr\u00e4ge",
+    "description": "Konto f\u00fcr Mitgliederbeitr\u00e4ge",
+    "account_type": 0
+  }
+},
+{
+  "model": "cashier.financialaccount",
+  "pk": 2,
+  "fields": {
+    "number": 2302,
+    "name": "Mitgliederbeitr\u00e4ge Folgeperiode",
+    "description": "Mitgliederbeitr\u00e4ge Folgeperiode",
+    "account_type": 0
+  }
+},
+{
+  "model": "cashier.financialaccount",
+  "pk": 3,
+  "fields": {
+    "number": 3000,
+    "name": "Betriebsertrag",
+    "description": "",
+    "account_type": 0
+  }
+},
+{
+  "model": "cashier.financialaccount",
+  "pk": 4,
   "fields": {
     "number": 1000,
-    "name": "Kasse"
+    "name": "Betriebskasse",
+    "description": "Hauptkasse (Bargeld)",
+    "account_type": 0
   }
 },
 {
-  "model": "cashier.journal",
-  "pk": 2,
-  "fields": {
-    "number": 1020,
-    "name": "PostFinance"
-  }
-},
-{
-  "model": "cashier.contraaccount",
-  "pk": 1,
-  "fields": {
-    "number": "1020",
-    "name": "PostFinance",
-    "description": "Absch\u00f6pfung",
-    "expense_account": false
-  }
-},
-{
-  "model": "cashier.contraaccount",
-  "pk": 2,
-  "fields": {
-    "number": "3000",
-    "name": "Betriebsertrag",
-    "description": "Maschinenmieten",
-    "expense_account": false
-  }
-},
-{
-  "model": "cashier.contraaccount",
-  "pk": 3,
-  "fields": {
-    "number": "3210",
-    "name": "Ertrag Materialverkauf",
-    "description": "Materialverkauf",
-    "expense_account": false
-  }
-},
-{
-  "model": "cashier.contraaccount",
-  "pk": 4,
-  "fields": {
-    "number": "3401",
-    "name": "Mitgliederbeitr\u00e4ge",
-    "description": "",
-    "expense_account": false
-  }
-},
-{
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 5,
   "fields": {
-    "number": "3402",
-    "name": "Ertrag Kurse",
-    "description": "",
-    "expense_account": true
+    "number": 1020,
+    "name": "PostFinance",
+    "description": "Bankonto f\u00fcr Absch\u00f6pfungen",
+    "account_type": 0
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 6,
   "fields": {
-    "number": "3601",
-    "name": "Spenden",
-    "description": "",
-    "expense_account": false
+    "number": 3210,
+    "name": "Ertrag Materialverkauf",
+    "description": "Materialverkauf",
+    "account_type": 0
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 7,
   "fields": {
-    "number": "6700",
-    "name": "\u00dcbriger Betriebsaufwand",
-    "description": "Verschiedenes",
-    "expense_account": true
+    "number": 3402,
+    "name": "Ertrag Kurse",
+    "description": "",
+    "account_type": 0
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 8,
   "fields": {
-    "number": "2302",
-    "name": "Erhaltene Mitgliederbeitr\u00e4ge Folgejahr",
+    "number": 3601,
+    "name": "Spenden",
     "description": "",
-    "expense_account": false
+    "account_type": 0
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 9,
   "fields": {
-    "number": "4000",
-    "name": "Materialaufwand",
-    "description": "EInkauf von Material",
-    "expense_account": true
+    "number": 6700,
+    "name": "\u00dcbriger Betriebsaufwand",
+    "description": "",
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 10,
   "fields": {
-    "number": "4201",
-    "name": "Getr\u00e4nke/Esswaren FabCaf\u00e9",
-    "description": "Getr\u00e4nke & Esswaren FabCaf\u00e9",
-    "expense_account": true
+    "number": 4000,
+    "name": "Materialaufwand",
+    "description": "Einkauf von Material",
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 11,
   "fields": {
-    "number": "4600",
-    "name": "Verbrauchsmaterial",
-    "description": "Verbrauchsmaterial",
-    "expense_account": true
+    "number": 4201,
+    "name": "Getr\u00e4nke/Esswaren FabCaf\u00e9",
+    "description": "",
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 12,
   "fields": {
-    "number": "4610",
-    "name": "Aufwand Anl\u00e4sse",
-    "description": "Aufwand f\u00fcr Anl\u00e4sse",
-    "expense_account": true
+    "number": 4600,
+    "name": "Verbrauchsmaterial",
+    "description": "B\u00fcromaterial, Schrauben, Klebstoffe etc.",
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 13,
   "fields": {
-    "number": "5100",
-    "name": "Kursleiterentsch\u00e4digung",
-    "description": "Kursleiterentsch\u00e4digung f\u00fcr diverse Kursleiter",
-    "expense_account": true
+    "number": 4610,
+    "name": "Aufwand Anl\u00e4sse",
+    "description": "Verpflegung Labmanagerh\u00f6ck, Kurse o.\u00e4.",
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 14,
   "fields": {
-    "number": "5101",
-    "name": "Kursleiterentsch\u00e4digung Dirk Altermatt",
-    "description": "Kursleiterentsch\u00e4digung Dirk Altermatt",
-    "expense_account": true
+    "number": 5100,
+    "name": "Kursleiterentsch\u00e4digung",
+    "description": "Kursleiterentsch\u00e4digung f\u00fcr diverse Kursleiter",
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 15,
   "fields": {
-    "number": "5102",
-    "name": "Kursleiterentsch\u00e4digung Martina Altermatt",
+    "number": 5101,
+    "name": "Kursleiterentsch\u00e4digung Dirk Altermatt",
     "description": "",
-    "expense_account": true
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 16,
   "fields": {
-    "number": "5103",
-    "name": "Kursleiterentsch\u00e4digung Marc Schaffer",
+    "number": 5102,
+    "name": "Kursleiterentsch\u00e4digung Martina Altermatt",
     "description": "",
-    "expense_account": true
+    "account_type": 1
   }
 },
 {
-  "model": "cashier.contraaccount",
+  "model": "cashier.financialaccount",
   "pk": 17,
   "fields": {
-    "number": "5107",
-    "name": "Kursleiterentsch\u00e4digung Michael Denzlein",
-    "description": "",
-    "expense_account": true
-  }
-},
-{
-  "model": "cashier.contraaccount",
-  "pk": 18,
-  "fields": {
-    "number": "6100",
+    "number": 6100,
     "name": "URE Maschinen und Apparate",
-    "description": "Unterhalt, Reinigung und Ersatz",
-    "expense_account": true
-  }
-},
-{
-  "model": "cashier.contraaccount",
-  "pk": 19,
-  "fields": {
-    "number": "6460",
-    "name": "Entsorgung",
-    "description": "Entsorgungsgeb\u00fchren",
-    "expense_account": true
-  }
-},
-{
-  "model": "cashier.contraaccount",
-  "pk": 20,
-  "fields": {
-    "number": "3403",
-    "name": "Vermietung FabRocket Lastenvelo",
-    "description": "",
-    "expense_account": false
-  }
-},
-{
-  "model": "cashier.paymentmethod",
-  "pk": 1,
-  "fields": {
-    "short_name": "EC+",
-    "long_name": "EFT (EC & andere)",
-    "selectable": true,
-    "journal": 2
-  }
-},
-{
-  "model": "cashier.paymentmethod",
-  "pk": 2,
-  "fields": {
-    "short_name": "PC",
-    "long_name": "EFT (PostCard)",
-    "selectable": true,
-    "journal": 2
-  }
-},
-{
-  "model": "cashier.paymentmethod",
-  "pk": 3,
-  "fields": {
-    "short_name": "Ueb",
-    "long_name": "\u00dcberweisung",
-    "selectable": false,
-    "journal": 2
-  }
-},
-{
-  "model": "cashier.paymentmethod",
-  "pk": 4,
-  "fields": {
-    "short_name": "BAR",
-    "long_name": "Barbezahlung",
-    "selectable": true,
-    "journal": 1
+    "description": "Unterhalt, Reinigung und Ersatzteile Maschinen",
+    "account_type": 1
   }
 }
 ]

@@ -2,13 +2,12 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.utils.translation import pgettext
 
 
-class Journal(models.Model):
-    """An object representing a cashier"""
+class FinancialAccount(models.Model):
+    """An object representing a financial Account"""
     number = models.PositiveSmallIntegerField(
         unique=True,
         verbose_name=_('journal account number'),
@@ -17,10 +16,36 @@ class Journal(models.Model):
         max_length=255,
         verbose_name=_('journal name'),
         help_text=_('Name of the journal'))
+    description = models.TextField(
+        blank=True,
+        verbose_name=_("Description"),
+        help_text=pgettext(
+            "Cashier",
+            "description of usage of account (keep it short)"))
+
+    REVENUES = 0      # Ertrag
+    EXPENSES = 1      # Aufwand
+    ASSETS = 3        # Aktive
+    LIABILITIES = 4   # Passive (for completeness sake)
+    ACCOUNT_TYPE_CHOICES = (
+        (REVENUES, _('Revenues')),
+        (EXPENSES, _('Expenses')),
+        (ASSETS, _('Assets')),
+        (LIABILITIES, _('Liabilities'))
+    )
+
+    account_type = models.PositiveSmallIntegerField(
+        choices=ACCOUNT_TYPE_CHOICES,
+        default=0,
+        verbose_name=_('account type'),
+        help_text=pgettext(
+            'Cashier',
+            'type of account'))
 
     class Meta:
-        verbose_name = _('Journal')
-        verbose_name_plural = _('Journals')
+        verbose_name = _('account')
+        verbose_name_plural = _('accounts')
+        ordering = ['number', ]
 
     def __str__(self):
         name = _('%(number)s %(name)s') % {
@@ -29,238 +54,127 @@ class Journal(models.Model):
         return name
 
 
-class JournalBalance(models.Model):
-    """Helper Model to keep track of account balance"""
-    journal = models.ForeignKey(
-        'Journal',
-        related_name='journals',
-        on_delete=models.PROTECT,
-        verbose_name=_('journal'),
-        help_text=pgettext(
-            'Cashier',
-            'Associated journal'))
-
-    balance_expected = models.DecimalField(
-        max_digits=20,
-        decimal_places=2,
-        verbose_name=_('Balance expected'),
-        help_text=_('Balance expected'))
-    balance_counted = models.DecimalField(
-        max_digits=20,
-        decimal_places=2,
-        blank=True,
-        null=True,
-        verbose_name=_('Balance true'),
-        help_text=_('Balance true'))
-
-    class Meta:
-        verbose_name = _('Journal Balance')
-        verbose_name_plural = _('Journal Balances')
-        permissions = (
-            ('view_journal_balance', _('Can view journal balances')),)
-
-    def __str__(self):
-        name = _('%(acc_name)s %(id)s: %(true)s (%(expected)s)') % {
-            'acc_name': self.journal.__str__(),
-            'id': self.id,
-            'true': self.balance_counted,
-            'expected': self.balance_expected}
-        return name
-
-
-class ContraAccount(models.Model):
-    number = models.CharField(
-        max_length=4,
-        unique=True,
-        verbose_name=_("contra account number"),
-        help_text=_("Accounting Number of the contra account"))
-
-    name = models.CharField(
-        max_length=50,
-        verbose_name=_("contra account name"),
-        help_text=_("Name of the contra account"))
-
-    description = models.TextField(
-        blank=True,
-        verbose_name=_("Description"),
-        help_text=pgettext(
-            "Cashier",
-            "description of usage of account (keep it short)"))
-
-    expense_account = models.BooleanField(
-        default=True,
-        verbose_name=_('expense account'),
-        help_text=pgettext(
-            'Contra account',
-            'Is this an expense account?'))
-
-    class Meta:
-        verbose_name = _('contra account')
-        verbose_name_plural = _('contra accounts')
-        ordering = ['number', ]
-        permissions = (
-            ('view_bookings', _('Can view bookings')),)
-
-    def __str__(self):
-        name = _('%(number)s %(name)s') % {
-            'number': self.number,
-            'name': self.name
-            }
-        return name
-
-
-class Booking(models.Model):
-    """ A booking to an account """
-    BOOKING = 0
-    COUNT = 1
-    BOOKING_TYPE_CHOICES = (
-        (BOOKING, _('Booking')),
+class Entry(models.Model):
+    """ An entry to an account """
+    INCOME = 0
+    EXPENSE = 1
+    COUNT = 2
+    ENTRY_TYPE_CHOICES = (
+        (INCOME, _('Income')),
+        (EXPENSE, _('Expense')),
         (COUNT, _('Count'))
     )
 
-    booking_type = models.PositiveSmallIntegerField(
-        choices=BOOKING_TYPE_CHOICES,
+    entry_type = models.PositiveSmallIntegerField(
+        choices=ENTRY_TYPE_CHOICES,
         default=0,
-        verbose_name=_('booking type'),
+        verbose_name=_('entry type'),
         help_text=pgettext(
             'Cashier',
-            'type of booking'))
+            'type of entry'))
 
-    journal = models.ForeignKey(
-        'Journal',
-        related_name='bookings',
+    account = models.ForeignKey(
+        'FinancialAccount',
+        related_name='account',
         on_delete=models.PROTECT,
-        verbose_name=_('journal'),
+        verbose_name=_('account'),
         help_text=pgettext(
             'Cashier',
-            'Associated journal'))
+            'account for entry'))
 
     contra_account = models.ForeignKey(
-        'ContraAccount',
+        'FinancialAccount',
+        related_name='contraaccount',
         on_delete=models.PROTECT,
         verbose_name=_("contra account"),
-        help_text=_("account to make the booking to/from"))
+        help_text=_("contra account for entry"))
 
     timestamp = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Date & Time'),
         help_text=pgettext(
             'Cashier',
-            'Booking date and time'))
+            'Entry date and time'))
 
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name=_('amount'),
-        help_text=_('Amount of the booking'))
+        help_text=_('Amount of the entry'))
+
+    balance = models.DecimalField(
+        null=True,
+        blank=True,
+        max_digits=20,
+        decimal_places=2,
+        verbose_name=_('current balance'),
+        help_text=_('current balance (counted)'))
 
     text = models.CharField(
         max_length=1000,
         blank=True,
-        verbose_name=_('booking text'),
+        verbose_name=_('entry text'),
         help_text=pgettext(
             'Cashier',
-            'Text of Booking')
+            'Text of Entry')
         )
 
-    balance = models.ForeignKey(
-        JournalBalance,
-        related_name='booking_balance',
-        on_delete=models.PROTECT,
-        verbose_name=_('Balance'),
-        help_text=pgettext(
-            'Cashier',
-            'Balance after booking'))
-
     class Meta:
-        verbose_name = _('Booking')
-        verbose_name_plural = _('Bookings')
+        verbose_name = _('Entry')
+        verbose_name_plural = _('Entries')
         ordering = ['-timestamp', ]
         permissions = (
-            ('view_bookings', _('Can view bookings')),)
+            ('view_entries', _('Can view entries')),)
 
     def __str__(self):
-        name = _('%(datetime)s | %(type)s | %(journal)s - %(account)s:  %(amount)s ') % {
+        name = _('%(datetime)s | %(type)s | %(account)s - %(contra_account)s:  %(amount)s ') % {
             'type': self.get_booking_type_display(),
             'datetime': self.timestamp.strftime('%d.%m.%Y %H:%M'),
-            'journal': self.journal.number,
-            'account': self.contra_account.number,
+            'account': self.account.number,
+            'contra_account': self.contra_account.number,
             'amount': self.amount
             }
         return name
 
-    def save(self, *args, **kwargs):
-        # get previous balance
-        if JournalBalance.objects.filter(journal=self.journal).exists():
-            last_balance = JournalBalance.objects.filter(
-                journal=self.journal).order_by('id').last()
-            last_balance_expected = last_balance.balance_expected
-            last_balance_counted = last_balance.balance_counted
-        else:
-            last_balance_expected = 0
-            last_balance_counted = 0
 
-        # add count if cash_count, else add normal booking
-        if self.booking_type == self.COUNT:
-            new_balance = JournalBalance.objects.create(
-                journal=self.journal,
-                balance_expected=last_balance_expected + 0,
-                balance_counted=self.amount)
-            self.amount = 0
-        else:
-            new_balance = JournalBalance.objects.create(
-                journal=self.journal,
-                balance_expected=last_balance_expected + self.amount,
-                balance_counted=last_balance_counted)
-        self.balance = new_balance
-        super(Booking, self).save(*args, **kwargs)
-
-
-class Payment(models.Model):
+class Transaction(models.Model):
     """
-    A Payment for a fablog
-    this is to seperate payments from bookings to accounts to allow for partial payment
+    A Transaction for a fablog
+    this is to seperate payments/expenses from bookings to accounts to allow for partial payment
     """
-    payment_method = models.ForeignKey(
-        'PaymentMethod',
-        related_name='payments',
+    transaction_method = models.ForeignKey(
+        'TransactionMethod',
+        related_name='transactions',
         on_delete=models.PROTECT,
-        verbose_name=_('payment method'),
+        verbose_name=_('transaction method'),
         help_text=pgettext(
             'Cashier',
-            'payment method'))
+            'transaction method'))
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name=_('amount'),
-        help_text=_('Amount of the payment'))
+        help_text=_('Amount of the transaction'))
     timestamp = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Date & Time'),
         help_text=pgettext(
             'Cashier',
-            'Payment date and time'))
+            'Transaction date and time'))
 
     class Meta:
-        verbose_name = _('Payment')
-        verbose_name_plural = _('Payments')
+        verbose_name = _('transaction')
+        verbose_name_plural = _('transactions')
         ordering = ['-amount', ]
-        permissions = (
-            ('view_bookings', _('Can view bookings')),)
 
     def __str__(self):
-        name = _('%(datetime)s | %(method)s | %(amount)s') % {
+        name = _('%(datetime)s | %(method)s ') % {
             'datetime': self.timestamp.strftime('%d.%m.%Y, %H:%M'),
-            'method': self.payment_method.__str__(),
-            'amount': self.amount}
+            'method': self.transaction_method.long_name}
         return name
 
-    def clean(self):
-        if not self.amount >= 0:
-            raise ValidationError({'amount': _("Amount can't be negative!")})
 
-
-class PaymentMethod(models.Model):
+class TransactionMethod(models.Model):
     '''table for storing different available payment types'''
     short_name = models.CharField(
         max_length=3,
@@ -282,22 +196,25 @@ class PaymentMethod(models.Model):
         help_text=pgettext(
             'payment method',
             'Used to restrict Select Widgets in Forms'))
-    journal = models.ForeignKey(
-        Journal,
-        related_name='payment_methods',
+
+    # if the transaction amount is > 0 this is the debit account (de: Soll), otherwise it's credit (de: Haben)
+    # the contra account is defined by the associated fablog.
+    account = models.ForeignKey(
+        FinancialAccount,
+        related_name='transaction_methods',
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        verbose_name=_('Bookings to journal'),
+        verbose_name=_('Entry to account'),
         help_text=pgettext(
             'Cashier',
             'Journal for this payment method'))
 
     class Meta:
-        verbose_name = _('payment method')
-        verbose_name_plural = _('payment methods')
+        verbose_name = _('transaction method')
+        verbose_name_plural = _('transaction methods')
         permissions = (
-            ('view_payment_methods', _('Can view payment methods')),)
+            ('view_transaction_methods', _('Can view transaction methods')),)
 
     def __str__(self):
         name = _('%(short_name)s (%(long_name)s)') % {
@@ -309,8 +226,6 @@ class PaymentMethod(models.Model):
 class CashCount(models.Model):
     """
     A cash count of a journal.
-
-    bookings are generated in post_save signal
     """
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -327,21 +242,10 @@ class CashCount(models.Model):
             'CashCount',
             'Creation date and time'))
     cashier_date = models.DateField(
-        default=timezone.now,
         verbose_name=_('cash count date'),
         help_text=pgettext(
             'CashCount',
             'Cash count date'))
-
-    journal = models.ForeignKey(
-        'Journal',
-        related_name='cash_counts',
-        on_delete=models.PROTECT,
-        verbose_name=_('journal'),
-        help_text=pgettext(
-            'Accounts',
-            'Associated journal'))
-
     fabday = models.ForeignKey(
         'fablog.FabDay',
         related_name='cashcount',
@@ -352,16 +256,23 @@ class CashCount(models.Model):
             'FabDay of this CashCount')
         )
 
+    account = models.ForeignKey(
+        'FinancialAccount',
+        related_name='cash_counts',
+        on_delete=models.PROTECT,
+        verbose_name=_('journal'),
+        help_text=pgettext(
+            'Accounts',
+            'Associated journal'))
+
     total = models.DecimalField(
         max_digits=20,
         decimal_places=2,
         verbose_name=_('total cash'),
         help_text=_('total cash'))
 
-    booking = models.ForeignKey(
-        "cashier.Booking",
-        blank=True,
-        null=True,
+    entry = models.ForeignKey(
+        "cashier.Entry",
         on_delete=models.PROTECT)
 
     class Meta:
@@ -377,3 +288,22 @@ class CashCount(models.Model):
             'date': self.cashier_date.strftime('%d.%m.%Y'),
             'total': self.total}
         return name
+
+    def save(self, *args, **kwargs):
+        if self.entry:
+            # update entry
+            self.entry.entry_type = Entry.COUNT,
+            self.entry.debit_account = self.account,
+            self.entry.credit_account = self.account,
+            self.entry.amount = 0,
+            self.entry.text = self.__str__()
+            self.entry.save()
+        else:
+            # add entry
+            self.entry = Entry.objects.create(
+                entry_type=Entry.COUNT,
+                account=self.account,
+                contra_account=self.account,
+                amount=0,
+                text=self.__str__())
+        super(CashCount, self).save(*args, **kwargs)

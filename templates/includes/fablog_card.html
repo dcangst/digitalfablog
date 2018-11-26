@@ -1,0 +1,99 @@
+<a style="display:block; color:black;"
+href="{{ fablog.get_absolute_url }}">
+<div class="card fablog-card {% if fablog.closed_at %}fablog-closed{% endif %}" >
+  <div class="card-header text-center p-1">
+    {{ fablog.member.get_full_name }}
+  </div>
+  <div class="card-body p-1 small text-center">
+    
+    {% if fablog.machinesused_set.all %}
+      <table class="w-100">
+        {% for machinesused in fablog.machinesused_set.all %}
+        <tr align="right">
+          <td style="width:20%">
+            <span 
+              class="badge badge-secondary"
+              style="background:{{ machinesused.machine.color }}">
+              {{ machinesused.machine.abbreviation }}
+            </span>
+          </td>
+          <td style="width:40%">
+            {% if machinesused.end_time %}
+              {{ machinesused.duration_str }}
+            {% else %}
+              <span name="countup" data-countup= "{{ machinesused.start_time|date:'c' }}"></span>
+            {% endif %}
+          </td>
+          <td style="width:40%">
+            {% if machinesused.end_time %}
+              <i>{{ machinesused.amount }}</i>
+            {% else %}
+              ...
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
+    {% if fablog.fablogvaria_set.all %}
+      <hr class="m-1">
+      <table class="w-100">
+        {% for fablogvaria in fablog.fablogvaria_set.all %}
+        <tr>
+          <td style="width:80%" align="left">
+            {{fablogvaria.units}} x {{ fablogvaria.details|truncatechars:16}}
+          </td>
+          <td style="width:20%" align="right">
+            <i>{{fablogvaria.amount}}</i>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
+    {% if fablog.fablogmemberships_set.all %}
+      <hr class="m-1">
+      <table class="w-100">
+        {% for fablogmembership in fablog.fablogmemberships_set.all %}
+        <tr>
+          <td style="width:80%" align="left">
+            {{ fablogmembership.membership_type.name|truncatechars:14}}
+          </td>
+          <td style="width:20%" align="right">
+            <i>{{ fablogmembership.amount }}</i>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
+    {% if fablog.fablogrefunds_set.all %}
+      <hr class="m-1">
+      <table class="w-100 text-warning">
+        {% for refund in fablog.fablogrefunds_set.all %}
+        <tr>
+          <td style="width:80%" align="left">
+            {{ refund.details|truncatechars:14}}
+          </td>
+          <td style="width:20%" align="right">
+            <i>-{{ refund.amount }}</i>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+
+  </div>
+  <div class="card-footer text-center p-1">
+    <table class="w-100">
+      <td style="width:80%" align="left">
+        Total    
+      </td>
+      <td style="width:20%" align="right">
+        <b>{{ fablog.dues }}</b>
+      </td>
+    </table>
+  </div>
+</div>
+</a>

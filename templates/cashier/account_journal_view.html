@@ -21,17 +21,17 @@
       </tr>
     </thead>
     <tbody>
-      {% for booking in bookings %}
+      {% for entry in entries %}
         <tr>
-          <td>{{booking.id}}</td>
-          <td>{{booking.timestamp}}</td>
-          <td>{{booking.get_booking_type_display}}</td>
-          <td>{{booking.account}}</td>
-          <td>{% if booking.text %}{{booking.text}}{%endif%}</td>
-          <td>{% if booking.amount >= 0 %}{{booking.amount}}{%endif%}</td>
-          <td>{% if booking.amount < 0 %}{{booking.amount}}{%endif%}</td>
-          <td>{{booking.balance.balance_expected}}</td>
-          <td>{{booking.balance.balance_counted}}</td>
+          <td>{{entry.id}}</td>
+          <td>{{entry.timestamp}}</td>
+          <td>{{entry.get_entry_type_display}}</td>
+          <td>{{entry.account}}</td>
+          <td>{% if entry.text %}{{entry.text}}{%endif%}</td>
+          <td>{% if entry.entry_type == entry.INCOME %}{{entry.amount}}{%endif%}</td>
+          <td>{% if entry.entry_type == entry.EXPENSE %}{{entry.amount}}{%endif%}</td>
+          <td>EXP</td>
+          <td>{% if entry.entry_type == entry.COUNT %}{{entry.balance}}</td>
         </tr>
       {% endfor %}
     </tbody>
