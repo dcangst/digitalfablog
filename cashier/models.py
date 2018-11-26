@@ -1,6 +1,5 @@
 # django
 from django.db import models
-from django.utils import timezone
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.utils.translation import pgettext
@@ -128,7 +127,7 @@ class Entry(models.Model):
 
     def __str__(self):
         name = _('%(datetime)s | %(type)s | %(account)s - %(contra_account)s:  %(amount)s ') % {
-            'type': self.get_booking_type_display(),
+            'type': self.get_entry_type_display(),
             'datetime': self.timestamp.strftime('%d.%m.%Y %H:%M'),
             'account': self.account.number,
             'contra_account': self.contra_account.number,
@@ -168,9 +167,10 @@ class Transaction(models.Model):
         ordering = ['-amount', ]
 
     def __str__(self):
-        name = _('%(datetime)s | %(method)s ') % {
+        name = _('%(datetime)s | %(method)s | %(amount)s') % {
             'datetime': self.timestamp.strftime('%d.%m.%Y, %H:%M'),
-            'method': self.transaction_method.long_name}
+            'method': self.transaction_method.long_name,
+            'amount': self.amount}
         return name
 
 

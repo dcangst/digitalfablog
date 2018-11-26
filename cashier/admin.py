@@ -26,8 +26,11 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ("timestamp", "transaction_method", "amount")
 
 
+class EntryAdmin(admin.ModelAdmin):
+    list_display = ("timestamp", "entry_type", "account", "contra_account", "text", "amount", "balance")
+
 admin.site.register(CashCount)
 admin.site.register(FinancialAccount, FinancialAccountAdmin)
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(TransactionMethod)
-admin.site.register(Entry)
+admin.site.register(Entry, EntryAdmin)

@@ -15,10 +15,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from django.urls import reverse
 
-# additional
-from localflavor.generic.models import IBANField
-from localflavor.generic.countries.sepa import IBAN_SEPA_COUNTRIES
-
 
 class Fablog(models.Model):
     """Fablog object"""
@@ -47,7 +43,7 @@ class Fablog(models.Model):
             "Fablog",
             "FabDay of this Fablog"))
 
-    # this is set to the last labmanager who took a payment. Fablogs are closed in post-save signal
+    # this is set to the last labmanager who took a transaction. Fablogs are closed in post-save signal
     # when fablog.dues() is = 0.
     closed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -119,6 +115,71 @@ class Fablog(models.Model):
         return self._meta.verbose_name + " " + str(self.id)
 
     def save(self, *args, **kwargs):
+        if self.total() > 0 and self.dues() == 0 and not self.is_closed():
+            # get Models
+            Entry = apps.get_model('cashier', 'Entry')
+            FablogEntries = apps.get_model('fablog', 'FablogEntries')
+
+            # transactions
+            transactions = self.transactions.all().order_by('-amount')
+            # create list of fablog positions
+            positions = self.get_positions()
+            positions.sort(key=itemgetter('amount'))
+            # make entries for all positions
+            new_entries = list()
+
+            for t in transactions:
+                amount = t.amount
+                while len(positions) > 0:
+                    if amount >= positions[-1]['amount']:
+                        new_entry = Entry.objects.create(
+                            entry_type=Entry.INCOME,
+                            account=t.transaction_method.account,
+                            contra_account=positions[-1]['contra_account'],
+                            amount=positions[-1]['amount'],
+                            text=positions[-1]['text'])
+                        new_entries.append(new_entry)
+                        amount = amount - positions[-1]['amount']
+                        positions.pop()
+                        if amount == 0:
+                            break
+                    else:
+                        positions[-1]['text'] += " (part)"
+                        new_entry = Entry.objects.create(
+                            entry_type=Entry.INCOME,
+                            account=t.transaction_method.account,
+                            contra_account=positions[-1]['contra_account'],
+                            amount=amount,
+                            text=positions[-1]['text'])
+                        new_entries.append(new_entry)
+                        positions[-1]['amount'] = positions[-1]['amount'] - amount
+                        break
+
+            if settings.DEBUG:
+                # check entries - just for sanity
+                total_entries = sum([x.amount for x in new_entries])
+                total_transactions = sum([x.amount for x in transactions])
+                assert total_entries == total_transactions
+
+            # add entries to fablog
+            for e in new_entries:
+                FablogEntries.objects.create(
+                    fablog=self,
+                    entry=e)
+
+            # if a membership was payed, add it to member model
+            if self.memberships.exists():
+                for m in self.fablogmemberships_set.all():
+                    Membership = apps.get_model('members', 'Membership')
+                    Membership.objects.create(
+                        member=self.member,
+                        membershipType=m.membership_type,
+                        fablog=self,
+                        start_date=m.start_date,
+                        end_date=m.end_date())
+
+            # set fablog to closed
+            self.closed_at = timezone.now()
         # make entries to accounts here
         super(Fablog, self).save(*args, **kwargs)
 
@@ -149,7 +210,7 @@ class Fablog(models.Model):
 
     def total_entries(self):
         return self.subtotal(self.fablogentries_set.all())
-    total_entries.short_description = _("total bookings")
+    total_entries.short_description = _("total entries")
 
     def total(self):
         return (self.total_machines() +
@@ -170,7 +231,7 @@ class Fablog(models.Model):
     def get_positions(self):
         """
         Get all positions in the fablog and return as a list.
-        splits membership position according to year into multiple positions to allow for booking to
+        splits membership position according to year into multiple positions to allow for entries to
         different financial years
         """
         positions = list()
@@ -412,7 +473,7 @@ class FablogMemberships(models.Model):
 
 
 class FablogTransactions(models.Model):
-    """ intermediate table linking Fablogs and Payments"""
+    """ intermediate table linking Fablogs and transactions"""
 
     fablog = models.ForeignKey(
         Fablog,
