@@ -48,3 +48,17 @@ python manage.py loaddata initial_cashier initial_machines initial_materials ini
 ### Code Style
 
 I use flake8 with linelenght set to 120 (since no one is going to print this)
+
+## Docker
+
+1. Build
+```
+docker-compose build
+```
+2. Add Admin User
+```
+./addAdminUserToDB.sh
+```
+### Local Ports
+- fablog site -> http://localhost:3000
+- db adminer -> http://localhost:3001

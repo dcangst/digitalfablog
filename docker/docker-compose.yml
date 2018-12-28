@@ -18,10 +18,7 @@ services:
       - 'db'
     working_dir: '/usr/src/app/'
     entrypoint: 
-      - python
-      - manage.py
-      - runserver
-      - 0.0.0.0:80
+      - /root/entrypoint.sh
 
   db:
     image: postgres
@@ -31,6 +28,7 @@ services:
       - web
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ../:/usr/src/app
 
   adminer:
     image: adminer
